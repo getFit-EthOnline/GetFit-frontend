@@ -4,7 +4,7 @@ import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider';
 import { Web3Auth } from '@web3auth/modal';
 import { OpenloginAdapter } from '@web3auth/openlogin-adapter';
 import { useEffect, useState } from 'react';
-
+import { ethers } from 'ethers';
 const clientId =
     'BOZXvB8YZOmaHlxETldZRrA91mqa3UiLz46eonVOL627eJX0QQ2Ncct_7cNWUDI20n-EAY2f4_vs_szOXocmmBI';
 
@@ -42,6 +42,21 @@ const openloginAdapter = new OpenloginAdapter({
                 primary: '#00D1B2',
             },
             useLogoLoader: true,
+        },
+        loginConfig: {
+            // Google login
+            google: {
+                verifier: 'google-getfit',
+                typeOfLogin: 'google',
+                clientId:
+                    '820609215104-m8issl84ttq2mmcjmntav0ev9pq0hso5.apps.googleusercontent.com',
+            },
+            // Discord login
+            discord: {
+                verifier: 'discord-getfit',
+                typeOfLogin: 'discord',
+                clientId: '1276989969352888381',
+            },
         },
     },
     privateKeyProvider,
@@ -86,6 +101,20 @@ function useWeb3Auth() {
         setLoggedIn(false);
     };
 
-    return { login, loggedIn, logout };
+    const getAccounts = async () => {
+        if (!provider) {
+            return;
+        }
+        const ethersProvider = new ethers.BrowserProvider(provider);
+        const signer = await ethersProvider.getSigner();
+        const addr = signer.getAddress();
+        const address = await addr;
+        console.log(address);
+    };
+    const getUserInfo = async () => {
+        const user = await web3auth.getUserInfo();
+        console.log(user);
+    };
+    return { login, loggedIn, logout, getAccounts, getUserInfo };
 }
 export default useWeb3Auth;
