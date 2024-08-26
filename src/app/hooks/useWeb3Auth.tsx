@@ -10,14 +10,24 @@ const clientId =
 
 const chainConfig = {
     chainNamespace: CHAIN_NAMESPACES.EIP155,
-    chainId: '0xaa36a7',
-    rpcTarget: 'https://rpc.ankr.com/eth_sepolia',
-    displayName: 'Ethereum Sepolia Testnet',
-    blockExplorerUrl: 'https://sepolia.etherscan.io',
-    ticker: 'ETH',
-    tickerName: 'Ethereum',
+    chainId: '0xaa289',
+    rpcTarget: 'https://devnet.galadriel.com',
+    displayName: 'Galadriel Devnet',
+    blockExplorerUrl: 'https://explorer.galadriel.com',
+    ticker: 'GAL',
+    tickerName: 'Galadriel',
     logo: 'https://cryptologos.cc/logos/ethereum-eth-logo.png',
 };
+// const chainConfig = {
+//     chainNamespace: CHAIN_NAMESPACES.EIP155,
+//     chainId: '0xaa36a7',
+//     rpcTarget: 'https://rpc.ankr.com/eth_sepolia',
+//     displayName: 'Ethereum Sepolia Testnet',
+//     blockExplorerUrl: 'https://sepolia.etherscan.io',
+//     ticker: 'ETH',
+//     tickerName: 'Ethereum',
+//     logo: 'https://cryptologos.cc/logos/ethereum-eth-logo.png',
+// };
 const privateKeyProvider = new EthereumPrivateKeyProvider({
     config: { chainConfig },
 });
@@ -115,6 +125,6 @@ function useWeb3Auth() {
         const user = await web3auth.getUserInfo();
         console.log(user);
     };
-    return { login, loggedIn, logout, getAccounts, getUserInfo };
+    return { login, loggedIn, logout, getAccounts, getUserInfo, provider };
 }
 export default useWeb3Auth;
