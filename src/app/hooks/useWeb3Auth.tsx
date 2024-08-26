@@ -34,8 +34,10 @@ const openloginAdapter = new OpenloginAdapter({
         whiteLabel: {
             appName: 'Get Fit',
             appUrl: 'https://web3auth.io',
-            logoLight: 'https://web3auth.io/images/web3auth-logo.svg',
-            logoDark: 'https://web3auth.io/images/web3auth-logo---Dark.svg',
+            logoLight:
+                'https://avatars.githubusercontent.com/u/179255662?s=200&v=4',
+            logoDark:
+                'https://avatars.githubusercontent.com/u/179255662?s=200&v=4',
             defaultLanguage: 'en',
             mode: 'dark',
             theme: {
