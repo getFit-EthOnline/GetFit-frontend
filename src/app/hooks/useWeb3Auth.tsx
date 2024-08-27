@@ -8,7 +8,7 @@ import { ethers } from 'ethers';
 const clientId =
     'BOZXvB8YZOmaHlxETldZRrA91mqa3UiLz46eonVOL627eJX0QQ2Ncct_7cNWUDI20n-EAY2f4_vs_szOXocmmBI';
 
-const chainConfig = {
+export const chainConfig = {
     chainNamespace: CHAIN_NAMESPACES.EIP155,
     chainId: '0xaa36a7',
     rpcTarget: 'https://rpc.ankr.com/eth_sepolia',
