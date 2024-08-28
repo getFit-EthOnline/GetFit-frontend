@@ -1,6 +1,6 @@
 'use client';
 import { tssLib } from '@toruslabs/tss-dkls-lib';
-import { chainConfig } from './useWeb3Auth';
+import { chainConfig } from './web3AuthProviderProps';
 import { EthereumSigningProvider } from '@web3auth/ethereum-mpc-provider';
 import { Web3 } from 'web3';
 import {
