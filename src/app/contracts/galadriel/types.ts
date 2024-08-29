@@ -1,11 +1,16 @@
-import { IProvider } from '@web3auth/base';
+import { IProvider } from "@web3auth/base";
 
 export interface Message {
-    role: string;
-    content: string;
+  role: string;
+  content: string;
 }
 export interface startFitnessRunProps {
-    message: string;
-    imageUrls: string[];
-    provider: IProvider | null;
+  message: string;
+  provider: IProvider | null;
+}
+
+export interface addMessageProps {
+  message: string;
+  agentRunID: Number;
+  provider: IProvider | null;
 }
