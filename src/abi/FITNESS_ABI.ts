@@ -1,5 +1,4 @@
-export // ABI for the FitnessAgent contract
-const fitnessAgentAbi = [
+export const FITNESS_ABI = [
   {
     inputs: [
       {
@@ -253,4 +252,4 @@ const fitnessAgentAbi = [
     stateMutability: "nonpayable",
     type: "function",
   },
-];
+] as const;

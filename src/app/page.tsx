@@ -4,8 +4,8 @@ import {
   getNewMessages,
   startFitnessRun,
   addMessage,
-} from "./contracts/galadriel";
-import useWeb3Auth from "./hooks/useWeb3Auth";
+} from "../contracts/galadriel";
+import useWeb3Auth from "../hooks/useWeb3Auth";
 
 export default function Home() {
   const { login, loggedIn, logout, getUserInfo, getAccounts, provider } =

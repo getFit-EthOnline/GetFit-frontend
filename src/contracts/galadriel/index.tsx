@@ -1,9 +1,8 @@
 import { Contract, ethers, TransactionReceipt, Wallet } from "ethers";
-import { fitnessAgentAbi } from "./abi";
-import { Message, startFitnessRunProps, addMessageProps } from "./types";
 import Web3 from "web3";
+import { FITNESS_ABI } from "../../abi/FITNESS_ABI";
+import { addMessageProps, Message, startFitnessRunProps } from "../../types/types";
 // Contract address for the FitnessAgent
-const fitnessAgentAddress = "0x054ba199Ef61ef15226e2CeB61138f7d5E2F8408";
 
 // Function to start a new fitness run
 export async function startFitnessRun({
@@ -16,8 +15,8 @@ export async function startFitnessRun({
   const web3 = new Web3(provider);
   const accounts = await web3.eth.getAccounts();
   const fitnessAgentContract = new web3.eth.Contract(
-    fitnessAgentAbi,
-    fitnessAgentAddress
+    FITNESS_ABI,
+    FITNESS_AGENT_ADDRESS
   );
 
   console.log("Starting fitness run...");
@@ -46,12 +45,12 @@ export async function addMessage({
     throw new Error("Provider not found");
   }
 
-  console.log(provider);
   const web3 = new Web3(provider);
   const accounts = await web3.eth.getAccounts();
+
   const fitnessAgentContract = new web3.eth.Contract(
-    fitnessAgentAbi,
-    fitnessAgentAddress
+    FITNESS_ABI,
+    FITNESS_AGENT_ADDRESS
   );
 
   console.log("Adding message to fitness run...");
@@ -68,7 +67,7 @@ function getAgentRunId(receipt: TransactionReceipt) {
   let agentRunID;
   const provider = new ethers.JsonRpcProvider("https://devnet.galadriel.com/");
   const wallet = new Wallet(process.env.NEXT_PUBLIC_P_KEY || "", provider);
-  const contract = new Contract(fitnessAgentAddress, fitnessAgentAbi, wallet);
+  const contract = new Contract(FITNESS_AGENT_ADDRESS, FITNESS_ABI, wallet);
   for (const log of receipt.logs) {
     try {
       const parsedLog = contract.interface.parseLog(log);
@@ -91,7 +90,7 @@ export async function getNewMessages(
 ): Promise<Message[]> {
   const provider = new ethers.JsonRpcProvider("https://devnet.galadriel.com/");
   const wallet = new Wallet(process.env.NEXT_PUBLIC_P_KEY || "", provider);
-  const contract = new Contract(fitnessAgentAddress, fitnessAgentAbi, wallet);
+  const contract = new Contract(FITNESS_AGENT_ADDRESS, FITNESS_ABI, wallet);
   const messages = await contract.getMessageHistory(agentRunID);
 
   const newMessages: Message[] = [];
