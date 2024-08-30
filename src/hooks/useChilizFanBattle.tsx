@@ -25,9 +25,12 @@ const useChilizFanBattle = () => {
                 paymasterServiceData: { mode: PaymasterMode.SPONSORED },
             });
             debugger
-            const { transactionHash } = await userOpResponse.waitForTxHash();
-            debugger
-            return transactionHash
+            const userOpReceipt = await userOpResponse.wait();
+            if (userOpReceipt.success == "true") {
+                console.log("UserOp receipt", userOpReceipt);
+                console.log("Transaction receipt", userOpReceipt.receipt);
+            } debugger
+            return userOpReceipt.receipt
         } catch (error) {
             debugger
         }
