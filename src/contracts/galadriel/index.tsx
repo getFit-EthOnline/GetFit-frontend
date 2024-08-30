@@ -1,6 +1,6 @@
 import { Contract, ethers, TransactionReceipt, Wallet } from "ethers";
 import Web3 from "web3";
-import { FITNESS_ABI } from "../../abi/FITNESS_ABI";
+import { GALADRIEL_FITNESS_ABI } from "../../abi/GALADRIEL_FITNESS_ABI";
 import { addMessageProps, Message, startFitnessRunProps } from "../../types/types";
 // Contract address for the FitnessAgent
 
@@ -15,7 +15,7 @@ export async function startFitnessRun({
   const web3 = new Web3(provider);
   const accounts = await web3.eth.getAccounts();
   const fitnessAgentContract = new web3.eth.Contract(
-    FITNESS_ABI,
+    GALADRIEL_FITNESS_ABI,
     FITNESS_AGENT_ADDRESS
   );
 
@@ -49,7 +49,7 @@ export async function addMessage({
   const accounts = await web3.eth.getAccounts();
 
   const fitnessAgentContract = new web3.eth.Contract(
-    FITNESS_ABI,
+    GALADRIEL_FITNESS_ABI,
     FITNESS_AGENT_ADDRESS
   );
 
@@ -67,7 +67,7 @@ function getAgentRunId(receipt: TransactionReceipt) {
   let agentRunID;
   const provider = new ethers.JsonRpcProvider("https://devnet.galadriel.com/");
   const wallet = new Wallet(process.env.NEXT_PUBLIC_P_KEY || "", provider);
-  const contract = new Contract(FITNESS_AGENT_ADDRESS, FITNESS_ABI, wallet);
+  const contract = new Contract(FITNESS_AGENT_ADDRESS, GALADRIEL_FITNESS_ABI, wallet);
   for (const log of receipt.logs) {
     try {
       const parsedLog = contract.interface.parseLog(log);
@@ -90,7 +90,7 @@ export async function getNewMessages(
 ): Promise<Message[]> {
   const provider = new ethers.JsonRpcProvider("https://devnet.galadriel.com/");
   const wallet = new Wallet(process.env.NEXT_PUBLIC_P_KEY || "", provider);
-  const contract = new Contract(FITNESS_AGENT_ADDRESS, FITNESS_ABI, wallet);
+  const contract = new Contract(FITNESS_AGENT_ADDRESS, GALADRIEL_FITNESS_ABI, wallet);
   const messages = await contract.getMessageHistory(agentRunID);
 
   const newMessages: Message[] = [];
