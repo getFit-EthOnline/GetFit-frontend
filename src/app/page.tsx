@@ -1,72 +1,58 @@
-// "use client";
-// import Web3 from "web3";
-// import {
-//   getNewMessages,
-//   startFitnessRun,
-//   addMessage,
-// } from "../contracts/galadriel";
-// import useWeb3Auth from "../hooks/useWeb3Auth";
+"use client";
+import useChilizFanBattle from "@/hooks/useChilizFanBattle";
+import useGlobalStore from "@/store";
+import useWeb3AuthWrapper from "@/web3auth/useWeb3AuthWrapper";
+import { useEffect, useState } from "react";
+import { useAccount, useConnect, useDisconnect, useSwitchChain } from "wagmi";
 
-// export default function Home() {
-//   // const { login, loggedIn, logout, getUserInfo, getAccounts, provider } =
-//   //   useWeb3Auth();
-//   // const loggedInView = (
-//   //   <>
-//   //     <button onClick={logout}>Log Out</button>{" "}
-//   //     <button onClick={getUserInfo} className="card">
-//   //       Get User Info
-//   //     </button>
-//   //     <button onClick={getAccounts} className="card">
-//   //       Get Accounts
-//   //     </button>
-//   //   </>
-//   // );
-//   // const unloggedInView = (
-//   //   <button onClick={login} className="card">
-//   //     Login
-//   //   </button>
-//   // );
+const MainPage = () => {
+  const { address, connector, isConnected, chain } = useAccount();
+  const [isMounted, setIsMounted] = useState(false)
+  const { chains, switchChain, error } = useSwitchChain()
+  useWeb3AuthWrapper();
+  const { disconnect } = useDisconnect();
+  const { connect, connectors } = useConnect();
+  const { participateInBattle } = useChilizFanBattle()
+  const { smartAccount, smartAddress } = useGlobalStore()
 
-//   const handleDelay = (id: number) => {
-//     setTimeout(async () => {
-//       const data = await getNewMessages(id, 0);
-//       console.log(data);
-//     }, 15000);
-//   };
-//   return (
-//     <>
-//       <div className="grid">{loggedIn ? loggedInView : unloggedInView}</div>
-//       <div id="console" style={{ whiteSpace: "pre-line" }}>
-//         <p style={{ whiteSpace: "pre-line" }}></p>
-//       </div>
-//       <div
-//         onClick={async () => {
-//           //   const res = await startFitnessRun({
-//           //     message:
-//           //       "Age 43, Sex M, fitness goal muscle gain, diet vegan. Create the weekly workout schedule",
-//           //     provider,
-//           //   });
-//           //   const res = await addMessage({
-//           //     message: "Send the diet schedule for the above workout",
-//           //     agentRunID: 1,
-//           //     provider,
-//           //   });
-//           //   if (res.runId) {
-//           handleDelay(1);
-//           //   }
-//         }}
-//       >
-//         start fitness
-//       </div>
-//     </>
-//   );
-// }
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
-
-const page = () => {
   return (
-    <div>page</div>
+    <div className="min-w-screen min-h-screen bg-black h-[100px]">
+      <div className="bg-orange-300 text-black text-end w-full h-[100px]">
+        Address: {isMounted && address ? address : ''}
+        <br />
+        Smart Address: {isMounted && smartAddress ? smartAddress : ''}
+        <br />
+        {isMounted && chain ? chain?.id : ''}
+      </div>
+      {connectors.map((connector) => {
+        return (
+          <button className="text-white" key={connector.id} onClick={() => connect({ connector })}>
+            {connector.name}
+          </button>
+        );
+      })}
+      <button onClick={() => disconnect()} className="bg-red-300 text-black text-end px-10 h-[100px]">Disconnect</button>
+      <button onClick={() => participateInBattle("Goggins")} className="bg-red-300 text-black text-end px-10 h-[100px]">Join Team</button>
+      <div className="flex items-center space-x-3 justify-center">
+        {
+          chains.map((chain) => (
+            <button
+              key={chain.id}
+              onClick={() => switchChain({ chainId: chain.id })}
+              className="bg-red-300 text-black text-end px-10 h-[100px]"
+            >
+              {chain.name}<br />
+              {chain.id}
+            </button>
+          ))
+        }
+      </div>
+    </div>
   )
 }
 
-export default page
+export default MainPage

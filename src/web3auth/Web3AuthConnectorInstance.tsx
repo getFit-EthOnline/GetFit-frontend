@@ -6,8 +6,11 @@ import { WalletServicesPlugin } from "@web3auth/wallet-services-plugin";
 import { Web3AuthConnector } from "@web3auth/web3auth-wagmi-connector";
 import { Chain } from "wagmi/chains";
 import pkg from "../../package.json";
+
+
 export default function Web3AuthConnectorInstance(chains: Chain[]) {
   const name = pkg.name;
+
   const chainConfig = {
     chainNamespace: CHAIN_NAMESPACES.EIP155,
     chainId: "0x" + chains[0].id.toString(16),
@@ -18,17 +21,7 @@ export default function Web3AuthConnectorInstance(chains: Chain[]) {
     blockExplorerUrl: chains[0].blockExplorers?.default.url[0] as string,
   };
 
-  // const chainConfig = {
-  //   chainNamespace: CHAIN_NAMESPACES.EIP155,
-  //   chainId: "0xaa289",
-  //   rpcTarget: "https://devnet.galadriel.com",
-  //   displayName: "Galadriel Devnet",
-  //   blockExplorerUrl: "https://explorer.galadriel.com",
-  //   ticker: "GAL",
-  //   tickerName: "Galadriel",
-  //   logo: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
-  // };
-
+  console.log(chainConfig, "chainConfig");
 
   const privateKeyProvider = new EthereumPrivateKeyProvider({ config: { chainConfig } });
 
@@ -46,8 +39,9 @@ export default function Web3AuthConnectorInstance(chains: Chain[]) {
       uxMode: "redirect",
       mode: "light",
     },
+
     web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
-    enableLogging: false,
+    enableLogging: true,
   });
 
   const walletServicesPlugin = new WalletServicesPlugin({
