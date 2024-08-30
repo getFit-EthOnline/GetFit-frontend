@@ -42,7 +42,7 @@ export default function Home() {
             <div
                 className="p-20"
                 onClick={async () => {
-                    const res = await sendTestTokens(provider);
+                    const res = await sendTestTokens();
                     console.log(res);
                 }}
             >

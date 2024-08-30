@@ -113,12 +113,12 @@ export async function getNewMessages(
     });
     return newMessages;
 }
-export async function sendTestTokens(provider: any) {
-    console.log(provider);
-    const web3 = new Web3(provider);
-    console.log(web3.eth);
-    const accounts = await web3.eth.getAccounts();
-    const signerAddress = accounts[0];
+export async function sendTestTokens() {
+    const provider = new ethers.JsonRpcProvider(
+        'https://devnet.galadriel.com/'
+    );
+    const signer = await provider.getSigner();
+    const signerAddress = await signer.getAddress();
     console.log(`Getting test funds for address: ${signerAddress}`);
 
     // Setup a third-party provider with its own signer to send transactions
@@ -126,15 +126,12 @@ export async function sendTestTokens(provider: any) {
         process.env.NEXT_PUBLIC_P_KEY || '',
         provider
     );
-    console.log(thirdPartyProvider);
-    console.log(signerAddress);
     // Sending ETH to the signer address
     console.log('Sending ETH to the signer address...');
     const ethSendPromise = await thirdPartyProvider.sendTransaction({
         to: signerAddress,
         value: ethers.parseUnits('0.01', 18), // Sending 0.01 ETH
     });
-    console.log(ethSendPromise);
     await ethSendPromise.wait();
     console.log(
         `ETH transfer successful, transaction hash: ${ethSendPromise.hash}`
