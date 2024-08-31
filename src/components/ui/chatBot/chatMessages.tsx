@@ -21,7 +21,6 @@ const ChatMessages = ({
     const [reportMsg, setReportMsg] = useState<string>('');
     const [userResponse, setUserResponse] = useState<string>('');
     const [step, setStep] = useState<number>(0);
-    const [isChatting, setIsChatting] = useState<boolean>(false);
 
     const [userProfile, setUserProfile] = useState<{
         age: string;
@@ -49,8 +48,8 @@ const ChatMessages = ({
     const fetchMessages = () => {
         setTimeout(async () => {
             const messages = await getNewMessages(chatId, 0);
-            const resp = messages[messages.length - 1].content;
-
+            console.log(messages);
+            const resp = messages[messages.length - 2].content;
             setReportMsg(resp);
         }, 15000);
     };
@@ -69,123 +68,246 @@ const ChatMessages = ({
             console.error('Error generating user report:', error);
         }
     };
-    const handleUserResponse = (response: string) => {
-        setMessages((prevMessages) => {
-            // Avoid adding duplicate user responses
-            if (
-                prevMessages.length > 0 &&
-                prevMessages[prevMessages.length - 1].type === 'user' &&
-                prevMessages[prevMessages.length - 1].text === response
-            ) {
-                return prevMessages;
-            }
+    //     setMessages((prevMessages) => {
+    //         // Avoid adding duplicate user responses
+    //         if (
+    //             prevMessages.length > 0 &&
+    //             prevMessages[prevMessages.length - 1].type === 'user' &&
+    //             prevMessages[prevMessages.length - 1].text === response
+    //         ) {
+    //             return prevMessages;
+    //         }
 
-            // Update user profile and bot messages based on the current step
-            let newProfile = { ...userProfile };
-            let newMessages: Message[] = [];
-            let newStep = step;
+    //         // Update user profile and bot messages based on the current step
+    //         let newProfile = { ...userProfile };
+    //         let newMessages: Message[] = [];
+    //         let newStep = step;
 
-            switch (step) {
-                case 0:
-                    newProfile.age = response;
-                    newStep = 1;
-                    newMessages = [
-                        {
-                            type: 'bot',
-                            text: 'Awesome! Please select your gender?',
-                            options: ['M', 'F'],
-                        },
-                    ];
-                    break;
-                case 1:
-                    newProfile.gender = response;
-                    newStep = 2;
-                    newMessages = [
-                        {
-                            type: 'bot',
-                            text: 'Thank you! What is your height in cm?',
-                        },
-                    ];
-                    break;
-                case 2:
-                    newProfile.height = response;
-                    newStep = 3;
-                    newMessages = [
-                        {
-                            type: 'bot',
-                            text: 'Great! What is your weight in kg?',
-                        },
-                    ];
-                    break;
-                case 3:
-                    newProfile.weight = response;
-                    newStep = 4;
-                    newMessages = [
-                        {
-                            type: 'bot',
-                            text: 'Awesome! What is your fitness goal?',
-                            options: ['Muscle Building', 'Fat Loss', 'Others'],
-                        },
-                    ];
-                    break;
-                case 4:
-                    if (response === 'Others') {
-                        newStep = 5;
-                        newMessages = [
-                            {
-                                type: 'bot',
-                                text: 'Please specify your fitness goal',
-                            },
-                        ];
-                    } else {
-                        newProfile.goal = response;
-                        newStep = 6;
-                        const formattedProfile = formatUserProfile(newProfile);
-                        generateUserReport(formattedProfile);
+    //         switch (step) {
+    //             case 0:
+    //                 newProfile.age = response;
+    //                 newStep = 1;
+    //                 newMessages = [
+    //                     {
+    //                         type: 'bot',
+    //                         text: 'Awesome! Please select your gender?',
+    //                         options: ['M', 'F'],
+    //                     },
+    //                 ];
+    //                 break;
+    //             case 1:
+    //                 newProfile.gender = response;
+    //                 newStep = 2;
+    //                 newMessages = [
+    //                     {
+    //                         type: 'bot',
+    //                         text: 'Thank you! What is your height in cm?',
+    //                     },
+    //                 ];
+    //                 break;
+    //             case 2:
+    //                 newProfile.height = response;
+    //                 newStep = 3;
+    //                 newMessages = [
+    //                     {
+    //                         type: 'bot',
+    //                         text: 'Great! What is your weight in kg?',
+    //                     },
+    //                 ];
+    //                 break;
+    //             case 3:
+    //                 newProfile.weight = response;
+    //                 newStep = 4;
+    //                 newMessages = [
+    //                     {
+    //                         type: 'bot',
+    //                         text: 'Awesome! What is your fitness goal?',
+    //                         options: ['Muscle Building', 'Fat Loss', 'Others'],
+    //                     },
+    //                 ];
+    //                 break;
+    //             case 4:
+    //                 if (response === 'Others') {
+    //                     newStep = 5;
+    //                     newMessages = [
+    //                         {
+    //                             type: 'bot',
+    //                             text: 'Please specify your fitness goal',
+    //                         },
+    //                     ];
+    //                 } else {
+    //                     newProfile.goal = response;
+    //                     newStep = 6;
+    //                     const formattedProfile = formatUserProfile(newProfile);
+    //                     setMessages((prevMessages) => [
+    //                         ...prevMessages,
+    //                         {
+    //                             type: 'bot',
+    //                             text: `Thank you! Your fitness goal is ${response}. We are generating your weekly fitness plan.`,
+    //                         },
+    //                     ]);
+    //                     setMessages((prevMessages) => [
+    //                         ...prevMessages,
+    //                         {
+    //                             type: 'bot',
+    //                             text: 'msg',
+    //                         },
+    //                     ]);
+    //                     setIsChatting(true);
+    //                 }
+    //                 break;
+    //             case 5:
+    //                 newProfile.goal = response;
+    //                 newStep = 6;
+    //                 const formattedProfile = formatUserProfile(newProfile);
+    //                 generateUserReport(formattedProfile);
+    //                 newMessages = [
+    //                     {
+    //                         type: 'bot',
+    //                         text: `Thank you! Your specified fitness goal is ${response}. We are generating your weekly fitness plan.`,
+    //                     },
+    //                     {
+    //                         type: 'bot',
+    //                         text: reportMsg,
+    //                     },
+    //                 ];
+    //                 setIsChatting(true);
+    //                 break;
+    //             default:
+    //                 break;
+    //         }
 
-                        setMessages((prevMessages) => [
-                            ...prevMessages,
-                            {
-                                type: 'bot',
-                                text: `Thank you! Your fitness goal is ${response}. We are generating your weekly fitness plan.`,
-                            },
-                            {
-                                type: 'bot',
-                                text: reportMsg,
-                            },
-                        ]);
-                        setIsChatting(true);
-                    }
-                    break;
-                case 5:
+    //         setStep(newStep);
+    //         setUserProfile(newProfile);
+    //         return [
+    //             ...prevMessages,
+    //             { type: 'user', text: response },
+    //             ...newMessages,
+    //         ];
+    //     });
+    // };
+    const handleUserResponse = async (response: string) => {
+        let newProfile = { ...userProfile };
+        let newStep = step;
+        let newMessages: Message[] = [];
+
+        // Store user response
+        setMessages((prevMessages) => [
+            ...prevMessages,
+            { type: 'user', text: response },
+        ]);
+
+        // Update profile and determine next step and messages
+        switch (step) {
+            case 0:
+                newProfile.age = response;
+                newStep = 1;
+                newMessages = [
+                    {
+                        type: 'bot',
+                        text: 'Awesome! Please select your gender?',
+                        options: ['M', 'F'],
+                    },
+                ];
+                break;
+            case 1:
+                newProfile.gender = response;
+                newStep = 2;
+                newMessages = [
+                    {
+                        type: 'bot',
+                        text: 'Thank you! What is your height in cm?',
+                    },
+                ];
+                break;
+            case 2:
+                newProfile.height = response;
+                newStep = 3;
+                newMessages = [
+                    { type: 'bot', text: 'Great! What is your weight in kg?' },
+                ];
+                break;
+            case 3:
+                newProfile.weight = response;
+                newStep = 4;
+                newMessages = [
+                    {
+                        type: 'bot',
+                        text: 'Awesome! What is your fitness goal?',
+                        options: ['Muscle Building', 'Fat Loss', 'Others'],
+                    },
+                ];
+                break;
+            case 4:
+                if (response === 'Others') {
+                    newProfile.goal = response;
+                    newStep = 5;
+                    newMessages = [
+                        {
+                            type: 'bot',
+                            text: 'Please specify your fitness goal:',
+                        },
+                    ];
+                } else {
                     newProfile.goal = response;
                     newStep = 6;
-                    const formattedProfile = formatUserProfile(newProfile);
-                    generateUserReport(formattedProfile);
                     newMessages = [
                         {
                             type: 'bot',
-                            text: `Thank you! Your specified fitness goal is ${response}. We are generating your weekly fitness plan.`,
-                        },
-                        {
-                            type: 'bot',
-                            text: reportMsg,
+                            text: `Thank you! Your fitness goal is ${response}. We are generating your weekly fitness plan.`,
                         },
                     ];
-                    setIsChatting(true);
-                    break;
-                default:
-                    break;
-            }
 
-            setStep(newStep);
-            setUserProfile(newProfile);
-            return [
-                ...prevMessages,
-                { type: 'user', text: response },
-                ...newMessages,
-            ];
-        });
+                    // Format profile and generate report
+                    const formattedProfile = formatUserProfile(newProfile);
+                    await generateUserReport(formattedProfile);
+
+                    newMessages.push({
+                        type: 'bot',
+                        text: reportMsg,
+                    });
+
+                    setStep(newStep);
+                    setUserProfile(newProfile);
+                    setMessages((prevMessages) => [
+                        ...prevMessages,
+                        ...newMessages,
+                    ]);
+                    return;
+                }
+                break;
+            case 5:
+                newProfile.goal = response;
+                newStep = 6;
+                newMessages = [
+                    {
+                        type: 'bot',
+                        text: `Thank you! Your specified fitness goal is ${response}. We are generating your weekly fitness plan.`,
+                    },
+                ];
+
+                // Format profile and generate report
+                const formattedProfile = formatUserProfile(newProfile);
+                await generateUserReport(formattedProfile);
+
+                newMessages.push({
+                    type: 'bot',
+                    text: reportMsg,
+                });
+
+                setStep(newStep);
+                setUserProfile(newProfile);
+                setMessages((prevMessages) => [
+                    ...prevMessages,
+                    ...newMessages,
+                ]);
+                return;
+        }
+
+        // Update state for new step and messages
+        setStep(newStep);
+        setUserProfile(newProfile);
+        setMessages((prevMessages) => [...prevMessages, ...newMessages]);
     };
 
     const formatUserProfile = (profile: {
@@ -212,6 +334,7 @@ const ChatMessages = ({
     const handleOptionClick = (option: string) => {
         handleUserResponse(option);
     };
+    console.log(reportMsg);
 
     return (
         <div className="flex flex-col items-center h-full">
@@ -248,11 +371,7 @@ const ChatMessages = ({
                     </div>
                 ))}
             </div>
-            {(isChatting ||
-                step === 0 ||
-                step === 2 ||
-                step === 3 ||
-                step === 5) && (
+            {(step === 0 || step === 2 || step === 3 || step === 5) && (
                 <div className="flex absolute bottom-0 w-[18em] items-center">
                     <input
                         type="text"
