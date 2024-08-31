@@ -1,5 +1,8 @@
 'use client';
-import useWeb3Auth from './hooks/useWeb3Auth';
+import ChatButton from '@/components/ui/chatBot/chatbutton';
+import useWeb3Auth from '../hooks/useWeb3Auth';
+import NavBar from '@/components/ui/navBar';
+import Onboarding from '@/components/ui/onboarding/onbarding';
 
 export default function Home() {
     const { login, loggedIn, logout, getUserInfo, getAccounts } = useWeb3Auth();
@@ -20,13 +23,16 @@ export default function Home() {
         </button>
     );
     return (
-        <>
-            <div className="grid">
+        <div className=' '>
+            <NavBar />
+            <Onboarding />
+            {/* <div className="grid relative">
                 {loggedIn ? loggedInView : unloggedInView}
             </div>
             <div id="console" style={{ whiteSpace: 'pre-line' }}>
                 <p style={{ whiteSpace: 'pre-line' }}></p>
-            </div>
-        </>
+            </div> */}
+            <ChatButton />
+        </div>
     );
 }
