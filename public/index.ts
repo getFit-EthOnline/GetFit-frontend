@@ -11,6 +11,9 @@ import weighLifting5 from "./sportsImages/weighLifting5.png";
 import weightliftingHomeevents from "./sportsImages/weightliftingHomeevents.png";
 import armWrestlingEvents from "./sportsImages/armWrestlingEvents.png";
 import mmahomeEvents from "./sportsImages/mmahomeEvents.png";
+import anatolyProfilePic from "./influencerProfilePics/anatoly.jpg";
+import davidGogginsProfilePic from "./influencerProfilePics/david goggins.jpg";
+import larryWheelsProfilePic from "./influencerProfilePics/larryWheels.jpg";
 
 export {
 	logoWhite,
@@ -26,4 +29,7 @@ export {
 	weightliftingHomeevents,
 	armWrestlingEvents,
 	mmahomeEvents,
+	anatolyProfilePic,
+	davidGogginsProfilePic,
+	larryWheelsProfilePic,
 };

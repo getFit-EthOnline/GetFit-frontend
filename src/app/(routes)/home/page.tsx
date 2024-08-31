@@ -1,6 +1,7 @@
 import React from 'react'
 import { armWrestlingEvents, mmahomeEvents, weightliftingHomeevents } from '../../../../public'
 import Image from 'next/image'
+import InfluencerModal from '@/components/ui/fitnessInfluncerModal'
 
 const events = [
     {
@@ -40,6 +41,7 @@ const page = () => {
                     ))}
                 </div>
             </div>
+            <InfluencerModal />
         </div>
     )
 }
