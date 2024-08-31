@@ -40,7 +40,6 @@ const InfluencerModal = () => {
             setIsOpen(false);
         }
     }, []);
-
     const closeModal = () => {
         setUserAgnet(selectedInfluencer);
         // startFitnessRun({
@@ -58,7 +57,7 @@ const InfluencerModal = () => {
                 open={isOpen}
                 as="div"
                 className="relative z-10 focus:outline-none"
-                onClose={() => {}}
+                onClose={() => { }}
             >
                 <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
                     <div className="flex min-h-full items-center justify-center p-4">
@@ -84,11 +83,11 @@ const InfluencerModal = () => {
                                             }
                                             className="flex flex-col items-center  mt-4"
                                         >
-                                            <div className=" rounded-full bg-black ">
+                                            <div className={` rounded-full ${selectedInfluencer?.name === influencer.name ? "bg-[#B8FE22]" : ""} `}>
                                                 <Image
                                                     src={influencer.profilePic}
                                                     alt={influencer.name}
-                                                    className="w-14 h-14 object-fill  rounded-full "
+                                                    className="w-14 h-14 object-fill p-0.5 shadow-lg  rounded-full "
                                                 />
                                             </div>
                                             <div>

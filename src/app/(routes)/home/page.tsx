@@ -1,3 +1,4 @@
+"use client"
 import React from 'react';
 import {
     armWrestlingEvents,
@@ -7,6 +8,7 @@ import {
 import Image from 'next/image';
 import ChatButton from '@/components/ui/chatBot/chatbutton';
 import InfluencerModal from '@/components/ui/fitnessInfluncerModal';
+import useGlobalStore from '@/store';
 
 const events = [
     {
@@ -26,7 +28,10 @@ const events = [
     },
 ];
 
-const page = () => {
+const Page = () => {
+
+    const { userAgent } = useGlobalStore();
+    console.log(userAgent)
     return (
         <div className=" bg-[#E2E2E2]">
             <h1 className=" text-2xl capitalize font-bold">Sports Bets</h1>
@@ -50,11 +55,12 @@ const page = () => {
                         </div>
                     ))}
                 </div>
-                <ChatButton />
+                {userAgent &&
+                    <ChatButton />}
             </div>
             <InfluencerModal />
         </div>
     );
 };
 
-export default page;
+export default Page;
