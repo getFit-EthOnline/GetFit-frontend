@@ -1,59 +1,71 @@
-"use client"
-import React from 'react'
-import { logo } from '../../../public/index'
-import Image from 'next/image'
-import { motion } from 'framer-motion'
+'use client';
+import React from 'react';
+import { logo } from '../../../public/index';
+import Image from 'next/image';
+import { motion } from 'framer-motion';
+import useWeb3Auth from '@/hooks/useWeb3Auth';
 
 const navContents = [
     {
         id: 1,
-        title: "fan tokens",
-
+        title: 'fan tokens',
     },
     {
         id: 2,
-        title: "Rewards",
-
+        title: 'Rewards',
     },
     {
         id: 3,
-        title: "Marketplace",
-
+        title: 'Marketplace',
     },
-]
+];
 
 const NavBar = () => {
     return (
-        <div className=' flex shadow-lg  justify-between items-center py-4 '>
-            <div className=' flex justify-center items-center w-1/4'>
-                <Image src={logo} alt="GetFit" className='w-44 ' />
+        <div className=" flex shadow-lg  justify-between items-center py-4 ">
+            <div className=" flex justify-center items-center w-1/4">
+                <Image src={logo} alt="GetFit" className="w-44 " />
             </div>
-            <div className=' w-1/3 flex  items-center justify-around'>
+            <div className=" w-1/3 flex  items-center justify-around">
                 {navContents.map((item) => {
                     return (
-                        <div key={item.id} className=' flex items-center gap-x-1 justify-center '>
-                            <p className='capitalize'>{item.title}</p>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                        <div
+                            key={item.id}
+                            className=" flex items-center gap-x-1 justify-center "
+                        >
+                            <p className="capitalize">{item.title}</p>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth={1.5}
+                                stroke="currentColor"
+                                className="size-4"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                                />
                             </svg>
-
                         </div>
-                    )
+                    );
                 })}
             </div>
-            <div className=' items-center flex justify-center  w-1/4'>
+            <div className=" items-center flex justify-center  w-1/4">
                 <WalletConnectButton label="connect wallet" />
             </div>
-        </div >
-    )
-}
+        </div>
+    );
+};
 
-export default NavBar
-
+export default NavBar;
 
 const WalletConnectButton = ({ label }: { label: string }) => {
+    const { login } = useWeb3Auth();
     return (
         <motion.button
+            onClick={login}
             className="inline-flex overflow-hidden rounded-lg bg-[linear-gradient(120deg,#063434_calc(var(--shimmer-button-x)-25%),#063434_var(--shimmer-button-x),#063434_calc(var(--shimmer-button-x)+25%))] [--shimmer-button-x:0%] "
             initial={
                 {
@@ -87,5 +99,5 @@ const WalletConnectButton = ({ label }: { label: string }) => {
                 {label}
             </span>
         </motion.button>
-    )
-}
+    );
+};

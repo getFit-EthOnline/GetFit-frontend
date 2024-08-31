@@ -30,7 +30,8 @@ const web3auth = new Web3Auth({
 
 const openloginAdapter = new OpenloginAdapter({
     adapterSettings: {
-        uxMode: 'popup',
+        uxMode: 'redirect',
+        redirectUrl: 'http://localhost:3000/home',
         whiteLabel: {
             appName: 'Get Fit',
             appUrl: 'https://web3auth.io',
@@ -65,6 +66,12 @@ web3auth.configureAdapter(openloginAdapter);
 function useWeb3Auth() {
     const [provider, setProvider] = useState<IProvider | null>(null);
     const [loggedIn, setLoggedIn] = useState(false);
+    const [address, setAddress] = useState<string | null>('');
+    useEffect(() => {
+        if (loggedIn) {
+            getAccounts();
+        }
+    }, [loggedIn]);
     useEffect(() => {
         const init = async () => {
             try {
@@ -99,6 +106,7 @@ function useWeb3Auth() {
         // IMP END - Logout
         setProvider(null);
         setLoggedIn(false);
+        setAddress('');
     };
 
     const getAccounts = async () => {
@@ -109,12 +117,12 @@ function useWeb3Auth() {
         const signer = await ethersProvider.getSigner();
         const addr = signer.getAddress();
         const address = await addr;
-        console.log(address);
+        setAddress(address);
     };
     const getUserInfo = async () => {
         const user = await web3auth.getUserInfo();
         console.log(user);
     };
-    return { login, loggedIn, logout, getAccounts, getUserInfo };
+    return { login, loggedIn, logout, address, getUserInfo };
 }
 export default useWeb3Auth;
