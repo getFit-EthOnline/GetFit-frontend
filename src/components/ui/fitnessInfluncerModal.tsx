@@ -1,15 +1,14 @@
 'use client';
+import { getNewMessages, startFitnessRun } from '@/contracts/galadriel';
+import useGlobalStore, { userAgentProps } from '@/store';
 import { Button, Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
-import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import {
     anatolyProfilePic,
     davidGogginsProfilePic,
     larryWheelsProfilePic,
 } from '../../../public';
-import Image from 'next/image';
-import useGlobalStore, { userAgentProps } from '@/store';
-import { startFitnessRun } from '@/contracts/galadriel';
-import useWeb3Auth from '@/hooks/useWeb3Auth';
 const InfluencerDetails = [
     {
         id: 1,
@@ -28,26 +27,28 @@ const InfluencerDetails = [
     },
 ];
 
-const InfluencerModal = () => {
+const InfluencerModal = ({ provider }: { provider: any }) => {
     const [isOpen, setIsOpen] = useState(true);
     const [selectedInfluencer, setSelectedInfluencer] =
         useState<userAgentProps | null>(null);
-    const { provider } = useWeb3Auth();
-    const { setUserAgnet } = useGlobalStore();
+    const { userAgent, setUserAgnet, setAgentFirstMessage } = useGlobalStore();
     useEffect(() => {
         const hasModalBeenShown = localStorage.getItem('hasModalBeenShown');
         if (hasModalBeenShown) {
             setIsOpen(false);
         }
     }, []);
-    const closeModal = () => {
-        setUserAgnet(selectedInfluencer);
-        // startFitnessRun({
-        //     message:
-        //         'Age 43, Sex M, fitness goal muscle gain, diet vegan. Create the weekly workout schedule',
-        //     provider,
-        // });
 
+    const closeModal = async () => {
+        setUserAgnet(selectedInfluencer);
+        const resp = await startFitnessRun({
+            message: `Create a fitness motivational quote for the influencer ${userAgent?.name}`,
+            provider,
+        });
+        if (resp.runId) {
+            const messages = await getNewMessages(resp.runId, 0);
+            setAgentFirstMessage(messages[1].content);
+        }
         localStorage.setItem('hasModalBeenShown', 'true');
         setIsOpen(false);
     };
@@ -57,7 +58,7 @@ const InfluencerModal = () => {
                 open={isOpen}
                 as="div"
                 className="relative z-10 focus:outline-none"
-                onClose={() => { }}
+                onClose={() => {}}
             >
                 <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
                     <div className="flex min-h-full items-center justify-center p-4">
@@ -83,7 +84,14 @@ const InfluencerModal = () => {
                                             }
                                             className="flex flex-col items-center  mt-4"
                                         >
-                                            <div className={` rounded-full ${selectedInfluencer?.name === influencer.name ? "bg-[#B8FE22]" : ""} `}>
+                                            <div
+                                                className={` rounded-full ${
+                                                    selectedInfluencer?.name ===
+                                                    influencer.name
+                                                        ? 'bg-[#B8FE22]'
+                                                        : ''
+                                                } `}
+                                            >
                                                 <Image
                                                     src={influencer.profilePic}
                                                     alt={influencer.name}

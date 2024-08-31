@@ -1,4 +1,4 @@
-"use client"
+'use client';
 import React from 'react';
 import {
     armWrestlingEvents,
@@ -8,6 +8,7 @@ import {
 import Image from 'next/image';
 import ChatButton from '@/components/ui/chatBot/chatbutton';
 import InfluencerModal from '@/components/ui/fitnessInfluncerModal';
+import useWeb3Auth from '@/hooks/useWeb3Auth';
 import useGlobalStore from '@/store';
 
 const events = [
@@ -29,9 +30,8 @@ const events = [
 ];
 
 const Page = () => {
-
+    const { loggedIn, provider } = useWeb3Auth();
     const { userAgent } = useGlobalStore();
-    console.log(userAgent)
     return (
         <div className=" bg-[#E2E2E2]">
             <h1 className=" text-2xl capitalize font-bold">Sports Bets</h1>
@@ -55,10 +55,9 @@ const Page = () => {
                         </div>
                     ))}
                 </div>
-                {userAgent &&
-                    <ChatButton />}
+                {userAgent && <ChatButton />}
             </div>
-            <InfluencerModal />
+            {loggedIn && <InfluencerModal provider={provider} />}
         </div>
     );
 };

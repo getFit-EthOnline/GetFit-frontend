@@ -6,6 +6,7 @@ import {
     Message,
     startFitnessRunProps,
 } from '../../types/types';
+import { FITNESS_AGENT_ADDRESS } from '@/config/addresses';
 // Contract address for the FitnessAgent
 
 // Function to start a new fitness run
