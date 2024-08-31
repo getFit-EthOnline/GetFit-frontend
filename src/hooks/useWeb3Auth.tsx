@@ -123,6 +123,6 @@ function useWeb3Auth() {
         const user = await web3auth.getUserInfo();
         console.log(user);
     };
-    return { login, loggedIn, logout, address, getUserInfo };
+    return { login, loggedIn, logout, address, getUserInfo, provider };
 }
 export default useWeb3Auth;

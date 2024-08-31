@@ -1,8 +1,13 @@
+import { StaticImageData } from 'next/image';
 import { create } from 'zustand';
-
+export interface userAgentProps {
+    id: number;
+    name: string;
+    profilePic: StaticImageData;
+}
 interface GlobalStore {
-    userAgent: string | null;
-    setUserAgnet: (agent: string | null) => void;
+    userAgent: userAgentProps | null;
+    setUserAgnet: (agent: userAgentProps | null) => void;
 }
 
 const useGlobalStore = create<GlobalStore>()((set) => ({
