@@ -23,7 +23,7 @@ export default function Home() {
         </button>
     );
     return (
-        <div className=' '>
+        <div className=" ">
             <NavBar />
             <Onboarding />
             {/* <div className="grid relative">
