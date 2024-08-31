@@ -1,15 +1,14 @@
 'use client';
-import React from 'react';
+import ChatButton from '@/components/ui/chatBot/chatbutton';
+import InfluencerModal from '@/components/ui/fitnessInfluncerModal';
+import useWeb3Auth from '@/hooks/useWeb3Auth';
+import Image from 'next/image';
 import {
     armWrestlingEvents,
     mmahomeEvents,
     weightliftingHomeevents,
 } from '../../../../public';
-import Image from 'next/image';
-import ChatButton from '@/components/ui/chatBot/chatbutton';
-import InfluencerModal from '@/components/ui/fitnessInfluncerModal';
-import useWeb3Auth from '@/hooks/useWeb3Auth';
-import useGlobalStore from '@/store';
+import { useState } from 'react';
 
 const events = [
     {
@@ -31,7 +30,7 @@ const events = [
 
 const Page = () => {
     const { loggedIn, provider } = useWeb3Auth();
-    const { userAgent } = useGlobalStore();
+    const [chatId, setChatId] = useState(0);
     return (
         <div className=" bg-[#E2E2E2]">
             <h1 className=" text-2xl capitalize font-bold">Sports Bets</h1>
@@ -55,9 +54,11 @@ const Page = () => {
                         </div>
                     ))}
                 </div>
-                {userAgent && <ChatButton />}
+                {<ChatButton chatId={chatId} />}
             </div>
-            {loggedIn && <InfluencerModal provider={provider} />}
+            {loggedIn && (
+                <InfluencerModal provider={provider} setChatId={setChatId} />
+            )}
         </div>
     );
 };

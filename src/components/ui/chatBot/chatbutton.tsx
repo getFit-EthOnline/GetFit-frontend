@@ -4,9 +4,11 @@ import ChatMessages from './chatMessages';
 import useGlobalStore from '@/store';
 import Image from 'next/image';
 import Bell from '../../../../public/icons/bell.png';
-const ChatButton = () => {
+import useWeb3Auth from '@/hooks/useWeb3Auth';
+const ChatButton = ({ chatId }: { chatId: number }) => {
     const [open, setOpen] = useState(false);
     const { userAgent } = useGlobalStore();
+    const { provider } = useWeb3Auth();
     return (
         <div className="fixed bottom-0 right-0 w-[300px]   overflow-hidden   ">
             <div
@@ -67,7 +69,7 @@ const ChatButton = () => {
             </div>
             {open && (
                 <div className=" no-scrollbar overflow-y-scroll transition-all ease-in-out duration-200  min-h-[calc(100vh-300px)]  max-h-[calc(100vh-300px)] bg-slate-100 mx-1   p-2 ">
-                    <ChatMessages />
+                    <ChatMessages chatId={chatId} provider={provider} />
                 </div>
             )}
         </div>

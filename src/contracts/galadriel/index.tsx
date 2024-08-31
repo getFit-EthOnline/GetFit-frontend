@@ -49,6 +49,7 @@ export async function addMessage({
     if (!provider) {
         throw new Error('Provider not found');
     }
+    console.log(message);
 
     const web3 = new Web3(provider);
     const accounts = await web3.eth.getAccounts();

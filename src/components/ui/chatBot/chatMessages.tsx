@@ -1,91 +1,201 @@
 'use client';
-import useGlobalStore from '@/store';
-import React, { useEffect, useState } from 'react';
 
-const ChatMessages = () => {
-    const [messages, setMessages] = useState<
-        { type: string; text: string | null; options?: string[] }[]
-    >([]);
-    const [userResponse, setUserResponse] = useState('');
-    const [step, setStep] = useState(0);
+import { addMessage, getNewMessages } from '@/contracts/galadriel';
+import useGlobalStore from '@/store';
+import React, { useEffect, useState, useCallback } from 'react';
+
+interface Message {
+    type: 'bot' | 'user';
+    text: string | null;
+    options?: string[];
+}
+
+const ChatMessages = ({
+    chatId,
+    provider,
+}: {
+    chatId: number;
+    provider: any;
+}) => {
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [reportMsg, setReportMsg] = useState<string>('');
+    const [userResponse, setUserResponse] = useState<string>('');
+    const [step, setStep] = useState<number>(0);
+    const [isChatting, setIsChatting] = useState<boolean>(false);
+
+    const [userProfile, setUserProfile] = useState<{
+        age: string;
+        gender: string;
+        height: string;
+        weight: string;
+        goal: string;
+    }>({
+        age: '',
+        gender: '',
+        height: '',
+        weight: '',
+        goal: '',
+    });
+
     const { agentFirstMessage } = useGlobalStore();
-    console.log(userResponse);
+
     useEffect(() => {
-        // Greet the user with a motivational quote
         setMessages([
-            {
-                type: 'bot',
-                text: agentFirstMessage,
-            },
+            { type: 'bot', text: agentFirstMessage },
             { type: 'bot', text: 'What is your age?' },
         ]);
-    }, []);
+    }, [agentFirstMessage]);
 
-    const handleUserResponse = (response: string) => {
-        setMessages((prevMessages) => [
-            ...prevMessages,
-            { type: 'user', text: response },
-        ]);
+    const fetchMessages = () => {
+        setTimeout(async () => {
+            const messages = await getNewMessages(chatId, 0);
+            const resp = messages[messages.length - 1].content;
 
-        if (step === 0) {
-            setStep(1);
-            setMessages((prevMessages) => [
-                ...prevMessages,
-                {
-                    type: 'bot',
-                    text: 'Awesome! Please select your gender?',
-                    options: ['M', 'F'],
-                },
-            ]);
-        } else if (step === 1) {
-            setStep(2);
-            setMessages((prevMessages) => [
-                ...prevMessages,
-                { type: 'bot', text: 'Thank you! What is your height in cm?' },
-            ]);
-        } else if (step === 2) {
-            setStep(3);
-            setMessages((prevMessages) => [
-                ...prevMessages,
-                { type: 'bot', text: 'Great! What is your weight in kg?' },
-            ]);
-        } else if (step === 3) {
-            setStep(4);
-            setMessages((prevMessages) => [
-                ...prevMessages,
-                {
-                    type: 'bot',
-                    text: 'Awesome! What is your fitness goal?',
-                    options: ['Muscle Building', 'Fat Loss', 'Others'],
-                },
-            ]);
-        } else if (step === 4) {
-            if (response === 'Others') {
-                setStep(5);
-                setMessages((prevMessages) => [
-                    ...prevMessages,
-                    { type: 'bot', text: 'Please specify your fitness goal:' },
-                ]);
-            } else {
-                setMessages((prevMessages) => [
-                    ...prevMessages,
-                    {
-                        type: 'bot',
-                        text: `Thank you! Your fitness goal is ${response}. Let's get started!`,
-                    },
-                ]);
-                setStep(6);
+            setReportMsg(resp);
+        }, 15000);
+    };
+
+    const generateUserReport = async (formattedProfile: string) => {
+        try {
+            const response = await addMessage({
+                message: formattedProfile,
+                agentRunID: chatId,
+                provider,
+            });
+            if (response.dispatch) {
+                fetchMessages();
             }
-        } else if (step === 5) {
-            setMessages((prevMessages) => [
-                ...prevMessages,
-                {
-                    type: 'bot',
-                    text: `Thank you! Your specified fitness goal is ${response}. Let's get started!`,
-                },
-            ]);
-            setStep(7);
+        } catch (error) {
+            console.error('Error generating user report:', error);
         }
+    };
+    const handleUserResponse = (response: string) => {
+        setMessages((prevMessages) => {
+            // Avoid adding duplicate user responses
+            if (
+                prevMessages.length > 0 &&
+                prevMessages[prevMessages.length - 1].type === 'user' &&
+                prevMessages[prevMessages.length - 1].text === response
+            ) {
+                return prevMessages;
+            }
+
+            // Update user profile and bot messages based on the current step
+            let newProfile = { ...userProfile };
+            let newMessages: Message[] = [];
+            let newStep = step;
+
+            switch (step) {
+                case 0:
+                    newProfile.age = response;
+                    newStep = 1;
+                    newMessages = [
+                        {
+                            type: 'bot',
+                            text: 'Awesome! Please select your gender?',
+                            options: ['M', 'F'],
+                        },
+                    ];
+                    break;
+                case 1:
+                    newProfile.gender = response;
+                    newStep = 2;
+                    newMessages = [
+                        {
+                            type: 'bot',
+                            text: 'Thank you! What is your height in cm?',
+                        },
+                    ];
+                    break;
+                case 2:
+                    newProfile.height = response;
+                    newStep = 3;
+                    newMessages = [
+                        {
+                            type: 'bot',
+                            text: 'Great! What is your weight in kg?',
+                        },
+                    ];
+                    break;
+                case 3:
+                    newProfile.weight = response;
+                    newStep = 4;
+                    newMessages = [
+                        {
+                            type: 'bot',
+                            text: 'Awesome! What is your fitness goal?',
+                            options: ['Muscle Building', 'Fat Loss', 'Others'],
+                        },
+                    ];
+                    break;
+                case 4:
+                    if (response === 'Others') {
+                        newStep = 5;
+                        newMessages = [
+                            {
+                                type: 'bot',
+                                text: 'Please specify your fitness goal',
+                            },
+                        ];
+                    } else {
+                        newProfile.goal = response;
+                        newStep = 6;
+                        const formattedProfile = formatUserProfile(newProfile);
+                        generateUserReport(formattedProfile);
+
+                        setMessages((prevMessages) => [
+                            ...prevMessages,
+                            {
+                                type: 'bot',
+                                text: `Thank you! Your fitness goal is ${response}. We are generating your weekly fitness plan.`,
+                            },
+                            {
+                                type: 'bot',
+                                text: reportMsg,
+                            },
+                        ]);
+                        setIsChatting(true);
+                    }
+                    break;
+                case 5:
+                    newProfile.goal = response;
+                    newStep = 6;
+                    const formattedProfile = formatUserProfile(newProfile);
+                    generateUserReport(formattedProfile);
+                    newMessages = [
+                        {
+                            type: 'bot',
+                            text: `Thank you! Your specified fitness goal is ${response}. We are generating your weekly fitness plan.`,
+                        },
+                        {
+                            type: 'bot',
+                            text: reportMsg,
+                        },
+                    ];
+                    setIsChatting(true);
+                    break;
+                default:
+                    break;
+            }
+
+            setStep(newStep);
+            setUserProfile(newProfile);
+            return [
+                ...prevMessages,
+                { type: 'user', text: response },
+                ...newMessages,
+            ];
+        });
+    };
+
+    const formatUserProfile = (profile: {
+        age: string;
+        gender: string;
+        height: string;
+        weight: string;
+        goal: string;
+    }): string => {
+        return `Age ${profile.age}, Sex ${profile.gender}, height ${profile.height} cm, weight ${profile.weight} kg, fitness goal ${profile.goal}. Create the weekly workout schedule for the attached profile.`;
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -93,7 +203,7 @@ const ChatMessages = () => {
     };
 
     const handleSend = () => {
-        if (userResponse.trim() !== '') {
+        if (userResponse.trim()) {
             handleUserResponse(userResponse.trim());
             setUserResponse('');
         }
@@ -104,8 +214,8 @@ const ChatMessages = () => {
     };
 
     return (
-        <div className="flex flex-col items-center h-full ">
-            <div className=" w-full mb-10 space-y-3">
+        <div className="flex flex-col items-center h-full">
+            <div className="w-full mb-10 space-y-3">
                 {messages.map((message, index) => (
                     <div
                         key={index}
@@ -117,18 +227,18 @@ const ChatMessages = () => {
                                 : 'bg-green-200'
                         }`}
                     >
-                        <p className="text-gray-800  px-4 mx-2 text-sm">
+                        <p className="text-gray-800 px-4 mx-2 text-sm">
                             {message.text}
                         </p>
                         {message.options && (
-                            <div className="flex justify-center  space-x-2 ">
+                            <div className="flex justify-center space-x-2">
                                 {message.options.map((option, idx) => (
                                     <button
                                         key={idx}
                                         onClick={() =>
                                             handleOptionClick(option)
                                         }
-                                        className="bg-blue-500 text-white  p-1 px-2 w-fit text-xs rounded-md hover:bg-blue-600"
+                                        className="bg-blue-500 text-white p-1 px-2 w-fit text-xs rounded-md hover:bg-blue-600"
                                     >
                                         {option}
                                     </button>
@@ -138,14 +248,18 @@ const ChatMessages = () => {
                     </div>
                 ))}
             </div>
-            {(step === 0 || step === 3 || step === 2 || step === 5) && (
-                <div className=" flex absolute bottom-0 w-[18em] items-center  ">
+            {(isChatting ||
+                step === 0 ||
+                step === 2 ||
+                step === 3 ||
+                step === 5) && (
+                <div className="flex absolute bottom-0 w-[18em] items-center">
                     <input
                         type="text"
                         value={userResponse}
                         onChange={handleInputChange}
                         placeholder="Type your response..."
-                        className="w-full px-4 py-2 border rounded-l-md focus:outline-none  focus:ring-blue-400"
+                        className="w-full px-4 py-2 border rounded-l-md focus:outline-none focus:ring-blue-400"
                     />
                     <button
                         onClick={handleSend}

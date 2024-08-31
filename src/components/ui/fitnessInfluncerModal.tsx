@@ -27,30 +27,41 @@ const InfluencerDetails = [
     },
 ];
 
-const InfluencerModal = ({ provider }: { provider: any }) => {
+const InfluencerModal = ({
+    provider,
+    setChatId,
+}: {
+    provider: any;
+    setChatId: React.Dispatch<React.SetStateAction<number>>;
+}) => {
     const [isOpen, setIsOpen] = useState(true);
     const [selectedInfluencer, setSelectedInfluencer] =
         useState<userAgentProps | null>(null);
-    const { userAgent, setUserAgnet, setAgentFirstMessage } = useGlobalStore();
+    const { setUserAgnet, setAgentFirstMessage } = useGlobalStore();
     useEffect(() => {
         const hasModalBeenShown = localStorage.getItem('hasModalBeenShown');
         if (hasModalBeenShown) {
             setIsOpen(false);
         }
     }, []);
-
+    const fetchMessages = async (resp: number) => {
+        setTimeout(async () => {
+            const messages = await getNewMessages(resp, 0);
+            setAgentFirstMessage(messages[1].content);
+            localStorage.setItem('hasModalBeenShown', 'true');
+            setIsOpen(false);
+        }, 15000);
+    };
     const closeModal = async () => {
         setUserAgnet(selectedInfluencer);
         const resp = await startFitnessRun({
-            message: `Create a fitness motivational quote for the influencer ${userAgent?.name}`,
+            message: `Create a fitness motivational quote from the influencer ${selectedInfluencer?.name}`,
             provider,
         });
         if (resp.runId) {
-            const messages = await getNewMessages(resp.runId, 0);
-            setAgentFirstMessage(messages[1].content);
+            setChatId(resp.runId);
+            fetchMessages(resp.runId);
         }
-        localStorage.setItem('hasModalBeenShown', 'true');
-        setIsOpen(false);
     };
     return (
         <div>
