@@ -84,11 +84,18 @@ const InfluencerModal = ({ provider }: { provider: any }) => {
                                             }
                                             className="flex flex-col items-center  mt-4"
                                         >
-                                            <div className=" rounded-full bg-black ">
+                                            <div
+                                                className={` rounded-full ${
+                                                    selectedInfluencer?.name ===
+                                                    influencer.name
+                                                        ? 'bg-[#B8FE22]'
+                                                        : ''
+                                                } `}
+                                            >
                                                 <Image
                                                     src={influencer.profilePic}
                                                     alt={influencer.name}
-                                                    className="w-14 h-14 object-fill  rounded-full "
+                                                    className="w-14 h-14 object-fill p-0.5 shadow-lg  rounded-full "
                                                 />
                                             </div>
                                             <div>
