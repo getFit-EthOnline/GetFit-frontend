@@ -1,15 +1,14 @@
 'use client';
+import { getNewMessages, startFitnessRun } from '@/contracts/galadriel';
+import useGlobalStore, { userAgentProps } from '@/store';
 import { Button, Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
-import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import {
     anatolyProfilePic,
     davidGogginsProfilePic,
     larryWheelsProfilePic,
 } from '../../../public';
-import Image from 'next/image';
-import useGlobalStore, { userAgentProps } from '@/store';
-import { startFitnessRun } from '@/contracts/galadriel';
-import useWeb3Auth from '@/hooks/useWeb3Auth';
 const InfluencerDetails = [
     {
         id: 1,
@@ -28,12 +27,11 @@ const InfluencerDetails = [
     },
 ];
 
-const InfluencerModal = () => {
+const InfluencerModal = ({ provider }: { provider: any }) => {
     const [isOpen, setIsOpen] = useState(true);
     const [selectedInfluencer, setSelectedInfluencer] =
         useState<userAgentProps | null>(null);
-    const { provider } = useWeb3Auth();
-    const { setUserAgnet } = useGlobalStore();
+    const { userAgent, setUserAgnet, setAgentFirstMessage } = useGlobalStore();
     useEffect(() => {
         const hasModalBeenShown = localStorage.getItem('hasModalBeenShown');
         if (hasModalBeenShown) {
@@ -41,14 +39,16 @@ const InfluencerModal = () => {
         }
     }, []);
 
-    const closeModal = () => {
+    const closeModal = async () => {
         setUserAgnet(selectedInfluencer);
-        // startFitnessRun({
-        //     message:
-        //         'Age 43, Sex M, fitness goal muscle gain, diet vegan. Create the weekly workout schedule',
-        //     provider,
-        // });
-
+        const resp = await startFitnessRun({
+            message: `Create a fitness motivational quote for the influencer ${userAgent?.name}`,
+            provider,
+        });
+        if (resp.runId) {
+            const messages = await getNewMessages(resp.runId, 0);
+            setAgentFirstMessage(messages[1].content);
+        }
         localStorage.setItem('hasModalBeenShown', 'true');
         setIsOpen(false);
     };

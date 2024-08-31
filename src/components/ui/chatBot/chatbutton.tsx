@@ -6,7 +6,6 @@ import Image from 'next/image';
 import Bell from '../../../../public/icons/bell.png';
 const ChatButton = () => {
     const [open, setOpen] = useState(false);
-    const [loading, setLoading] = useState(false);
     const { userAgent } = useGlobalStore();
     return (
         <div className="fixed bottom-0 right-0 w-[300px]   overflow-hidden   ">

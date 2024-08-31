@@ -10,12 +10,12 @@ const clientId =
 
 const chainConfig = {
     chainNamespace: CHAIN_NAMESPACES.EIP155,
-    chainId: '0xaa36a7',
-    rpcTarget: 'https://rpc.ankr.com/eth_sepolia',
-    displayName: 'Ethereum Sepolia Testnet',
-    blockExplorerUrl: 'https://sepolia.etherscan.io',
-    ticker: 'ETH',
-    tickerName: 'Ethereum',
+    chainId: '0xaa289',
+    rpcTarget: 'https://devnet.galadriel.com',
+    displayName: 'Galadriel Devnet',
+    blockExplorerUrl: 'https://explorer.galadriel.com',
+    ticker: 'GAL',
+    tickerName: 'Galadriel',
     logo: 'https://cryptologos.cc/logos/ethereum-eth-logo.png',
 };
 const privateKeyProvider = new EthereumPrivateKeyProvider({

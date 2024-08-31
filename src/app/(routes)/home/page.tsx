@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import {
     armWrestlingEvents,
@@ -7,6 +8,7 @@ import {
 import Image from 'next/image';
 import ChatButton from '@/components/ui/chatBot/chatbutton';
 import InfluencerModal from '@/components/ui/fitnessInfluncerModal';
+import useWeb3Auth from '@/hooks/useWeb3Auth';
 
 const events = [
     {
@@ -26,7 +28,8 @@ const events = [
     },
 ];
 
-const page = () => {
+const Page = () => {
+    const { loggedIn, provider } = useWeb3Auth();
     return (
         <div className=" bg-[#E2E2E2]">
             <h1 className=" text-2xl capitalize font-bold">Sports Bets</h1>
@@ -52,9 +55,9 @@ const page = () => {
                 </div>
                 <ChatButton />
             </div>
-            <InfluencerModal />
+            {loggedIn && <InfluencerModal provider={provider} />}
         </div>
     );
 };
 
-export default page;
+export default Page;
