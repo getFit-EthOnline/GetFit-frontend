@@ -1,16 +1,11 @@
 'use client';
-import Web3 from 'web3';
-import {
-    getNewMessages,
-    startFitnessRun,
-    addMessage,
-    sendTestTokens,
-} from '../contracts/galadriel';
+import ChatButton from '@/components/ui/chatBot/chatbutton';
 import useWeb3Auth from '../hooks/useWeb3Auth';
+import NavBar from '@/components/ui/navBar';
+import Onboarding from '@/components/ui/onboarding/onbarding';
 
 export default function Home() {
-    const { login, loggedIn, logout, getUserInfo, getAccounts, provider } =
-        useWeb3Auth();
+    const { login, loggedIn, logout, getUserInfo, getAccounts } = useWeb3Auth();
     const loggedInView = (
         <>
             <button onClick={logout}>Log Out</button>{' '}
@@ -27,49 +22,17 @@ export default function Home() {
             Login
         </button>
     );
-
-    const handleDelay = (id: number) => {
-        setTimeout(async () => {
-            const data = await getNewMessages(id, 0);
-            console.log(data);
-        }, 15000);
-    };
     return (
-        <>
-            <div className="grid">
+        <div className=" ">
+            <NavBar />
+            <Onboarding />
+            {/* <div className="grid relative">
                 {loggedIn ? loggedInView : unloggedInView}
-            </div>
-            <div
-                className="p-20"
-                onClick={async () => {
-                    const res = await sendTestTokens();
-                    console.log(res);
-                }}
-            >
-                send test token to user address
             </div>
             <div id="console" style={{ whiteSpace: 'pre-line' }}>
                 <p style={{ whiteSpace: 'pre-line' }}></p>
-            </div>
-            <div
-                onClick={async () => {
-                    //   const res = await startFitnessRun({
-                    //     message:
-                    //       "Age 43, Sex M, fitness goal muscle gain, diet vegan. Create the weekly workout schedule",
-                    //     provider,
-                    //   });
-                    //   const res = await addMessage({
-                    //     message: "Send the diet schedule for the above workout",
-                    //     agentRunID: 1,
-                    //     provider,
-                    //   });
-                    //   if (res.runId) {
-                    handleDelay(1);
-                    //   }
-                }}
-            >
-                start fitness
-            </div>
-        </>
+            </div> */}
+            <ChatButton />
+        </div>
     );
 }
