@@ -12,13 +12,7 @@ interface Message {
     options?: string[];
 }
 
-const ChatMessages = ({
-    chatId,
-    provider,
-}: {
-    chatId: number;
-    provider: any;
-}) => {
+const ChatMessages = ({ chatId }: { chatId: number }) => {
     const [downloadUrl, setDownloadUrl] = useState('');
     const [messages, setMessages] = useState<Message[]>([]);
     const [userResponse, setUserResponse] = useState<string>('');
@@ -41,7 +35,7 @@ const ChatMessages = ({
         goal: '',
     });
 
-    const { agentFirstMessage } = useGlobalStore();
+    const { provider, agentFirstMessage } = useGlobalStore();
 
     useEffect(() => {
         setMessages([
@@ -240,7 +234,6 @@ const ChatMessages = ({
     const handleOptionClick = (option: string) => {
         handleUserResponse(option);
     };
-    console.log(chatId);
     return (
         <div className="flex flex-col no-scrollbar items-center ">
             <div

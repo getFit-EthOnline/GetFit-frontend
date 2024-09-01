@@ -8,6 +8,8 @@ export interface userAgentProps {
 interface GlobalStore {
     address: string | null;
     setAddress: (address: string | null) => void;
+    provider: any;
+    setProvider: (provider: any) => void;
     userAgent: userAgentProps | null;
     setUserAgnet: (agent: userAgentProps | null) => void;
     agentFirstMessage: string | null;
@@ -17,6 +19,8 @@ interface GlobalStore {
 const useGlobalStore = create<GlobalStore>()((set) => ({
     address: '',
     setAddress: (address) => set({ address }),
+    provider: null,
+    setProvider: (provider) => set({ provider }),
     userAgent: null,
     setUserAgnet: (agent) => set({ userAgent: agent }),
     agentFirstMessage: null,

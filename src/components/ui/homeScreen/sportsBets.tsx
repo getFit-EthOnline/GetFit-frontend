@@ -42,7 +42,7 @@ const SportsBets = ({
     selected: string;
     setSelected: any;
 }) => {
-    const { loggedIn, provider } = useWeb3Auth();
+    const { loggedIn } = useWeb3Auth();
     const [chatId, setChatId] = useState(0);
     return (
         <div className="mx-20">
@@ -80,9 +80,7 @@ const SportsBets = ({
                 </div>
                 {loggedIn && <ChatButton chatId={chatId} />}
             </div>
-            {loggedIn && (
-                <InfluencerModal provider={provider} setChatId={setChatId} />
-            )}
+            {loggedIn && <InfluencerModal setChatId={setChatId} />}
         </div>
     );
 };

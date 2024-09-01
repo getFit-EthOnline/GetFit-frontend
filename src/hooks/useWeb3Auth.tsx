@@ -67,9 +67,8 @@ const openloginAdapter = new OpenloginAdapter({
 });
 web3auth.configureAdapter(openloginAdapter);
 function useWeb3Auth() {
-    const [provider, setProvider] = useState<IProvider | null>(null);
     const [loggedIn, setLoggedIn] = useState(false);
-    const { setAddress } = useGlobalStore();
+    const { provider, setAddress, setProvider } = useGlobalStore();
     useEffect(() => {
         if (loggedIn) {
             getAccounts();
@@ -129,6 +128,6 @@ function useWeb3Auth() {
         const user = await web3auth.getUserInfo();
         console.log(user);
     };
-    return { login, loggedIn, logout, getUserInfo, provider };
+    return { login, loggedIn, logout, getUserInfo };
 }
 export default useWeb3Auth;

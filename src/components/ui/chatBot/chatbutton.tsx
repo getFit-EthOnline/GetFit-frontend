@@ -8,8 +8,6 @@ import useWeb3Auth from '@/hooks/useWeb3Auth';
 const ChatButton = ({ chatId }: { chatId: number }) => {
     const [open, setOpen] = useState(false);
     const { userAgent } = useGlobalStore();
-    const { provider } = useWeb3Auth();
-
     return (
         <div className="fixed bottom-0 right-0 w-[400px]   overflow-hidden z-50  ">
             <div
@@ -70,7 +68,7 @@ const ChatButton = ({ chatId }: { chatId: number }) => {
             </div>
             {open && (
                 <div className=" no-scrollbar overflow-x-hidden overflow-y-scroll transition-all ease-in-out duration-200  min-h-[calc(100vh-300px)]  max-h-[calc(100vh-300px)] bg-slate-100  mx-1 p-2">
-                    <ChatMessages chatId={chatId} provider={provider} />
+                    <ChatMessages chatId={chatId}  />
                 </div>
             )}
         </div>

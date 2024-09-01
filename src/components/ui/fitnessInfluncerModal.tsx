@@ -29,16 +29,14 @@ const InfluencerDetails = [
 ];
 
 const InfluencerModal = ({
-    provider,
     setChatId,
 }: {
-    provider: any;
     setChatId: React.Dispatch<React.SetStateAction<number>>;
 }) => {
     const [isOpen, setIsOpen] = useState(true);
     const [selectedInfluencer, setSelectedInfluencer] =
         useState<userAgentProps | null>(null);
-    const { setUserAgnet, setAgentFirstMessage } = useGlobalStore();
+    const { provider, setUserAgnet, setAgentFirstMessage } = useGlobalStore();
     const [loading, setLoading] = useState(false);
     useEffect(() => {
         const hasModalBeenShown = localStorage.getItem('hasModalBeenShown');
