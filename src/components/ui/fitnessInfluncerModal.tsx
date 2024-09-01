@@ -9,6 +9,7 @@ import {
     davidGogginsProfilePic,
     larryWheelsProfilePic,
 } from '../../../public';
+import SpiralLoader from './loader';
 const InfluencerDetails = [
     {
         id: 1,
@@ -38,6 +39,7 @@ const InfluencerModal = ({
     const [selectedInfluencer, setSelectedInfluencer] =
         useState<userAgentProps | null>(null);
     const { setUserAgnet, setAgentFirstMessage } = useGlobalStore();
+    const [loading, setLoading] = useState(false);
     useEffect(() => {
         const hasModalBeenShown = localStorage.getItem('hasModalBeenShown');
         if (hasModalBeenShown) {
@@ -46,9 +48,11 @@ const InfluencerModal = ({
     }, []);
     const fetchMessages = async (resp: number) => {
         setTimeout(async () => {
+            setLoading(true);
             const messages = await getNewMessages(resp, 0);
             setAgentFirstMessage(messages[1].content);
             localStorage.setItem('hasModalBeenShown', 'true');
+            setLoading(false);
             setIsOpen(false);
         }, 15000);
     };
@@ -121,13 +125,14 @@ const InfluencerModal = ({
                                     );
                                 })}
                             </div>
-                            <div className="mt-4">
+                            <div className="mt-4  ">
                                 <Button
-                                    className="inline-flex items-center gap-2 rounded-md bg-gray-700 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[focus]:outline-1 data-[focus]:outline-white data-[open]:bg-gray-700"
+                                    className="inline-flex items-center gap-2 rounded-md bg-gray-700 p-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[focus]:outline-1 data-[focus]:outline-white data-[open]:bg-gray-700"
                                     disabled={!selectedInfluencer}
                                     onClick={closeModal}
                                 >
-                                    Start your fitness journey now
+                                    <p> Start your fitness journey now</p>
+                                    {loading && <SpiralLoader />}
                                 </Button>
                             </div>
                         </DialogPanel>

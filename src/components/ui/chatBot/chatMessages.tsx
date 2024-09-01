@@ -69,7 +69,7 @@ const ChatMessages = ({
     }, [messages, isTyping]);
 
     const fetchMessages = async () => {
-        const newMessages = await getNewMessages(12, 0);
+        const newMessages = await getNewMessages(chatId, 0);
         console.log(newMessages);
         const resp = newMessages[newMessages.length - 2].content;
         handleGeneratePDF(resp);
@@ -79,7 +79,7 @@ const ChatMessages = ({
         try {
             const response = await addMessage({
                 message: formattedProfile,
-                agentRunID: 12,
+                agentRunID: chatId,
                 provider,
             });
 
