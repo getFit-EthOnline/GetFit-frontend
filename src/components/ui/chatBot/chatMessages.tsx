@@ -1,11 +1,12 @@
 'use client';
 
 import { addMessage, getNewMessages } from '@/contracts/galadriel';
+import { useEthersProvider } from '@/hooks/useEthersProvider';
 import useGlobalStore from '@/store';
-import React, { useEffect, useRef, useState } from 'react';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import '@/styles/chat.css';
 import axios from 'axios';
+import React, { useEffect, useRef, useState } from 'react';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 interface Message {
     type: 'bot' | 'user' | 'loading';
     text: string | null;
@@ -35,7 +36,7 @@ const ChatMessages = ({ chatId }: { chatId: number }) => {
         goal: '',
     });
 
-    const { provider, agentFirstMessage } = useGlobalStore();
+    const { agentFirstMessage, provider } = useGlobalStore();
 
     useEffect(() => {
         setMessages([
@@ -78,7 +79,7 @@ const ChatMessages = ({ chatId }: { chatId: number }) => {
             const response = await addMessage({
                 message: formattedProfile,
                 agentRunID: chatId,
-                provider,
+                provider
             });
 
             if (response.dispatch) {
@@ -251,13 +252,11 @@ const ChatMessages = ({ chatId }: { chatId: number }) => {
                             classNames="fade"
                         >
                             <div
-                                className={`w-fit mt-2   ${
-                                    message.type === 'bot' ? 'm-0' : 'ml-[80%]'
-                                }  rounded-md ${
-                                    message.type === 'bot'
+                                className={`w-fit mt-2   ${message.type === 'bot' ? 'm-0' : 'ml-[80%]'
+                                    }  rounded-md ${message.type === 'bot'
                                         ? 'bg-blue-100'
                                         : 'bg-green-200'
-                                }`}
+                                    }`}
                             >
                                 <p className="text-gray-800 p-1 mx-1 text-sm">
                                     {message.text}
@@ -295,7 +294,7 @@ const ChatMessages = ({ chatId }: { chatId: number }) => {
 
                 {messages.length > 0 &&
                     messages[messages.length - 1].text ===
-                        "Here's your personalized fitness plan!" &&
+                    "Here's your personalized fitness plan!" &&
                     downloadUrl && (
                         <a
                             href={downloadUrl}

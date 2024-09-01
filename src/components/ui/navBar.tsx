@@ -1,5 +1,4 @@
 'use client';
-import useGlobalStore from '@/store';
 import { cn, toastStyles } from '@/utils/utils';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
@@ -7,7 +6,7 @@ import { logo } from '../../../public/index';
 
 import toast from 'react-hot-toast';
 import { ImSpinner2 } from 'react-icons/im';
-import { useConnect, useDisconnect } from 'wagmi';
+import { useAccount, useConnect, useDisconnect } from 'wagmi';
 
 const navContents = [
     {
@@ -58,9 +57,6 @@ const NavBar = () => {
             </div>
             <div className=" items-center flex justify-center  w-1/4">
                 <WalletConnectButton />
-
-
-
             </div>
         </div>
     );
@@ -69,9 +65,10 @@ export default NavBar;
 export const WalletConnectButton = () => {
     const { connect, connectors } = useConnect();
     const { disconnect } = useDisconnect();
-    const { address } = useGlobalStore();
+    const { address } = useAccount();
     const handleLogin = async () => {
         const res = await connect({ connector: connectors[0] });
+        debugger
         console.log(res);
         // if (res) {
         //     await getBalance(res);

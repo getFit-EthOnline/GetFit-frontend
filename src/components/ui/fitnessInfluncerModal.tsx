@@ -36,7 +36,7 @@ const InfluencerModal = ({
     const [isOpen, setIsOpen] = useState(true);
     const [selectedInfluencer, setSelectedInfluencer] =
         useState<userAgentProps | null>(null);
-    const { provider, setUserAgnet, setAgentFirstMessage } = useGlobalStore();
+    const { setUserAgnet, setAgentFirstMessage, provider } = useGlobalStore();
     const [loading, setLoading] = useState(false);
     useEffect(() => {
         const hasModalBeenShown = localStorage.getItem('hasModalBeenShown');
@@ -58,7 +58,7 @@ const InfluencerModal = ({
         setLoading(true);
         const resp = await startFitnessRun({
             message: `Create a fitness motivational quote from the influencer ${selectedInfluencer?.name}`,
-            provider,
+            provider: provider,
         });
         if (resp.runId) {
             setChatId(resp.runId);
@@ -71,7 +71,7 @@ const InfluencerModal = ({
                 open={isOpen}
                 as="div"
                 className="relative z-10 focus:outline-none"
-                onClose={() => {}}
+                onClose={() => { }}
             >
                 <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
                     <div className="flex min-h-full items-center justify-center p-4">
@@ -98,12 +98,11 @@ const InfluencerModal = ({
                                             className="flex flex-col items-center  mt-4"
                                         >
                                             <div
-                                                className={` rounded-full ${
-                                                    selectedInfluencer?.name ===
+                                                className={` rounded-full ${selectedInfluencer?.name ===
                                                     influencer.name
-                                                        ? 'bg-[#B8FE22]'
-                                                        : ''
-                                                } `}
+                                                    ? 'bg-[#B8FE22]'
+                                                    : ''
+                                                    } `}
                                             >
                                                 <Image
                                                     src={influencer.profilePic}
