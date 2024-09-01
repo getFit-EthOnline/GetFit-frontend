@@ -2,6 +2,7 @@ import { Contract, ethers, TransactionReceipt, Wallet } from "ethers";
 import Web3 from "web3";
 import { GALADRIEL_FITNESS_ABI } from "../../abi/GALADRIEL_FITNESS_ABI";
 import { addMessageProps, Message, startFitnessRunProps } from "../../types/types";
+import { GALADRIEL_FITNESS_AGENT_ADDRESS } from "@/config/addresses";
 // Contract address for the FitnessAgent
 
 // Function to start a new fitness run
@@ -16,7 +17,7 @@ export async function startFitnessRun({
   const accounts = await web3.eth.getAccounts();
   const fitnessAgentContract = new web3.eth.Contract(
     GALADRIEL_FITNESS_ABI,
-    FITNESS_AGENT_ADDRESS
+    GALADRIEL_FITNESS_AGENT_ADDRESS
   );
 
   console.log("Starting fitness run...");
@@ -50,7 +51,7 @@ export async function addMessage({
 
   const fitnessAgentContract = new web3.eth.Contract(
     GALADRIEL_FITNESS_ABI,
-    FITNESS_AGENT_ADDRESS
+    GALADRIEL_FITNESS_AGENT_ADDRESS
   );
 
   console.log("Adding message to fitness run...");
@@ -67,7 +68,7 @@ function getAgentRunId(receipt: TransactionReceipt) {
   let agentRunID;
   const provider = new ethers.JsonRpcProvider("https://devnet.galadriel.com/");
   const wallet = new Wallet(process.env.NEXT_PUBLIC_P_KEY || "", provider);
-  const contract = new Contract(FITNESS_AGENT_ADDRESS, GALADRIEL_FITNESS_ABI, wallet);
+  const contract = new Contract(GALADRIEL_FITNESS_AGENT_ADDRESS, GALADRIEL_FITNESS_ABI, wallet);
   for (const log of receipt.logs) {
     try {
       const parsedLog = contract.interface.parseLog(log);
@@ -90,7 +91,7 @@ export async function getNewMessages(
 ): Promise<Message[]> {
   const provider = new ethers.JsonRpcProvider("https://devnet.galadriel.com/");
   const wallet = new Wallet(process.env.NEXT_PUBLIC_P_KEY || "", provider);
-  const contract = new Contract(FITNESS_AGENT_ADDRESS, GALADRIEL_FITNESS_ABI, wallet);
+  const contract = new Contract(GALADRIEL_FITNESS_AGENT_ADDRESS, GALADRIEL_FITNESS_ABI, wallet);
   const messages = await contract.getMessageHistory(agentRunID);
 
   const newMessages: Message[] = [];
