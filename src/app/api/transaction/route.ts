@@ -2,6 +2,7 @@ import { CHILIZ_FAN_BATTLE_ABI } from "@/abi/CHILIZ_FAN_BATTLE_ABI";
 import { CHILIZ_FAN_BATTLE_ADDRESS } from "@/config/addresses";
 import type { FrameTransactionResponse } from "@coinbase/onchainkit/frame";
 import { getXmtpFrameMessage } from "@coinbase/onchainkit/xmtp";
+import { Contract, ethers } from "ethers";
 import { NextRequest, NextResponse } from "next/server";
 import { encodeFunctionData } from "viem";
 import { spicy } from "viem/chains";
@@ -19,16 +20,30 @@ async function getResponse(req: NextRequest): Promise<NextResponse | Response> {
     args: ["Goggins"],
   });
 
+  const gasPrice = (await ethers.getDefaultProvider().getFeeData()).gasPrice;
+
+  const contract = await new Contract(
+    CHILIZ_FAN_BATTLE_ADDRESS,
+    CHILIZ_FAN_BATTLE_ABI,
+    ethers.getDefaultProvider()
+  );
+
+  // @ts-ignore
+  const gasUnits = await contract.estimateGas.joinTeam("Goggins");
+
+  const transactionFee = BigInt(gasPrice?.toString() || "0") * BigInt(gasUnits);
+
   const txData: FrameTransactionResponse = {
     chainId: `eip155:${spicy.id}`,
     method: "eth_sendTransaction",
     params: {
       abi: CHILIZ_FAN_BATTLE_ABI,
       to: CHILIZ_FAN_BATTLE_ADDRESS,
-      value: "Goggins",
+      value: transactionFee.toString(),
       data,
     },
   };
+
   return NextResponse.json(txData);
 }
 
