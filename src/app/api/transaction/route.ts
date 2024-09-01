@@ -2,12 +2,28 @@ import { CHILIZ_FAN_BATTLE_ABI } from "@/abi/CHILIZ_FAN_BATTLE_ABI";
 import { CHILIZ_FAN_BATTLE_ADDRESS } from "@/config/addresses";
 import type { FrameTransactionResponse } from "@coinbase/onchainkit/frame";
 import { getXmtpFrameMessage } from "@coinbase/onchainkit/xmtp";
-import { Contract, ethers } from "ethers";
 import { NextRequest, NextResponse } from "next/server";
-import { encodeFunctionData, parseEther } from "viem";
+import { encodeFunctionData, parseUnits } from "viem";
 import { spicy } from "viem/chains";
 
 async function getResponse(req: NextRequest): Promise<NextResponse | Response> {
+  // const provider = new ethers.providers.JsonRpcProvider(
+  //   spicy.rpcUrls.default.http[0]
+  // );
+  // const gasPrice = await provider.getGasPrice();
+  // const gasUnits = await new Contract(
+  //   CHILIZ_FAN_BATTLE_ADDRESS,
+  //   CHILIZ_FAN_BATTLE_ABI,
+  //   provider
+  // ).estimateGas.joinTeam("Goggins");
+  // const transactionFee = gasPrice.mul(gasUnits);
+  // console.log("transactionFee in wei: " + transactionFee.toString());
+  // console.log(
+  //   "transactionFee in ether: " +
+  //     ethers.utils.formatUnits(transactionFee, "ether")
+  // );
+  // return NextResponse.json({ transactionFee });
+
   const body = await req.json();
   const { isValid } = await getXmtpFrameMessage(body);
   if (!isValid) {
@@ -39,7 +55,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse | Response> {
     params: {
       abi: CHILIZ_FAN_BATTLE_ABI,
       to: CHILIZ_FAN_BATTLE_ADDRESS,
-      value: parseEther("0.0000000000032", "wei").toString(),
+      value: parseUnits("0.005", 18).toString(),
       data,
     },
   };
