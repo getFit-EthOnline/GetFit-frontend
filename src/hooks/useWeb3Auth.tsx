@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import useGlobalStore from '@/store';
 import { getBalance } from '@/contracts/galadriel';
+import { REDIRECT_URL } from '@/config';
 const clientId =
     'BOZXvB8YZOmaHlxETldZRrA91mqa3UiLz46eonVOL627eJX0QQ2Ncct_7cNWUDI20n-EAY2f4_vs_szOXocmmBI';
 
@@ -33,7 +34,7 @@ const web3auth = new Web3Auth({
 const openloginAdapter = new OpenloginAdapter({
     adapterSettings: {
         uxMode: 'redirect',
-        redirectUrl: 'http://localhost:3000/prediction',
+        redirectUrl: REDIRECT_URL,
         whiteLabel: {
             appName: 'Get Fit',
             appUrl: 'https://web3auth.io',
