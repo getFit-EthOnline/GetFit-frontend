@@ -51,7 +51,7 @@ const InfluencerModal = ({
             localStorage.setItem('hasModalBeenShown', 'true');
             setLoading(false);
             setIsOpen(false);
-        }, 15000);
+        }, 20000);
     };
     const closeModal = async () => {
         setUserAgnet(selectedInfluencer);
