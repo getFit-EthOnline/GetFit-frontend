@@ -39,7 +39,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse | Response> {
     params: {
       abi: CHILIZ_FAN_BATTLE_ABI,
       to: CHILIZ_FAN_BATTLE_ADDRESS,
-      value: parseEther("0.000000032", "wei").toString(),
+      value: parseEther("0.0000000000032", "wei").toString(),
       data,
     },
   };
