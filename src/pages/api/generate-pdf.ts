@@ -1,7 +1,27 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { createWriteStream } from 'fs';
-import { join } from 'path';
 import PDFDocument from 'pdfkit';
+import cloudinary from 'cloudinary';
+import { Readable } from 'stream';
+
+// Configure Cloudinary
+cloudinary.v2.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+const uploadToCloudinary = (stream: Readable) => {
+    return new Promise<string>((resolve, reject) => {
+        const cloudinaryUploadStream = cloudinary.v2.uploader.upload_stream(
+            { resource_type: 'raw', public_id: 'report' }, // Adjust public_id as needed
+            (error, result) => {
+                if (error) return reject(error);
+                resolve(result?.secure_url || '');
+            }
+        );
+        stream.pipe(cloudinaryUploadStream);
+    });
+};
 
 export default async function handler(
     req: NextApiRequest,
@@ -12,39 +32,25 @@ export default async function handler(
 
         // Create a new PDF document
         const doc = new PDFDocument();
-        const filePath = join(process.cwd(), 'public', 'report.pdf');
-        const stream = createWriteStream(filePath);
-        doc.pipe(stream);
+        const buffers: Buffer[] = [];
 
-        // Add a logo image to the top of the PDF
-        const logoPath = join(process.cwd(), 'public', 'logo.png'); // Replace with your actual logo path
-        const imageWidth = 70; // Desired image width
-        const imageHeight = 70; // Desired image height
-
-        // Calculate x position to center the image horizontally
-        const x = (doc.page.width - imageWidth) / 2;
-        // Set y position to a small margin from the top
-        const y = 20; // Adjust this value for desired margin from the top
-
-        doc.image(logoPath, x, y, {
-            width: imageWidth, // Set the width of the image
-            height: imageHeight, // Set the height of the image
+        doc.on('data', buffers.push.bind(buffers));
+        doc.on('end', async () => {
+            const pdfBuffer = Buffer.concat(buffers);
+            try {
+                const url = await uploadToCloudinary(Readable.from(pdfBuffer));
+                res.status(200).json({ url });
+            } catch (error) {
+                console.error('Error uploading to Cloudinary:', error);
+                res.status(500).json({ message: 'Error uploading PDF' });
+            }
         });
-
-        // Add a little space between the image and the text
-        doc.moveDown(3); // Adjust the value to set space between the image and text
 
         // Add text to the PDF
-        doc.fontSize(12).font('Helvetica').text(text, {
+        doc.fontSize(12).text(text, {
             align: 'left',
         });
-
         doc.end();
-
-        // Wait for PDF to be written
-        stream.on('finish', () => {
-            res.status(200).json({ url: '/report.pdf' });
-        });
     } else {
         res.status(405).json({ message: 'Method not allowed' });
     }
