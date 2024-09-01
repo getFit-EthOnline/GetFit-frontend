@@ -19,7 +19,7 @@ export default function Layout({
             <body className={` bg-black ${inter.className}`}>
 
                 <HomeNav />
-                <div>  {children}</div>
+                <div className=' bg-[#E2E2E2]  mx-auto'>  {children}</div>
             </body>
         </html>
     );

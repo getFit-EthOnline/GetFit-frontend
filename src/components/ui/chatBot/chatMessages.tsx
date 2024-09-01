@@ -1,7 +1,6 @@
 'use client';
 import useGlobalStore from '@/store';
 import React, { useEffect, useState } from 'react';
-
 const ChatMessages = () => {
     const [messages, setMessages] = useState<
         { type: string; text: string | null; options?: string[] }[]
@@ -105,17 +104,16 @@ const ChatMessages = () => {
 
     return (
         <div className="flex flex-col items-center h-full ">
+
             <div className=" w-full mb-10 space-y-3">
                 {messages.map((message, index) => (
                     <div
                         key={index}
-                        className={`w-fit ${
-                            message.type === 'bot' ? 'm-0' : 'ml-[80%]'
-                        } py-2 rounded-md ${
-                            message.type === 'bot'
+                        className={`w-fit ${message.type === 'bot' ? 'm-0' : 'ml-[80%]'
+                            } py-2 rounded-md ${message.type === 'bot'
                                 ? 'bg-blue-100'
                                 : 'bg-green-200'
-                        }`}
+                            }`}
                     >
                         <p className="text-gray-800  px-4 mx-2 text-sm">
                             {message.text}
