@@ -1,4 +1,4 @@
-export const FITNESS_ABI = [
+export const GALADRIEL_FITNESS_ABI = [
   {
     inputs: [
       {
