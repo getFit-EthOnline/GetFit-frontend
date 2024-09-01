@@ -140,7 +140,6 @@ export async function sendTestTokens() {
     return { trxhash: ethSendPromise.hash };
 }
 export const getBalance = async (address: string | null) => {
-    console.log(address);
     const provider = new ethers.JsonRpcProvider(
         'https://devnet.galadriel.com/'
     );
