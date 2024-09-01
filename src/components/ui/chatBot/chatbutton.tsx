@@ -1,10 +1,10 @@
 'use client';
-import React, { useState } from 'react';
-import ChatMessages from './chatMessages';
 import useGlobalStore from '@/store';
 import Image from 'next/image';
+import { useState } from 'react';
 import Bell from '../../../../public/icons/bell.png';
-import useWeb3Auth from '@/hooks/useWeb3Auth';
+import ChatMessages from './chatMessages';
+
 const ChatButton = ({ chatId }: { chatId: number }) => {
     const [open, setOpen] = useState(false);
     const { userAgent } = useGlobalStore();
@@ -68,7 +68,7 @@ const ChatButton = ({ chatId }: { chatId: number }) => {
             </div>
             {open && (
                 <div className=" no-scrollbar overflow-x-hidden overflow-y-scroll transition-all ease-in-out duration-200  min-h-[calc(100vh-300px)]  max-h-[calc(100vh-300px)] bg-slate-100  mx-1 p-2">
-                    <ChatMessages chatId={chatId}  />
+                    <ChatMessages chatId={chatId} />
                 </div>
             )}
         </div>

@@ -1,15 +1,15 @@
 'use client';
 import ChatButton from '@/components/ui/chatBot/chatbutton';
 import InfluencerModal from '@/components/ui/fitnessInfluncerModal';
-import useWeb3Auth from '@/hooks/useWeb3Auth';
+import useGlobalStore from '@/store';
 import Image from 'next/image';
+import { useState } from 'react';
+import { useAccount } from 'wagmi';
 import {
     armWrestlingEvents,
     mmahomeEvents,
     weightliftingHomeevents,
 } from '../../../../public';
-import { useState } from 'react';
-import useGlobalStore from '@/store';
 
 const events = [
     {
@@ -42,7 +42,7 @@ const SportsBets = ({
     selected: string;
     setSelected: any;
 }) => {
-    const { loggedIn } = useWeb3Auth();
+    const { address } = useAccount();
     const [chatId, setChatId] = useState(0);
     const { userAgent } = useGlobalStore();
     return (
@@ -78,7 +78,7 @@ const SportsBets = ({
                 </div>
                 {userAgent && <ChatButton chatId={chatId} />}
             </div>
-            {loggedIn && <InfluencerModal setChatId={setChatId} />}
+            {address && <InfluencerModal setChatId={setChatId} />}
         </div>
     );
 };

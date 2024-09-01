@@ -1,15 +1,13 @@
 'use client';
-import React from 'react';
-import { logo } from '../../../public/index';
-import Image from 'next/image';
-import { motion } from 'framer-motion';
-import useWeb3Auth from '@/hooks/useWeb3Auth';
 import useGlobalStore from '@/store';
-import { getBalance } from '@/contracts/galadriel';
 import { cn, toastStyles } from '@/utils/utils';
+import { motion } from 'framer-motion';
+import Image from 'next/image';
+import { logo } from '../../../public/index';
 
-import { ImSpinner2 } from 'react-icons/im';
 import toast from 'react-hot-toast';
+import { ImSpinner2 } from 'react-icons/im';
+import { useConnect, useDisconnect } from 'wagmi';
 
 const navContents = [
     {
@@ -69,14 +67,15 @@ const NavBar = () => {
 };
 export default NavBar;
 export const WalletConnectButton = () => {
-    const { login, logout } = useWeb3Auth();
+    const { connect, connectors } = useConnect();
+    const { disconnect } = useDisconnect();
     const { address } = useGlobalStore();
     const handleLogin = async () => {
-        const res = await login();
+        const res = await connect({ connector: connectors[0] });
         console.log(res);
-        if (res) {
-            await getBalance(res);
-        }
+        // if (res) {
+        //     await getBalance(res);
+        // }
     };
 
     const handleCopyToClipboard = () => {
@@ -141,7 +140,7 @@ export const WalletConnectButton = () => {
 
 
             </motion.button>
-            {address && <svg onClick={() => logout()} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className=" text-slate-500 size-6 hover:text-slate-300 cursor-pointer hover:scale-105 transition duration-300 ease-in-out">
+            {address && <svg onClick={() => disconnect()} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className=" text-slate-500 size-6 hover:text-slate-300 cursor-pointer hover:scale-105 transition duration-300 ease-in-out">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5.636 5.636a9 9 0 1 0 12.728 0M12 3v9" />
             </svg>}
 
