@@ -2,10 +2,12 @@
 
 import { addMessage, getNewMessages } from '@/contracts/galadriel';
 import useGlobalStore from '@/store';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import './ChatMessages.css'; // Import CSS for animations
 import axios from 'axios';
 interface Message {
-    type: 'bot' | 'user';
+    type: 'bot' | 'user' | 'loading';
     text: string | null;
     options?: string[];
 }
@@ -19,9 +21,11 @@ const ChatMessages = ({
 }) => {
     const [downloadUrl, setDownloadUrl] = useState('');
     const [messages, setMessages] = useState<Message[]>([]);
-    const [reportMsg, setReportMsg] = useState<string>('');
     const [userResponse, setUserResponse] = useState<string>('');
     const [step, setStep] = useState<number>(0);
+    const [isTyping, setIsTyping] = useState<boolean>(false);
+    const chatContainerRef = useRef<HTMLDivElement>(null); // Ref for chat container
+    const inputRef = useRef<HTMLInputElement>(null); // Ref for input
 
     const [userProfile, setUserProfile] = useState<{
         age: string;
@@ -41,28 +45,44 @@ const ChatMessages = ({
 
     useEffect(() => {
         setMessages([
-            { type: 'bot', text: agentFirstMessage },
+            {
+                type: 'bot',
+                text:
+                    agentFirstMessage ||
+                    '"From the time you take your first breath, you become eligible to die. You also become eligible to find your greatness and become the one warrior"',
+            },
             { type: 'bot', text: 'What is your age?' },
         ]);
     }, [agentFirstMessage]);
 
-    const fetchMessages = () => {
-        setTimeout(async () => {
-            const messages = await getNewMessages(chatId, 0);
-            console.log(messages);
-            const resp = messages[messages.length - 2].content;
-            setReportMsg(resp);
-        }, 15000);
+    useEffect(() => {
+        // Focus on the input when component mounts
+        inputRef.current?.focus();
+    }, []);
+
+    useEffect(() => {
+        // Scroll to the latest message
+        chatContainerRef.current?.scrollTo({
+            top: chatContainerRef.current.scrollHeight,
+            behavior: 'smooth', // Add smooth scrolling
+        });
+    }, [messages, isTyping]);
+
+    const fetchMessages = async () => {
+        const newMessages = await getNewMessages(12, 0);
+        console.log(newMessages);
+        const resp = newMessages[newMessages.length - 2].content;
+        handleGeneratePDF(resp);
     };
 
     const generateUserReport = async (formattedProfile: string) => {
         try {
             const response = await addMessage({
                 message: formattedProfile,
-                agentRunID: chatId,
+                agentRunID: 12,
                 provider,
             });
-            console.log(response);
+
             if (response.dispatch) {
                 fetchMessages();
             }
@@ -91,6 +111,8 @@ const ChatMessages = ({
             ...prevMessages,
             { type: 'user', text: response },
         ]);
+
+        setIsTyping(true); // Start loader
 
         // Update profile and determine next step and messages
         switch (step) {
@@ -156,19 +178,10 @@ const ChatMessages = ({
                     // Format profile and generate report
                     const formattedProfile = formatUserProfile(newProfile);
                     await generateUserReport(formattedProfile);
-
                     newMessages.push({
                         type: 'bot',
-                        text: reportMsg,
+                        text: "Here's your personalized fitness plan!",
                     });
-
-                    setStep(newStep);
-                    setUserProfile(newProfile);
-                    setMessages((prevMessages) => [
-                        ...prevMessages,
-                        ...newMessages,
-                    ]);
-                    return;
                 }
                 break;
             case 5:
@@ -184,29 +197,24 @@ const ChatMessages = ({
                 // Format profile and generate report
                 const formattedProfile = formatUserProfile(newProfile);
                 await generateUserReport(formattedProfile);
-
                 newMessages.push({
                     type: 'bot',
-                    text: reportMsg,
+                    text: "Here's your personalized fitness plan!",
                 });
-
-                setStep(newStep);
-                setUserProfile(newProfile);
-                setMessages((prevMessages) => [
-                    ...prevMessages,
-                    ...newMessages,
-                ]);
-                return;
+                break;
         }
 
-        // Update state for new step and messages
-        setStep(newStep);
-        setUserProfile(newProfile);
-        setMessages((prevMessages) => [...prevMessages, ...newMessages]);
+        // Simulate typing delay
+        setTimeout(() => {
+            setIsTyping(false); // Stop loader
+            setStep(newStep);
+            setUserProfile(newProfile);
+            setMessages((prevMessages) => [...prevMessages, ...newMessages]);
+        }, 4000); // 4-second delay before showing the bot's response
     };
-    if (reportMsg) {
-        handleGeneratePDF(reportMsg);
-    }
+    // if (reportMsg) {
+    //     handleGeneratePDF(reportMsg);
+    // }
     const formatUserProfile = (profile: {
         age: string;
         gender: string;
@@ -231,40 +239,63 @@ const ChatMessages = ({
     const handleOptionClick = (option: string) => {
         handleUserResponse(option);
     };
+
     return (
-        <div className="flex flex-col items-center h-full">
-            <div className="w-full mb-10 space-y-3">
-                {messages.map((message, index) => (
-                    <div
-                        key={index}
-                        className={`w-fit ${
-                            message.type === 'bot' ? 'm-0' : 'ml-[80%]'
-                        } py-2 rounded-md ${
-                            message.type === 'bot'
-                                ? 'bg-blue-100'
-                                : 'bg-green-200'
-                        }`}
-                    >
-                        <p className="text-gray-800 px-4 mx-2 text-sm">
-                            {message.text}
-                        </p>
-                        {message.options && (
-                            <div className="flex justify-center space-x-2">
-                                {message.options.map((option, idx) => (
-                                    <button
-                                        key={idx}
-                                        onClick={() =>
-                                            handleOptionClick(option)
-                                        }
-                                        className="bg-blue-500 text-white p-1 px-2 w-fit text-xs rounded-md hover:bg-blue-600"
-                                    >
-                                        {option}
-                                    </button>
-                                ))}
+        <div className="flex flex-col no-scrollbar items-center ">
+            <div
+                ref={chatContainerRef}
+                className="w-full   h-[calc(100vh-6rem)]"
+            >
+                <TransitionGroup>
+                    {messages.map((message, index) => (
+                        <CSSTransition
+                            key={index}
+                            timeout={500}
+                            classNames="fade"
+                        >
+                            <div
+                                className={`w-fit mt-2   ${
+                                    message.type === 'bot' ? 'm-0' : 'ml-[80%]'
+                                }  rounded-md ${
+                                    message.type === 'bot'
+                                        ? 'bg-blue-100'
+                                        : 'bg-green-200'
+                                }`}
+                            >
+                                <p className="text-gray-800 p-1 mx-1 text-sm">
+                                    {message.text}
+                                </p>
+                                {message.options && (
+                                    <div className="flex justify-center space-x-2">
+                                        {message.options.map((option, idx) => (
+                                            <button
+                                                key={idx}
+                                                onClick={() =>
+                                                    handleOptionClick(option)
+                                                }
+                                                className="bg-blue-500 text-white p-1 px-2 w-fit text-xs rounded-md hover:bg-blue-600"
+                                            >
+                                                {option}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
-                        )}
-                    </div>
-                ))}
+                        </CSSTransition>
+                    ))}
+                </TransitionGroup>
+                {isTyping && (
+                    <CSSTransition timeout={500} classNames="fade">
+                        <div className="w-fit m-0 py-2 rounded-md ">
+                            <div className="flex items-center justify-center space-x-2">
+                                <div className="h-4 w-4 animate-bounce rounded-full bg-[#B8FE22] [animation-delay:-0.3s]"></div>
+                                <div className="h-4 w-4 animate-bounce rounded-full  bg-[#B8FE22] [animation-delay:-0.13s]"></div>
+                                <div className="h-4 w-4 animate-bounce rounded-full  bg-[#B8FE22]"></div>
+                            </div>
+                        </div>
+                    </CSSTransition>
+                )}
+
                 {downloadUrl && (
                     <a
                         href={downloadUrl}
@@ -277,17 +308,18 @@ const ChatMessages = ({
             </div>
 
             {(step === 0 || step === 2 || step === 3 || step === 5) && (
-                <div className="flex absolute bottom-0 w-[18em] items-center">
+                <div className="flex absolute bottom-0 w-[24em] items-center">
                     <input
+                        ref={inputRef} // Ref for input field
                         type="text"
                         value={userResponse}
                         onChange={handleInputChange}
                         placeholder="Type your response..."
-                        className="w-full px-4 py-2 border rounded-l-md focus:outline-none focus:ring-blue-400"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-l-md"
                     />
                     <button
                         onClick={handleSend}
-                        className="bg-blue-500 text-white px-4 py-2 rounded-r-md hover:bg-blue-600"
+                        className="px-4 py-2 bg-blue-500 text-white rounded-r-md"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
