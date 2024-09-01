@@ -23,6 +23,9 @@ function useWeb3AuthWrapper() {
                 if (chainId === galadriel_devnet.id) {
                     return
                 }
+                if (!process.env.NEXT_SMART_ACCOUNT_ENABLED) {
+                    return
+                }
                 const biconomy_config = BICONOMY_CONFIG[chainId as keyof typeof BICONOMY_CONFIG];
                 const smartAccount = await createSmartAccountClient({
                     signer: signer,
