@@ -44,6 +44,7 @@ const SportsBets = ({
 }) => {
     const { loggedIn } = useWeb3Auth();
     const [chatId, setChatId] = useState(0);
+    const { userAgent } = useGlobalStore();
     return (
         <div className="mx-20">
             <h1 className=" text-2xl capitalize ml-28 font-bold">
@@ -78,7 +79,7 @@ const SportsBets = ({
                         </div>
                     ))}
                 </div>
-                {loggedIn && <ChatButton chatId={chatId} />}
+                {userAgent && <ChatButton chatId={chatId} />}
             </div>
             {loggedIn && <InfluencerModal setChatId={setChatId} />}
         </div>
