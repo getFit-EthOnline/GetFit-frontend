@@ -1,5 +1,6 @@
 'use client';
-import useWeb3Auth from './hooks/useWeb3Auth';
+
+import useWeb3Auth from "@/hooks/useWeb3Auth";
 
 export default function Home() {
     const { login, loggedIn, logout, getUserInfo, getAccounts } = useWeb3Auth();
