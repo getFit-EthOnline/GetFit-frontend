@@ -6,6 +6,10 @@ import { motion } from 'framer-motion';
 import useWeb3Auth from '@/hooks/useWeb3Auth';
 import useGlobalStore from '@/store';
 import { getBalance } from '@/contracts/galadriel';
+import { cn, toastStyles } from '@/utils/utils';
+
+import { ImSpinner2 } from 'react-icons/im';
+import toast from 'react-hot-toast';
 
 const navContents = [
     {
@@ -56,6 +60,9 @@ const NavBar = () => {
             </div>
             <div className=" items-center flex justify-center  w-1/4">
                 <WalletConnectButton />
+
+
+
             </div>
         </div>
     );
@@ -71,41 +78,94 @@ export const WalletConnectButton = () => {
             await getBalance(res);
         }
     };
+
+    const handleCopyToClipboard = () => {
+        if (address) {
+            navigator.clipboard.writeText(address);
+            alert('Address copied to clipboard!');
+        }
+    };
+
+    const handleCopy = (address: string) => {
+        navigator.clipboard
+            .writeText(address)
+            .then(() => {
+                toast.success('Address copied to clipboard!', toastStyles);
+            })
+            .catch(() => {
+                toast.success('Something went wrong', toastStyles);
+            });
+    };
     return (
-        <motion.button
-            className="inline-flex overflow-hidden rounded-lg bg-[linear-gradient(120deg,#063434_calc(var(--shimmer-button-x)-25%),#063434_var(--shimmer-button-x),#063434_calc(var(--shimmer-button-x)+25%))] [--shimmer-button-x:0%] "
-            initial={
-                {
-                    scale: 1,
-                    '--shimmer-button-x': '-100%',
-                } as any
-            }
-            onClick={() => (address ? logout() : handleLogin())}
-            animate={
-                {
-                    '--shimmer-button-x': '200%',
-                } as any
-            }
-            transition={{
-                stiffness: 500,
-                damping: 20,
-                type: 'spring',
-                '--shimmer-button-x': {
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: [0.445, 0.05, 0.55, 0.95],
-                },
-            }}
-            whileTap={{
-                scale: 0.95,
-            }}
-            whileHover={{
-                scale: 1.05,
-            }}
-        >
-            <span className="m-[0.125rem] text-[#063434] rounded-[calc(0.5rem-0.125rem)] bg-[#B8FE22] px-4 py-1   backdrop-blur-sm">
-                {address ? address : 'connect wallet'}
-            </span>
-        </motion.button>
+        <>
+            <motion.button
+                className="inline-flex overflow-hidden rounded-lg bg-[linear-gradient(120deg,#063434_calc(var(--shimmer-button-x)-25%),#063434_var(--shimmer-button-x),#063434_calc(var(--shimmer-button-x)+25%))] [--shimmer-button-x:0%] "
+                initial={
+                    {
+                        scale: 1,
+                        '--shimmer-button-x': '-100%',
+                    } as any
+                }
+                onClick={() => (address ? handleCopy(address || '') : handleLogin())}
+                animate={
+                    {
+                        '--shimmer-button-x': '200%',
+                    } as any
+                }
+                transition={{
+                    stiffness: 500,
+                    damping: 20,
+                    type: 'spring',
+                    '--shimmer-button-x': {
+                        duration: 3,
+                        repeat: Infinity,
+                        ease: [0.445, 0.05, 0.55, 0.95],
+                    },
+                }}
+                whileTap={{
+                    scale: 0.95,
+                }}
+                whileHover={{
+                    scale: 1.05,
+                }}
+            >
+                <span className=' bg-[#B8FE22] px-2 py-1'>
+                    {getButtonCTA({
+                        isLoading: false,
+                        text: address
+                            ? // ? address.slice(0, 4) + '...' + address.slice(4, 7)
+                            address.slice(0, 4) + '...' + address.slice(-4)
+                            : 'Connect wallet',
+                    })}
+                </span>
+
+
+            </motion.button>
+            {address && <svg onClick={() => logout()} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className=" text-slate-500 size-6 hover:text-slate-300 cursor-pointer hover:scale-105 transition duration-300 ease-in-out">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5.636 5.636a9 9 0 1 0 12.728 0M12 3v9" />
+            </svg>}
+
+        </>
     );
+};
+
+const getButtonCTA = ({
+    isLoading,
+    text,
+}: {
+    isLoading: boolean;
+    text: string;
+}) => {
+    if (isLoading) {
+        return (
+            <span
+                className={cn(
+                    'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2'
+                )}
+            >
+                <ImSpinner2 className='animate-spin' />
+            </span>
+        );
+    }
+    return text;
 };
