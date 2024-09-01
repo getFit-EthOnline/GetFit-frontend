@@ -3,7 +3,7 @@
 import { addMessage, getNewMessages } from '@/contracts/galadriel';
 import useGlobalStore from '@/store';
 import React, { useEffect, useState } from 'react';
-
+import axios from 'axios';
 interface Message {
     type: 'bot' | 'user';
     text: string | null;
@@ -17,6 +17,7 @@ const ChatMessages = ({
     chatId: number;
     provider: any;
 }) => {
+    const [downloadUrl, setDownloadUrl] = useState('');
     const [messages, setMessages] = useState<Message[]>([]);
     const [reportMsg, setReportMsg] = useState<string>('');
     const [userResponse, setUserResponse] = useState<string>('');
@@ -69,124 +70,17 @@ const ChatMessages = ({
             console.error('Error generating user report:', error);
         }
     };
-    //     setMessages((prevMessages) => {
-    //         // Avoid adding duplicate user responses
-    //         if (
-    //             prevMessages.length > 0 &&
-    //             prevMessages[prevMessages.length - 1].type === 'user' &&
-    //             prevMessages[prevMessages.length - 1].text === response
-    //         ) {
-    //             return prevMessages;
-    //         }
 
-    //         // Update user profile and bot messages based on the current step
-    //         let newProfile = { ...userProfile };
-    //         let newMessages: Message[] = [];
-    //         let newStep = step;
-
-    //         switch (step) {
-    //             case 0:
-    //                 newProfile.age = response;
-    //                 newStep = 1;
-    //                 newMessages = [
-    //                     {
-    //                         type: 'bot',
-    //                         text: 'Awesome! Please select your gender?',
-    //                         options: ['M', 'F'],
-    //                     },
-    //                 ];
-    //                 break;
-    //             case 1:
-    //                 newProfile.gender = response;
-    //                 newStep = 2;
-    //                 newMessages = [
-    //                     {
-    //                         type: 'bot',
-    //                         text: 'Thank you! What is your height in cm?',
-    //                     },
-    //                 ];
-    //                 break;
-    //             case 2:
-    //                 newProfile.height = response;
-    //                 newStep = 3;
-    //                 newMessages = [
-    //                     {
-    //                         type: 'bot',
-    //                         text: 'Great! What is your weight in kg?',
-    //                     },
-    //                 ];
-    //                 break;
-    //             case 3:
-    //                 newProfile.weight = response;
-    //                 newStep = 4;
-    //                 newMessages = [
-    //                     {
-    //                         type: 'bot',
-    //                         text: 'Awesome! What is your fitness goal?',
-    //                         options: ['Muscle Building', 'Fat Loss', 'Others'],
-    //                     },
-    //                 ];
-    //                 break;
-    //             case 4:
-    //                 if (response === 'Others') {
-    //                     newStep = 5;
-    //                     newMessages = [
-    //                         {
-    //                             type: 'bot',
-    //                             text: 'Please specify your fitness goal',
-    //                         },
-    //                     ];
-    //                 } else {
-    //                     newProfile.goal = response;
-    //                     newStep = 6;
-    //                     const formattedProfile = formatUserProfile(newProfile);
-    //                     setMessages((prevMessages) => [
-    //                         ...prevMessages,
-    //                         {
-    //                             type: 'bot',
-    //                             text: `Thank you! Your fitness goal is ${response}. We are generating your weekly fitness plan.`,
-    //                         },
-    //                     ]);
-    //                     setMessages((prevMessages) => [
-    //                         ...prevMessages,
-    //                         {
-    //                             type: 'bot',
-    //                             text: 'msg',
-    //                         },
-    //                     ]);
-    //                     setIsChatting(true);
-    //                 }
-    //                 break;
-    //             case 5:
-    //                 newProfile.goal = response;
-    //                 newStep = 6;
-    //                 const formattedProfile = formatUserProfile(newProfile);
-    //                 generateUserReport(formattedProfile);
-    //                 newMessages = [
-    //                     {
-    //                         type: 'bot',
-    //                         text: `Thank you! Your specified fitness goal is ${response}. We are generating your weekly fitness plan.`,
-    //                     },
-    //                     {
-    //                         type: 'bot',
-    //                         text: reportMsg,
-    //                     },
-    //                 ];
-    //                 setIsChatting(true);
-    //                 break;
-    //             default:
-    //                 break;
-    //         }
-
-    //         setStep(newStep);
-    //         setUserProfile(newProfile);
-    //         return [
-    //             ...prevMessages,
-    //             { type: 'user', text: response },
-    //             ...newMessages,
-    //         ];
-    //     });
-    // };
+    const handleGeneratePDF = async (text: string) => {
+        try {
+            const response = await axios.post('/api/generate-pdf', { text });
+            if (response.data.url) {
+                setDownloadUrl(response.data.url);
+            }
+        } catch (error) {
+            console.error('Error generating PDF:', error);
+        }
+    };
     const handleUserResponse = async (response: string) => {
         let newProfile = { ...userProfile };
         let newStep = step;
@@ -310,7 +204,9 @@ const ChatMessages = ({
         setUserProfile(newProfile);
         setMessages((prevMessages) => [...prevMessages, ...newMessages]);
     };
-
+    if (reportMsg) {
+        handleGeneratePDF(reportMsg);
+    }
     const formatUserProfile = (profile: {
         age: string;
         gender: string;
@@ -368,7 +264,16 @@ const ChatMessages = ({
                             </div>
                         )}
                     </div>
-                ))}{' '}
+                ))}
+                {downloadUrl && (
+                    <a
+                        href={downloadUrl}
+                        download="report.pdf"
+                        className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                    >
+                        Download as PDF
+                    </a>
+                )}
             </div>
 
             {(step === 0 || step === 2 || step === 3 || step === 5) && (
