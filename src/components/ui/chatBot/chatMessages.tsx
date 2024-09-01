@@ -70,7 +70,7 @@ const ChatMessages = ({ chatId }: { chatId: number }) => {
             if (resp) {
                 handleGeneratePDF(resp);
             }
-        }, 15000);
+        }, 20000);
     };
 
     const generateUserReport = async (formattedProfile: string) => {
