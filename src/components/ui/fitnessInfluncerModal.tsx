@@ -47,8 +47,8 @@ const InfluencerModal = ({
         }
     }, []);
     const fetchMessages = async (resp: number) => {
+        setLoading(true);
         setTimeout(async () => {
-            setLoading(true);
             const messages = await getNewMessages(resp, 0);
             setAgentFirstMessage(messages[1].content);
             localStorage.setItem('hasModalBeenShown', 'true');

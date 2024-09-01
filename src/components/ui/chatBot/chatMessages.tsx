@@ -239,14 +239,14 @@ const ChatMessages = ({
     const handleOptionClick = (option: string) => {
         handleUserResponse(option);
     };
-
+    console.log(messages);
     return (
         <div className="flex flex-col no-scrollbar items-center ">
             <div
                 ref={chatContainerRef}
                 className="w-full   h-[calc(100vh-6rem)]"
             >
-                <TransitionGroup>
+                <TransitionGroup className="mb-5">
                     {messages.map((message, index) => (
                         <CSSTransition
                             key={index}
@@ -266,7 +266,7 @@ const ChatMessages = ({
                                     {message.text}
                                 </p>
                                 {message.options && (
-                                    <div className="flex justify-center space-x-2">
+                                    <div className="flex justify-center space-x-2 p-2">
                                         {message.options.map((option, idx) => (
                                             <button
                                                 key={idx}
@@ -296,15 +296,18 @@ const ChatMessages = ({
                     </CSSTransition>
                 )}
 
-                {downloadUrl && (
-                    <a
-                        href={downloadUrl}
-                        download="report.pdf"
-                        className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-                    >
-                        Download as PDF
-                    </a>
-                )}
+                {messages.length > 0 &&
+                    messages[messages.length - 1].text ===
+                        "Here's your personalized fitness plan!" &&
+                    downloadUrl && (
+                        <a
+                            href={downloadUrl}
+                            download="report.pdf"
+                            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                        >
+                            Download as PDF
+                        </a>
+                    )}
             </div>
 
             {(step === 0 || step === 2 || step === 3 || step === 5) && (
