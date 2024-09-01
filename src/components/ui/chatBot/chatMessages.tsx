@@ -2,7 +2,7 @@
 
 import { addMessage, getNewMessages } from '@/contracts/galadriel';
 import useGlobalStore from '@/store';
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface Message {
     type: 'bot' | 'user';
@@ -61,6 +61,7 @@ const ChatMessages = ({
                 agentRunID: chatId,
                 provider,
             });
+            console.log(response);
             if (response.dispatch) {
                 fetchMessages();
             }
@@ -334,8 +335,6 @@ const ChatMessages = ({
     const handleOptionClick = (option: string) => {
         handleUserResponse(option);
     };
-    console.log(reportMsg);
-
     return (
         <div className="flex flex-col items-center h-full">
             <div className="w-full mb-10 space-y-3">
@@ -369,8 +368,9 @@ const ChatMessages = ({
                             </div>
                         )}
                     </div>
-                ))}
+                ))}{' '}
             </div>
+
             {(step === 0 || step === 2 || step === 3 || step === 5) && (
                 <div className="flex absolute bottom-0 w-[18em] items-center">
                     <input

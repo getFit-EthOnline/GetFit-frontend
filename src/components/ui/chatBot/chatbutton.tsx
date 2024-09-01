@@ -9,6 +9,7 @@ const ChatButton = ({ chatId }: { chatId: number }) => {
     const [open, setOpen] = useState(false);
     const { userAgent } = useGlobalStore();
     const { provider } = useWeb3Auth();
+
     return (
         <div className="fixed bottom-0 right-0 w-[300px]   overflow-hidden   ">
             <div

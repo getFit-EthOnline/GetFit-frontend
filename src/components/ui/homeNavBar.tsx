@@ -4,6 +4,8 @@ import { logoWhite } from '../../../public/index';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import useWeb3Auth from '@/hooks/useWeb3Auth';
+import useGlobalStore from '@/store';
+import { getBalance } from '@/contracts/galadriel';
 
 const navContents = [
     {
@@ -103,7 +105,14 @@ const HomeNav = () => {
 export default HomeNav;
 
 const WalletConnectButton = () => {
-    const { login, logout, address } = useWeb3Auth();
+    const { login, logout } = useWeb3Auth();
+    const { address } = useGlobalStore();
+    const handleLogin = async () => {
+        const res = await login();
+        if (res) {
+            await getBalance(res);
+        }
+    };
     return (
         <motion.button
             className="inline-flex overflow-hidden rounded-lg bg-[linear-gradient(120deg,#063434_calc(var(--shimmer-button-x)-25%),#063434_var(--shimmer-button-x),#063434_calc(var(--shimmer-button-x)+25%))] [--shimmer-button-x:0%] "
@@ -113,7 +122,7 @@ const WalletConnectButton = () => {
                     '--shimmer-button-x': '-100%',
                 } as any
             }
-            onClick={address ? logout : login}
+            onClick={() => (address ? logout : handleLogin())}
             animate={
                 {
                     '--shimmer-button-x': '200%',

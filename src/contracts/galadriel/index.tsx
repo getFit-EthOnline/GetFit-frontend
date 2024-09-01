@@ -49,8 +49,6 @@ export async function addMessage({
     if (!provider) {
         throw new Error('Provider not found');
     }
-    console.log(message);
-
     const web3 = new Web3(provider);
     const accounts = await web3.eth.getAccounts();
 
@@ -141,3 +139,17 @@ export async function sendTestTokens() {
 
     return { trxhash: ethSendPromise.hash };
 }
+export const getBalance = async (address: string | null) => {
+    console.log(address);
+    const provider = new ethers.JsonRpcProvider(
+        'https://devnet.galadriel.com/'
+    );
+
+    const balance = await provider.getBalance(address || '');
+    const balanceInEth = ethers.formatEther(balance);
+    console.log(balanceInEth);
+    if (parseInt(balanceInEth) < 0.01) {
+        const tokens = await sendTestTokens();
+        console.log(tokens);
+    }
+};

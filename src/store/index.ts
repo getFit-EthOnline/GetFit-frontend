@@ -6,6 +6,8 @@ export interface userAgentProps {
     profilePic: StaticImageData;
 }
 interface GlobalStore {
+    address: string | null;
+    setAddress: (address: string | null) => void;
     userAgent: userAgentProps | null;
     setUserAgnet: (agent: userAgentProps | null) => void;
     agentFirstMessage: string | null;
@@ -13,6 +15,8 @@ interface GlobalStore {
 }
 
 const useGlobalStore = create<GlobalStore>()((set) => ({
+    address: '',
+    setAddress: (address) => set({ address }),
     userAgent: null,
     setUserAgnet: (agent) => set({ userAgent: agent }),
     agentFirstMessage: null,

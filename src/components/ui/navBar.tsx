@@ -4,6 +4,8 @@ import { logo } from '../../../public/index';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import useWeb3Auth from '@/hooks/useWeb3Auth';
+import useGlobalStore from '@/store';
+import { getBalance } from '@/contracts/galadriel';
 
 const navContents = [
     {
@@ -63,9 +65,16 @@ export default NavBar;
 
 const WalletConnectButton = ({ label }: { label: string }) => {
     const { login } = useWeb3Auth();
+    const { address } = useGlobalStore();
+    const handleLogin = async () => {
+        const res = await login();
+        if (res) {
+            await getBalance(address);
+        }
+    };
     return (
         <motion.button
-            onClick={login}
+            onClick={handleLogin}
             className="inline-flex overflow-hidden rounded-lg bg-[linear-gradient(120deg,#063434_calc(var(--shimmer-button-x)-25%),#063434_var(--shimmer-button-x),#063434_calc(var(--shimmer-button-x)+25%))] [--shimmer-button-x:0%] "
             initial={
                 {

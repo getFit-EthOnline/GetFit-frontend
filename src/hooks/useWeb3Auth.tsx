@@ -5,6 +5,8 @@ import { Web3Auth } from '@web3auth/modal';
 import { OpenloginAdapter } from '@web3auth/openlogin-adapter';
 import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
+import useGlobalStore from '@/store';
+import { getBalance } from '@/contracts/galadriel';
 const clientId =
     'BOZXvB8YZOmaHlxETldZRrA91mqa3UiLz46eonVOL627eJX0QQ2Ncct_7cNWUDI20n-EAY2f4_vs_szOXocmmBI';
 
@@ -66,7 +68,7 @@ web3auth.configureAdapter(openloginAdapter);
 function useWeb3Auth() {
     const [provider, setProvider] = useState<IProvider | null>(null);
     const [loggedIn, setLoggedIn] = useState(false);
-    const [address, setAddress] = useState<string | null>('');
+    const { setAddress } = useGlobalStore();
     useEffect(() => {
         if (loggedIn) {
             getAccounts();
@@ -98,6 +100,8 @@ function useWeb3Auth() {
         if (web3auth.connected) {
             setLoggedIn(true);
         }
+        const addr = await getAccounts();
+        return addr;
     };
 
     const logout = async () => {
@@ -118,11 +122,12 @@ function useWeb3Auth() {
         const addr = signer.getAddress();
         const address = await addr;
         setAddress(address);
+        return address;
     };
     const getUserInfo = async () => {
         const user = await web3auth.getUserInfo();
         console.log(user);
     };
-    return { login, loggedIn, logout, address, getUserInfo, provider };
+    return { login, loggedIn, logout, getUserInfo, provider };
 }
 export default useWeb3Auth;
