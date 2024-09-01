@@ -1,32 +1,41 @@
 'use client';
-import React, { useState } from 'react';
-
-import Image from 'next/image';
-import ChatButton from '@/components/ui/chatBot/chatbutton';
-import InfluencerModal from '@/components/ui/fitnessInfluncerModal';
-import useWeb3Auth from '@/hooks/useWeb3Auth';
-import useGlobalStore from '@/store';
-import SportsBets from '@/components/ui/homeScreen/sportsBets';
-import LiveMatches from '@/components/ui/homeScreen/liveMatches';
 import BettingTable from '@/components/ui/homeScreen/bettingTable';
+import LiveMatches from '@/components/ui/homeScreen/liveMatches';
+import SportsBets from '@/components/ui/homeScreen/sportsBets';
+import { useState } from 'react';
+import {
+    armWrestlingEvents,
+    mmahomeEvents,
+    weightliftingHomeevents,
+} from '../../../../public';
 
-
+const events = [
+    {
+        id: 1,
+        title: 'Weight Lifting',
+        image: weightliftingHomeevents,
+    },
+    {
+        id: 2,
+        title: 'Arm Wrestling',
+        image: armWrestlingEvents,
+    },
+    {
+        id: 3,
+        title: 'Mix Martial arts',
+        image: mmahomeEvents,
+    },
+];
 
 const Page = () => {
-    const { loggedIn, provider } = useWeb3Auth();
-    const { userAgent } = useGlobalStore();
-    const [selected, setSelected] = useState<string>("weightLifting")
-    console.log(selected)
+    const [selected, setSelected] = useState<string>('weightLifting');
     return (
-        <div className=" pt-10">
-            <div className=' flex flex-col justify-center gap-y-20'>
+        <div className="pt-10">
+            <div className=" flex flex-col justify-center gap-y-20">
                 <SportsBets selected={selected} setSelected={setSelected} />
                 <LiveMatches selected={selected} />
                 <BettingTable />
-
             </div>
-            <ChatButton />
-            {/* {loggedIn && <InfluencerModal provider={provider} />} */}
         </div>
     );
 };

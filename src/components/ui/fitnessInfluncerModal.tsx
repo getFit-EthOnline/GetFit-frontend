@@ -9,6 +9,7 @@ import {
     davidGogginsProfilePic,
     larryWheelsProfilePic,
 } from '../../../public';
+import SpiralLoader from './loader';
 const InfluencerDetails = [
     {
         id: 1,
@@ -27,30 +28,44 @@ const InfluencerDetails = [
     },
 ];
 
-const InfluencerModal = ({ provider }: { provider: any }) => {
+const InfluencerModal = ({
+    provider,
+    setChatId,
+}: {
+    provider: any;
+    setChatId: React.Dispatch<React.SetStateAction<number>>;
+}) => {
     const [isOpen, setIsOpen] = useState(true);
     const [selectedInfluencer, setSelectedInfluencer] =
         useState<userAgentProps | null>(null);
-    const { userAgent, setUserAgnet, setAgentFirstMessage } = useGlobalStore();
+    const { setUserAgnet, setAgentFirstMessage } = useGlobalStore();
+    const [loading, setLoading] = useState(false);
     useEffect(() => {
         const hasModalBeenShown = localStorage.getItem('hasModalBeenShown');
         if (hasModalBeenShown) {
             setIsOpen(false);
         }
     }, []);
-
+    const fetchMessages = async (resp: number) => {
+        setTimeout(async () => {
+            const messages = await getNewMessages(resp, 0);
+            setAgentFirstMessage(messages[1].content);
+            localStorage.setItem('hasModalBeenShown', 'true');
+            setLoading(false);
+            setIsOpen(false);
+        }, 15000);
+    };
     const closeModal = async () => {
         setUserAgnet(selectedInfluencer);
+        setLoading(true);
         const resp = await startFitnessRun({
-            message: `Create a fitness motivational quote for the influencer ${userAgent?.name}`,
+            message: `Create a fitness motivational quote from the influencer ${selectedInfluencer?.name}`,
             provider,
         });
         if (resp.runId) {
-            const messages = await getNewMessages(resp.runId, 0);
-            setAgentFirstMessage(messages[1].content);
+            setChatId(resp.runId);
+            fetchMessages(resp.runId);
         }
-        localStorage.setItem('hasModalBeenShown', 'true');
-        setIsOpen(false);
     };
     return (
         <div>
@@ -110,13 +125,14 @@ const InfluencerModal = ({ provider }: { provider: any }) => {
                                     );
                                 })}
                             </div>
-                            <div className="mt-4">
+                            <div className="mt-4  ">
                                 <Button
-                                    className="inline-flex items-center gap-2 rounded-md bg-gray-700 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[focus]:outline-1 data-[focus]:outline-white data-[open]:bg-gray-700"
+                                    className="inline-flex items-center gap-2 rounded-md bg-gray-700 p-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[focus]:outline-1 data-[focus]:outline-white data-[open]:bg-gray-700"
                                     disabled={!selectedInfluencer}
                                     onClick={closeModal}
                                 >
-                                    Start your fitness journey now
+                                    <p> Start your fitness journey now</p>
+                                    {loading && <SpiralLoader />}
                                 </Button>
                             </div>
                         </DialogPanel>

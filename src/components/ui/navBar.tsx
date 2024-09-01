@@ -4,6 +4,8 @@ import { logo } from '../../../public/index';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import useWeb3Auth from '@/hooks/useWeb3Auth';
+import useGlobalStore from '@/store';
+import { getBalance } from '@/contracts/galadriel';
 
 const navContents = [
     {
@@ -53,19 +55,24 @@ const NavBar = () => {
                 })}
             </div>
             <div className=" items-center flex justify-center  w-1/4">
-                <WalletConnectButton label="connect wallet" />
+                <WalletConnectButton />
             </div>
         </div>
     );
 };
-
 export default NavBar;
-
-const WalletConnectButton = ({ label }: { label: string }) => {
-    const { login } = useWeb3Auth();
+export const WalletConnectButton = () => {
+    const { login, logout } = useWeb3Auth();
+    const { address } = useGlobalStore();
+    const handleLogin = async () => {
+        const res = await login();
+        console.log(res);
+        if (res) {
+            await getBalance(res);
+        }
+    };
     return (
         <motion.button
-            onClick={login}
             className="inline-flex overflow-hidden rounded-lg bg-[linear-gradient(120deg,#063434_calc(var(--shimmer-button-x)-25%),#063434_var(--shimmer-button-x),#063434_calc(var(--shimmer-button-x)+25%))] [--shimmer-button-x:0%] "
             initial={
                 {
@@ -73,6 +80,7 @@ const WalletConnectButton = ({ label }: { label: string }) => {
                     '--shimmer-button-x': '-100%',
                 } as any
             }
+            onClick={() => (address ? logout() : handleLogin())}
             animate={
                 {
                     '--shimmer-button-x': '200%',
@@ -96,7 +104,7 @@ const WalletConnectButton = ({ label }: { label: string }) => {
             }}
         >
             <span className="m-[0.125rem] text-[#063434] rounded-[calc(0.5rem-0.125rem)] bg-[#B8FE22] px-4 py-1   backdrop-blur-sm">
-                {label}
+                {address ? address : 'connect wallet'}
             </span>
         </motion.button>
     );

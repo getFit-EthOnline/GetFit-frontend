@@ -1,9 +1,7 @@
 'use client';
-import React from 'react';
-import { logoWhite } from '../../../public/index';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
-import useWeb3Auth from '@/hooks/useWeb3Auth';
+import { logoWhite } from '../../../public/index';
+import { WalletConnectButton } from './navBar';
 
 const navContents = [
     {
@@ -101,44 +99,3 @@ const HomeNav = () => {
 };
 
 export default HomeNav;
-
-const WalletConnectButton = () => {
-    const { login, logout, address } = useWeb3Auth();
-    return (
-        <motion.button
-            className="inline-flex overflow-hidden rounded-lg bg-[linear-gradient(120deg,#063434_calc(var(--shimmer-button-x)-25%),#063434_var(--shimmer-button-x),#063434_calc(var(--shimmer-button-x)+25%))] [--shimmer-button-x:0%] "
-            initial={
-                {
-                    scale: 1,
-                    '--shimmer-button-x': '-100%',
-                } as any
-            }
-            onClick={address ? logout : login}
-            animate={
-                {
-                    '--shimmer-button-x': '200%',
-                } as any
-            }
-            transition={{
-                stiffness: 500,
-                damping: 20,
-                type: 'spring',
-                '--shimmer-button-x': {
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: [0.445, 0.05, 0.55, 0.95],
-                },
-            }}
-            whileTap={{
-                scale: 0.95,
-            }}
-            whileHover={{
-                scale: 1.05,
-            }}
-        >
-            <span className="m-[0.125rem] text-[#063434] rounded-[calc(0.5rem-0.125rem)] bg-[#B8FE22] px-4 py-1   backdrop-blur-sm">
-                {address ? address : 'connect wallet'}
-            </span>
-        </motion.button>
-    );
-};
