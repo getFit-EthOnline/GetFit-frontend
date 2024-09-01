@@ -11,7 +11,7 @@ const ChatButton = ({ chatId }: { chatId: number }) => {
     const { provider } = useWeb3Auth();
 
     return (
-        <div className="fixed bottom-0 right-0 w-[400px]   overflow-hidden   ">
+        <div className="fixed bottom-0 right-0 w-[400px]   overflow-hidden z-50  ">
             <div
                 onClick={() => setOpen(!open)}
                 className="  transition-all ease-in-out duration-100 rounded-md rounded-b-none min-h-11  bg-slate-400  hover:bg-slate-500  mx-1  py-2 px-4"

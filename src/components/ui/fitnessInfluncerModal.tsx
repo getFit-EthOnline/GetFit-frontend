@@ -47,7 +47,6 @@ const InfluencerModal = ({
         }
     }, []);
     const fetchMessages = async (resp: number) => {
-        setLoading(true);
         setTimeout(async () => {
             const messages = await getNewMessages(resp, 0);
             setAgentFirstMessage(messages[1].content);
@@ -58,6 +57,7 @@ const InfluencerModal = ({
     };
     const closeModal = async () => {
         setUserAgnet(selectedInfluencer);
+        setLoading(true);
         const resp = await startFitnessRun({
             message: `Create a fitness motivational quote from the influencer ${selectedInfluencer?.name}`,
             provider,

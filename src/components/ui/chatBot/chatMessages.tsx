@@ -4,7 +4,7 @@ import { addMessage, getNewMessages } from '@/contracts/galadriel';
 import useGlobalStore from '@/store';
 import React, { useEffect, useRef, useState } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import './ChatMessages.css'; // Import CSS for animations
+import '@/styles/chat.css';
 import axios from 'axios';
 interface Message {
     type: 'bot' | 'user' | 'loading';
@@ -77,6 +77,7 @@ const ChatMessages = ({
 
     const generateUserReport = async (formattedProfile: string) => {
         try {
+            console.log(provider);
             const response = await addMessage({
                 message: formattedProfile,
                 agentRunID: chatId,
@@ -239,7 +240,7 @@ const ChatMessages = ({
     const handleOptionClick = (option: string) => {
         handleUserResponse(option);
     };
-    console.log(messages);
+    console.log(chatId);
     return (
         <div className="flex flex-col no-scrollbar items-center ">
             <div

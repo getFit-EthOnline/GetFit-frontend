@@ -33,7 +33,7 @@ const web3auth = new Web3Auth({
 const openloginAdapter = new OpenloginAdapter({
     adapterSettings: {
         uxMode: 'redirect',
-        redirectUrl: 'http://localhost:3000/home',
+        redirectUrl: 'http://localhost:3000/prediction',
         whiteLabel: {
             appName: 'Get Fit',
             appUrl: 'https://web3auth.io',
