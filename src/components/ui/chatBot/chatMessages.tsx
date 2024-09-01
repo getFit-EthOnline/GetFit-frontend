@@ -5,7 +5,7 @@ import useGlobalStore from '@/store';
 import React, { useEffect, useRef, useState } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import './ChatMessages.css'; // Import CSS for animations
-
+import axios from 'axios';
 interface Message {
     type: 'bot' | 'user' | 'loading';
     text: string | null;
@@ -19,6 +19,7 @@ const ChatMessages = ({
     chatId: number;
     provider: any;
 }) => {
+    const [downloadUrl, setDownloadUrl] = useState('');
     const [messages, setMessages] = useState<Message[]>([]);
     const [userResponse, setUserResponse] = useState<string>('');
     const [step, setStep] = useState<number>(0);
@@ -44,7 +45,12 @@ const ChatMessages = ({
 
     useEffect(() => {
         setMessages([
-            { type: 'bot', text: agentFirstMessage || "“From the time you take your first breath, you become eligible to die. You also become eligible to find your greatness and become the one warrior”" },
+            {
+                type: 'bot',
+                text:
+                    agentFirstMessage ||
+                    '"From the time you take your first breath, you become eligible to die. You also become eligible to find your greatness and become the one warrior"',
+            },
             { type: 'bot', text: 'What is your age?' },
         ]);
     }, [agentFirstMessage]);
@@ -63,21 +69,20 @@ const ChatMessages = ({
     }, [messages, isTyping]);
 
     const fetchMessages = async () => {
-        const newMessages = await getNewMessages(11, 0);
+        const newMessages = await getNewMessages(12, 0);
+        console.log(newMessages);
         const resp = newMessages[newMessages.length - 2].content;
-        setMessages((prevMessages) => [
-            ...prevMessages,
-            { type: 'bot', text: resp },
-        ]);
+        handleGeneratePDF(resp);
     };
 
     const generateUserReport = async (formattedProfile: string) => {
         try {
             const response = await addMessage({
                 message: formattedProfile,
-                agentRunID: 11,
+                agentRunID: 12,
                 provider,
             });
+
             if (response.dispatch) {
                 fetchMessages();
             }
@@ -86,6 +91,16 @@ const ChatMessages = ({
         }
     };
 
+    const handleGeneratePDF = async (text: string) => {
+        try {
+            const response = await axios.post('/api/generate-pdf', { text });
+            if (response.data.url) {
+                setDownloadUrl(response.data.url);
+            }
+        } catch (error) {
+            console.error('Error generating PDF:', error);
+        }
+    };
     const handleUserResponse = async (response: string) => {
         let newProfile = { ...userProfile };
         let newStep = step;
@@ -163,7 +178,6 @@ const ChatMessages = ({
                     // Format profile and generate report
                     const formattedProfile = formatUserProfile(newProfile);
                     await generateUserReport(formattedProfile);
-
                     newMessages.push({
                         type: 'bot',
                         text: "Here's your personalized fitness plan!",
@@ -183,7 +197,6 @@ const ChatMessages = ({
                 // Format profile and generate report
                 const formattedProfile = formatUserProfile(newProfile);
                 await generateUserReport(formattedProfile);
-
                 newMessages.push({
                     type: 'bot',
                     text: "Here's your personalized fitness plan!",
@@ -199,7 +212,9 @@ const ChatMessages = ({
             setMessages((prevMessages) => [...prevMessages, ...newMessages]);
         }, 4000); // 4-second delay before showing the bot's response
     };
-
+    // if (reportMsg) {
+    //     handleGeneratePDF(reportMsg);
+    // }
     const formatUserProfile = (profile: {
         age: string;
         gender: string;
@@ -239,11 +254,13 @@ const ChatMessages = ({
                             classNames="fade"
                         >
                             <div
-                                className={`w-fit mt-2   ${message.type === 'bot' ? 'm-0' : 'ml-[80%]'
-                                    }  rounded-md ${message.type === 'bot'
+                                className={`w-fit mt-2   ${
+                                    message.type === 'bot' ? 'm-0' : 'ml-[80%]'
+                                }  rounded-md ${
+                                    message.type === 'bot'
                                         ? 'bg-blue-100'
                                         : 'bg-green-200'
-                                    }`}
+                                }`}
                             >
                                 <p className="text-gray-800 p-1 mx-1 text-sm">
                                     {message.text}
@@ -278,7 +295,18 @@ const ChatMessages = ({
                         </div>
                     </CSSTransition>
                 )}
+
+                {downloadUrl && (
+                    <a
+                        href={downloadUrl}
+                        download="report.pdf"
+                        className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                    >
+                        Download as PDF
+                    </a>
+                )}
             </div>
+
             {(step === 0 || step === 2 || step === 3 || step === 5) && (
                 <div className="flex absolute bottom-0 w-[24em] items-center">
                     <input
@@ -293,10 +321,20 @@ const ChatMessages = ({
                         onClick={handleSend}
                         className="px-4 py-2 bg-blue-500 text-white rounded-r-md"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={1.5}
+                            stroke="currentColor"
+                            className="size-6"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
+                            />
                         </svg>
-
                     </button>
                 </div>
             )}
