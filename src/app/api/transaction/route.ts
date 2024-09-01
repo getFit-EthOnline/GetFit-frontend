@@ -55,7 +55,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse | Response> {
     params: {
       abi: CHILIZ_FAN_BATTLE_ABI,
       to: CHILIZ_FAN_BATTLE_ADDRESS,
-      value: parseUnits("0.005", 18).toString(),
+      value: parseUnits("7.5", 18).toString(),
       data,
     },
   };
