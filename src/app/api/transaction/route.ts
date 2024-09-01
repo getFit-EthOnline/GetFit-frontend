@@ -4,6 +4,7 @@ import type { FrameTransactionResponse } from "@coinbase/onchainkit/frame";
 import { getXmtpFrameMessage } from "@coinbase/onchainkit/xmtp";
 import { NextRequest, NextResponse } from "next/server";
 import { encodeFunctionData } from "viem";
+import { spicy } from "viem/chains";
 
 async function getResponse(req: NextRequest): Promise<NextResponse | Response> {
   const body = await req.json();
@@ -19,7 +20,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse | Response> {
   });
 
   const txData: FrameTransactionResponse = {
-    chainId: `eip155:11155111`,
+    chainId: `eip155:${spicy.id}`,
     method: "eth_sendTransaction",
     params: {
       abi: CHILIZ_FAN_BATTLE_ABI,
