@@ -63,15 +63,18 @@ const ChatMessages = ({ chatId }: { chatId: number }) => {
     }, [messages, isTyping]);
 
     const fetchMessages = async () => {
-        const newMessages = await getNewMessages(chatId, 0);
-        console.log(newMessages);
-        const resp = newMessages[newMessages.length - 2].content;
-        handleGeneratePDF(resp);
+        setTimeout(async () => {
+            const newMessages = await getNewMessages(chatId, 0);
+            console.log(newMessages);
+            const resp = newMessages[newMessages.length - 2].content;
+            if (resp) {
+                handleGeneratePDF(resp);
+            }
+        }, 1500);
     };
 
     const generateUserReport = async (formattedProfile: string) => {
         try {
-            console.log(provider);
             const response = await addMessage({
                 message: formattedProfile,
                 agentRunID: chatId,
@@ -79,7 +82,7 @@ const ChatMessages = ({ chatId }: { chatId: number }) => {
             });
 
             if (response.dispatch) {
-                fetchMessages();
+                await fetchMessages();
             }
         } catch (error) {
             console.error('Error generating user report:', error);
