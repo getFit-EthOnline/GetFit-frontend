@@ -1,5 +1,12 @@
 "use client"
-import React, { useState, useEffect, useRef } from 'react';
+import { ReplyCodec } from "@xmtp/content-type-reply";
+import { CachedConversation, ContentTypeMetadata, Conversation, useClient, useConversations, useSendMessage, useStartConversation } from "@xmtp/react-sdk";
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useWalletClient } from 'wagmi';
+
+
+const peerAddress = "0x6250f33239D70BebA96cBd170E98bC0aD0e50285";
+const conversationTopic = "/match goggin_elixir";
 
 const initialMessages = [
     { id: 1, user: 'User1', level: 'Pro', message: 'Just placed 200 coins on the next round! Feeling lucky 🍀', timestamp: '12:08 PM' },
@@ -12,16 +19,25 @@ const initialMessages = [
 ];
 
 const LiveChat = () => {
+    const { client, error, isLoading, initialize } = useClient();
+    const { data: walletClient } = useWalletClient();
+    const { startConversation, } = useStartConversation();
+    const [conversation, setConversation] = useState<Conversation | null>(null);
+    const { sendMessage } = useSendMessage();
+    const { conversations } = useConversations();
+
+    console.log(client, "client");
+
     const [messages, setMessages] = useState<{ id: number; user: string; level: string; message: string; timestamp: string; }[]>([]);
     const messageIndexRef = useRef(0);
     const [inputMessage, setInputMessage] = useState('');
     const chatRef = useRef(null);
     const intervalIdRef = useRef<NodeJS.Timeout | null>(null);
 
-    useEffect(() => {
-        startMessageLoop();
-        return () => clearInterval(intervalIdRef.current || undefined);
-    }, []);
+    // useEffect(() => {
+    //     startMessageLoop();
+    //     return () => clearInterval(intervalIdRef.current || undefined);
+    // }, []);
 
     useEffect(() => {
         if (chatRef.current) {
@@ -45,9 +61,18 @@ const LiveChat = () => {
         setInputMessage(e.target.value);
     };
 
-    const handleSendMessage = () => {
-        if (inputMessage.trim() === '') return;
+    const foundPeer = conversations.find((conversation) => conversation.peerAddress === peerAddress);
 
+    const handleSendMessage = async () => {
+        if (inputMessage.trim() === '') return;
+        if (!foundPeer) {
+            const conversation = await startConversation(peerAddress, conversationTopic);
+            const s = await sendMessage(conversation.cachedConversation as unknown as CachedConversation<ContentTypeMetadata>, inputMessage);
+            debugger
+        } else {
+            const s = await sendMessage(foundPeer as unknown as CachedConversation<ContentTypeMetadata>, inputMessage);
+            debugger
+        }
         const newMessage = {
             id: messages.length + 1,
             user: 'You',
@@ -59,13 +84,46 @@ const LiveChat = () => {
         setMessages((prevMessages) => [...prevMessages, newMessage]);
         setInputMessage('');
         messageIndexRef.current = 0; // Reset message index to restart the loop
-        startMessageLoop(); // Restart the loop
+        // startMessageLoop(); // Restart the loop
     };
 
+    const handleConnect = useCallback(async () => {
+        const options = {
+            persistConversations: true,
+            env: "dev" as const,
+        };
+        try {
+            const client = await initialize({
+                options, signer: walletClient
+            });
+            if (client) {
+                const ss = client.registerCodec(new ReplyCodec());
+                const allConversations = await client.conversations.list();
+                // Assuming you have a method to fetch the last message for a conversation
+                debugger
+                const sortedConversations = allConversations.sort(
+                    (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+                );
+                debugger
+                console.log(ss, "ss");
+                debugger
+            }
+        } catch (error) {
+            console.error("Failed to initialize XMTP client:", error);
+        }
+    }, [initialize, walletClient]);
+
+    console.log(conversations, "client_conversations");
+
     return (
-        <>
-            <div className="flex flex-col h-full w-full  rounded-md bg-white p-4   ">
-                <h1 className=' text-slate-600 font-bold '>Live Chats</h1>
+        <div className="flex relative flex-col h-full w-full  rounded-md bg-white p-4   ">
+            <h1 className=' text-slate-600 font-bold '>Live Chats</h1>
+            {walletClient && !client &&
+                <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
+                    <button className='bg-blue-500 text-white px-4 py-2 rounded-md' onClick={handleConnect}>Connect with xmtp</button>
+                </div>
+            }
+            {client ?
                 <div className="flex-grow overflow-y-auto pr-2 no-scrollbar  " ref={chatRef}>
                     {messages.map((msg, index) => (
                         msg && (
@@ -91,24 +149,25 @@ const LiveChat = () => {
                             </div>
                         )
                     ))}
+                </div> : <div className="flex-grow overflow-y-auto pr-2 no-scrollbar  " ref={chatRef}>
                 </div>
-                <div className="flex border-t border-gray-200 pt-4">
-                    <input
-                        type="text"
-                        value={inputMessage}
-                        onChange={handleInputChange}
-                        placeholder="Type your message here..."
-                        className="flex-grow p-2 rounded bg-gray-100 text-gray-800 focus:outline-none"
-                    />
-                    <button
-                        onClick={handleSendMessage}
-                        className="ml-2 p-2 rounded bg-blue-500 text-white hover:bg-blue-600"
-                    >
-                        Send
-                    </button>
-                </div>
+            }
+            <div className="flex border-t border-gray-200 pt-4">
+                <input
+                    type="text"
+                    value={inputMessage}
+                    onChange={handleInputChange}
+                    placeholder="Type your message here..."
+                    className="flex-grow p-2 rounded bg-gray-100 text-gray-800 focus:outline-none"
+                />
+                <button
+                    onClick={handleSendMessage}
+                    className="ml-2 p-2 rounded bg-blue-500 text-white hover:bg-blue-600"
+                >
+                    Send
+                </button>
             </div>
-        </>
+        </div>
     );
 };
 

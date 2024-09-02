@@ -1,6 +1,7 @@
 'use client'
 import { galadriel_devnet } from '@/config/chains';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { XMTPProvider } from '@xmtp/react-sdk';
 import { ComponentProps } from 'react';
 import { morphHolesky, spicy } from 'viem/chains';
 import { WagmiProvider, createConfig, http, useAccount, useChainId, useConnect, useDisconnect, useSwitchChain } from "wagmi";
@@ -83,7 +84,9 @@ const Providers: React.FC<ComponentProps<"div">> = ({ children }) => {
     return (
         <WagmiProvider config={config}>
             <QueryClientProvider client={queryClient}>
-                {children}
+                <XMTPProvider>
+                    {children}
+                </XMTPProvider>
             </QueryClientProvider>
         </WagmiProvider>
     );
