@@ -36,7 +36,8 @@ const InfluencerModal = ({
     const [isOpen, setIsOpen] = useState(true);
     const [selectedInfluencer, setSelectedInfluencer] =
         useState<userAgentProps | null>(null);
-    const { provider, setUserAgnet, setAgentFirstMessage } = useGlobalStore();
+    const { provider, setUserAgnet, setAgentFirstMessage, setFitnessRunTrx } =
+        useGlobalStore();
     const [loading, setLoading] = useState(false);
     useEffect(() => {
         const hasModalBeenShown = localStorage.getItem('hasModalBeenShown');
@@ -57,9 +58,12 @@ const InfluencerModal = ({
         setUserAgnet(selectedInfluencer);
         setLoading(true);
         const resp = await startFitnessRun({
-            message: `Create a fitness motivational quote from the influencer ${selectedInfluencer?.name}`,
+            message: `Create a fitness motivational quote from the influencer ${selectedInfluencer?.name}, only share a motivation quote `,
             provider,
         });
+        if (resp.dispatch) {
+            setFitnessRunTrx(resp.dispatch);
+        }
         if (resp.runId) {
             setChatId(resp.runId);
             fetchMessages(resp.runId);

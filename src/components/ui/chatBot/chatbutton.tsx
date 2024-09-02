@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import Bell from '../../../../public/icons/bell.png';
 import ChatMessages from './chatMessages';
+import { RiExternalLinkLine } from 'react-icons/ri';
 export interface Message {
     type: 'bot' | 'user' | 'loading';
     text?: string | null;
@@ -13,7 +14,7 @@ export interface Message {
 }
 const ChatButton = ({ chatId }: { chatId: number }) => {
     const [open, setOpen] = useState(false);
-    const { userAgent, agentFirstMessage } = useGlobalStore();
+    const { userAgent, agentFirstMessage, fitnessRunTrx } = useGlobalStore();
     const [messages, setMessages] = useState<Message[]>([]);
     useEffect(() => {
         setMessages([
@@ -48,6 +49,16 @@ const ChatButton = ({ chatId }: { chatId: number }) => {
                             height={20}
                             width={20}
                         />
+                        {fitnessRunTrx && (
+                            <a
+                                className="cursor-pointer"
+                                href={`https://explorer.galadriel.com/tx/${fitnessRunTrx}`}
+                                target="_blank"
+                                rel="noreferrer"
+                            >
+                                <RiExternalLinkLine size={20} />
+                            </a>
+                        )}
                     </div>
                     <div>
                         {!open ? (

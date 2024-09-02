@@ -7,6 +7,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import '@/styles/chat.css';
 import axios from 'axios';
 import { Message } from './chatbutton';
+import { RiExternalLinkLine } from 'react-icons/ri';
 
 const ChatMessages = ({
     chatId,
@@ -42,7 +43,8 @@ const ChatMessages = ({
         dietRequired: '',
     });
 
-    const { provider } = useGlobalStore();
+    const { provider, setWorkoutTrx, setDietTrx, dietTrx, workoutTrx } =
+        useGlobalStore();
 
     useEffect(() => {
         // Focus on the input when component mounts
@@ -59,7 +61,7 @@ const ChatMessages = ({
 
     const fetchMessages = async (type: string | undefined) => {
         setTimeout(async () => {
-            const newMessages = await getNewMessages(chatId, 0);
+            const newMessages = await getNewMessages(23, 0);
             console.log(newMessages);
             const resp = newMessages[newMessages.length - 1].content;
             if (type) {
@@ -80,10 +82,16 @@ const ChatMessages = ({
         try {
             const response = await addMessage({
                 message: formattedProfile,
-                agentRunID: chatId,
+                agentRunID: 23,
                 provider,
             });
             if (response.dispatch) {
+                if (type) {
+                    setDietTrx(response.dispatch);
+                } else {
+                    setWorkoutTrx(response.dispatch);
+                }
+
                 await fetchMessages(type);
             }
         } catch (error) {
@@ -105,13 +113,25 @@ const ChatMessages = ({
                         type: 'bot',
                         isComponent: true,
                         component: (
-                            <a
-                                href={downloadUrlDiet}
-                                download="report.pdf"
-                                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-                            >
-                                Download as PDF
-                            </a>
+                            <div className="flex items-center gap-x-4">
+                                <a
+                                    href={downloadUrlDiet}
+                                    download="report.pdf"
+                                    className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                                >
+                                    Download as PDF
+                                </a>
+                                {dietTrx && (
+                                    <a
+                                        className="cursor-pointer"
+                                        href={`https://explorer.galadriel.com/tx/${dietTrx}`}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                    >
+                                        <RiExternalLinkLine size={20} />
+                                    </a>
+                                )}
+                            </div>
                         ),
                     },
                 ]);
@@ -135,13 +155,25 @@ const ChatMessages = ({
                         type: 'bot',
                         isComponent: true,
                         component: (
-                            <a
-                                href={downloadUrl}
-                                download="report.pdf"
-                                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-                            >
-                                Download as PDF
-                            </a>
+                            <div className="flex items-center gap-x-4">
+                                <a
+                                    href={downloadUrl}
+                                    download="report.pdf"
+                                    className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                                >
+                                    Download as PDF
+                                </a>
+                                {workoutTrx && (
+                                    <a
+                                        className="cursor-pointer"
+                                        href={`https://explorer.galadriel.com/tx/${workoutTrx}`}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                    >
+                                        <RiExternalLinkLine size={20} />
+                                    </a>
+                                )}
+                            </div>
                         ),
                     },
                     {
@@ -305,7 +337,7 @@ const ChatMessages = ({
         <div className="flex flex-col no-scrollbar items-center ">
             <div
                 ref={chatContainerRef}
-                className="w-full   h-[calc(100vh-6rem)]"
+                className="w-full   h-[calc(100vh-4rem)]"
             >
                 <TransitionGroup className="mb-5">
                     {messages.map((message, index) => (
