@@ -2,10 +2,42 @@
 import { galadriel_devnet } from '@/config/chains';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ComponentProps } from 'react';
-import { morphHolesky, spicy } from 'viem/chains';
+import { defineChain } from 'viem';
+import { morphHolesky } from 'viem/chains';
 import { WagmiProvider, createConfig, http, useAccount, useChainId, useConnect, useDisconnect, useSwitchChain } from "wagmi";
 import Web3AuthConnectorInstance from "./Web3AuthConnectorInstance";
 const queryClient = new QueryClient()
+
+
+export const spicy = defineChain({
+    id: 88_882,
+    name: 'Chiliz Spicy Testnet',
+    network: 'chiliz-spicy-Testnet',
+    nativeCurrency: {
+        decimals: 18,
+        name: 'CHZ',
+        symbol: 'CHZ',
+    },
+    rpcUrls: {
+        default: {
+            http: [
+                'https://chiliz-spicy-rpc.publicnode.com',
+            ],
+            webSocket: [
+                'wss://spicy-rpc-ws.chiliz.com',
+                'wss://chiliz-spicy-rpc.publicnode.com',
+            ],
+        },
+    },
+    blockExplorers: {
+        default: {
+            name: 'Chiliz Explorer',
+            url: 'http://spicy-explorer.chiliz.com',
+            apiUrl: 'http://spicy-explorer.chiliz.com/api',
+        },
+    },
+    testnet: true,
+})
 
 const config = createConfig({
     chains: [galadriel_devnet, spicy, morphHolesky],

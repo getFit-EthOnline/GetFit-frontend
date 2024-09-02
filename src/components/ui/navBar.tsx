@@ -24,6 +24,7 @@ const navContents = [
 ];
 
 const NavBar = () => {
+    const { chain } = useAccount()
     return (
         <div className=" flex shadow-lg  justify-between items-center py-4 ">
             <div className=" flex justify-center items-center w-1/4">
@@ -55,6 +56,7 @@ const NavBar = () => {
                     );
                 })}
             </div>
+            <span className=' text-slate-500'>{chain?.id}</span>
             <div className=" items-center flex justify-center  w-1/4">
                 <WalletConnectButton />
             </div>

@@ -1,5 +1,6 @@
 'use client';
 import Image from 'next/image';
+import { useAccount, useConnect, useSwitchChain } from 'wagmi';
 import { logoWhite } from '../../../public/index';
 import { WalletConnectButton } from './navBar';
 
@@ -35,6 +36,11 @@ const navContents = [
 ];
 
 const HomeNav = () => {
+    const { chain } = useAccount()
+    const { address, connector, isConnected, } = useAccount();
+    const { chains, switchChain, error } = useSwitchChain()
+    const { connect, connectors } = useConnect();
+
     return (
         <>
             <div className=" flex shadow-lg  justify-between bg-[#1E1E1E] items-center py-2 px-10 ">
@@ -63,6 +69,18 @@ const HomeNav = () => {
                             className=" rounded-md bg-[#313131] py-1 text-center "
                             placeholder=" Search here"
                         />
+                        <span className='text-pink-500'>{chain?.name}</span>
+                        {
+                            chains.map((chain) => (
+                                <button
+                                    key={chain.id}
+                                    onClick={() => switchChain({ chainId: chain.id })}
+                                    className='text-white mx-3'
+                                >
+                                    {chain.name}
+                                </button>
+                            ))
+                        }
                     </div>
                     <WalletConnectButton />
                 </div>

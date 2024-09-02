@@ -56,18 +56,18 @@ export default function Home() {
 //       <button onClick={() => disconnect()} className="bg-red-300 text-black text-end px-10 h-[100px]">Disconnect</button>
 //       <button onClick={() => participateInBattle("Goggins")} className="bg-red-300 text-black text-end px-10 h-[100px]">Join Team</button>
 //       <div className="flex items-center space-x-3 justify-center">
-//         {
-//           chains.map((chain) => (
-//             <button
-//               key={chain.id}
-//               onClick={() => switchChain({ chainId: chain.id })}
-//               className="bg-red-300 text-black text-end px-10 h-[100px]"
-//             >
-//               {chain.name}<br />
-//               {chain.id}
-//             </button>
-//           ))
-//         }
+// {
+//   chains.map((chain) => (
+//     <button
+//       key={chain.id}
+//       onClick={() => switchChain({ chainId: chain.id })}
+//       className="bg-red-300 text-black text-end px-10 h-[100px]"
+//     >
+//       {chain.name}<br />
+//       {chain.id}
+//     </button>
+//   ))
+// }
 //       </div>
 //     </div>
 //   )

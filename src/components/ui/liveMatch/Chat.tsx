@@ -1,9 +1,15 @@
-import { useRef, useState } from "react";
+import { FramesClient } from "@xmtp/frames-client";
+import { useEffect, useRef, useState } from "react";
+import { useWalletClient } from "wagmi";
+import { Frame } from "./Frames/Frame";
+import { getFrameTitle, getOrderedButtons, isValidFrame, isXmtpFrame } from "./Frames/FrameInfo";
+import { fetchFrameFromUrl, urlRegex } from "./Frames/utils";
 import { PEER_ADDRESS } from "./LiveChat";
 
 function Chat({ client, messageHistory, conversation }) {
     const [inputValue, setInputValue] = useState("");
     const chatRef = useRef(null);
+
     // Function to handle sending a message
     const handleSend = async () => {
         if (inputValue) {
@@ -16,14 +22,6 @@ function Chat({ client, messageHistory, conversation }) {
     };
 
 
-    // useEffect(() => {
-    //     if (chatRef.current) {
-    //         (chatRef.current as HTMLDivElement).scrollTop = (chatRef.current as HTMLDivElement).scrollHeight;
-    //     }
-    // }, []);
-
-
-    // Function to handle sending a text message
     const onSendMessage = async (value) => {
         return conversation.send(value);
     };
@@ -39,25 +37,7 @@ function Chat({ client, messageHistory, conversation }) {
             <div className="flex-grow overflow-y-auto pr-2" ref={chatRef}>
                 {messages.map((msg, index) => (
                     msg && (
-                        <div
-                            key={msg.id || index}
-                            className={`p-2 mb-2 rounded-md ${msg.senderAddress === PEER_ADDRESS
-                                ? 'bg-blue-400 italic'
-                                : msg.senderAddress === client.address
-                                    ? 'bg-red-400 font-bold'
-                                    : msg.user === 'You'
-                                        ? 'bg-green-600 text-right'
-                                        : 'bg-gray-100'
-                                }`}
-                        >
-                            <div className="flex flex-col">
-                                <div>
-                                    <span className="font-bold mr-2">{msg.senderAddress === client.address ? "You" : "Bot"}</span>
-                                    <span className="ml-1">{msg.content}</span>
-                                </div>
-                                <span className="text-gray-500 text-xs mt-1">{msg.sent.toLocaleTimeString()}</span>
-                            </div>
-                        </div>
+                        <MessageItem msg={msg} index={index} client={client} inputValue={inputValue} />
                     )
                 ))}
             </div>
@@ -97,3 +77,181 @@ function Chat({ client, messageHistory, conversation }) {
 }
 
 export default Chat;
+
+export const MessageItem = ({ msg, index, client, inputValue }) => {
+    const { data: walletClient } = useWalletClient()
+
+    const [isLoading, setIsLoading] = useState(true);
+    const [frameMetadata, setFrameMetadata] = useState();
+    const [frameButtonUpdating, setFrameButtonUpdating] = useState(0);
+
+    const handleFrameButtonClick = async (buttonIndex, action = "post") => {
+        try {
+            debugger
+            const metadata = await fetchFrameFromUrl(msg);
+            const frameMetadata = metadata
+            if (!frameMetadata || !client || !walletClient || !frameMetadata?.frameInfo?.buttons) {
+                return;
+            }
+            const { frameInfo, url: frameUrl } = frameMetadata;
+            if (!frameInfo.buttons) {
+                return;
+            }
+            const button = frameInfo.buttons[buttonIndex];
+            console.log(button);
+            setFrameButtonUpdating(buttonIndex);
+            const framesClient = new FramesClient(client);
+            const postUrl = button.target || frameInfo.postUrl || frameUrl;
+            const payload = await framesClient.signFrameAction({
+                frameUrl,
+                inputText: inputValue || undefined,
+                buttonIndex,
+                conversationTopic: msg.conversation.topic,
+                participantAccountAddresses: [PEER_ADDRESS, client.address],
+                address: client.address,
+                state: frameInfo.state,
+            });
+
+            if (action === "tx") {
+                const transactionInfo = await framesClient.proxy.postTransaction(
+                    button.target,
+                    payload,
+                );
+                console.log("Transaction info", transactionInfo);
+
+                if (transactionInfo.method === "eth_personalSign") {
+                    const { value } = transactionInfo.params;
+                    const signature = await walletClient.signMessage({
+                        account: client,
+                        message: value,
+                    });
+
+                    const payloadWithTxId = await framesClient.signFrameAction({
+                        frameUrl,
+                        inputText: inputValue || undefined,
+                        buttonIndex,
+                        conversationTopic: msg.conversation.topic,
+                        participantAccountAddresses: [PEER_ADDRESS, client.address],
+                        address: client.address,
+                        state: frameInfo.state,
+                        transactionId: signature,
+                    });
+
+                    const completeTransactionMetadata = await framesClient.proxy.post(
+                        button.postUrl,
+                        payloadWithTxId,
+                    );
+                    setFrameMetadata(completeTransactionMetadata);
+                } else {
+                    const address = transactionInfo.params.to;
+                    debugger;
+                    try {
+                        const hash = await walletClient.sendTransaction({
+                            account: client.address,
+                            to: address,
+                            value: transactionInfo.params.value, // 1 as bigint
+                            data: transactionInfo.params.data,
+                        });
+
+                        const buttonPostUrl =
+                            frameMetadata.extractedTags["fc:frame:button:1:post_url"];
+                        const completeTransactionMetadata = await framesClient.proxy.post(
+                            buttonPostUrl,
+                            {
+                                ...payload,
+                                transactionId: hash,
+                            },
+                        );
+                        setFrameMetadata(completeTransactionMetadata);
+                    } catch (e) {
+                        debugger;
+                        console.log("Transaction error", e);
+                    }
+                }
+            } else if (action === "post") {
+                const updatedFrameMetadata = await framesClient.proxy.post(
+                    postUrl,
+                    payload,
+                );
+                setFrameMetadata(updatedFrameMetadata);
+            } else if (action === "post_redirect") {
+                const { redirectedTo } = await framesClient.proxy.postRedirect(
+                    postUrl,
+                    payload,
+                );
+                window.open(redirectedTo, "_blank");
+            } else if (action === "link" && button?.target) {
+                window.open(button.target, "_blank");
+            }
+            setFrameButtonUpdating(0);
+        } catch (e) {
+            //setShowAlert(true);
+            //setAlertMessage(e.message);
+            //alert("Error: " + e.message);
+            console.error(e);
+        }
+    };
+    const [isXmtpFrameInitial, setIsXmtpFrameInitial] = useState(false); // Add this line
+
+    useEffect(() => {
+        const fetchMetadata = async () => {
+            setIsLoading(true);
+            const isUrl = !!msg.content.match(urlRegex)?.[0];
+            if (isUrl) {
+                const metadata = await fetchFrameFromUrl(msg);
+                setFrameMetadata(metadata);
+                setIsXmtpFrameInitial(isXmtpFrame(metadata)); // Set the initial isXmtpFrame value here
+                setIsLoading(false);
+            }
+        };
+        fetchMetadata();
+    }, [msg?.content]);
+
+    const showFrame = isValidFrame(frameMetadata);
+
+    return (
+        <>
+            {showFrame && frameMetadata?.frameInfo ? (
+                <>
+                    {isLoading && (
+                        <div>{"Loading..."}</div>
+                    )}
+                    <Frame
+                        image={frameMetadata?.frameInfo?.image.content}
+                        title={getFrameTitle(frameMetadata)}
+                        buttons={getOrderedButtons(frameMetadata)}
+                        handleClick={handleFrameButtonClick}
+                        frameButtonUpdating={frameButtonUpdating}
+                        showAlert={false}
+                        alertMessage={"Hello"}
+                        onClose={() => console.log(false)}
+                        interactionsEnabled={isXmtpFrameInitial}
+                        textInput={frameMetadata?.frameInfo?.textInput?.content}
+                        onTextInputChange={() => {
+                            console.log("onTextInputChange");
+                        }}
+                        frameUrl={frameMetadata?.url}
+                    />
+                </>
+            ) : <div
+                key={msg.id || index}
+                className={`p-2 mb-2 rounded-md ${msg.senderAddress === PEER_ADDRESS
+                    ? 'bg-blue-400 italic'
+                    : msg.senderAddress === client.address
+                        ? 'bg-red-400 font-bold'
+                        : msg.user === 'You'
+                            ? 'bg-green-600 text-right'
+                            : 'bg-gray-100'
+                    }`}
+            >
+                <div className="flex flex-col">
+                    <div>
+                        <span className="font-bold mr-2">{msg.senderAddress === client.address ? "You" : "Bot"}</span>
+                        <span className="ml-1">{msg.content}</span>
+                    </div>
+                    <span className="text-gray-500 text-xs mt-1">{msg.sent.toLocaleTimeString()}</span>
+                </div>
+            </div>}
+        </>
+    )
+}
