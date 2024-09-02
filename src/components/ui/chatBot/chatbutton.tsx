@@ -1,13 +1,31 @@
 'use client';
-import React, { useState } from 'react';
-import ChatMessages from './chatMessages';
 import useGlobalStore from '@/store';
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import Bell from '../../../../public/icons/bell.png';
-import useWeb3Auth from '@/hooks/useWeb3Auth';
+import ChatMessages from './chatMessages';
+export interface Message {
+    type: 'bot' | 'user' | 'loading';
+    text?: string | null;
+    options?: string[];
+    isComponent?: boolean;
+    component?: React.ReactNode;
+}
 const ChatButton = ({ chatId }: { chatId: number }) => {
     const [open, setOpen] = useState(false);
-    const { userAgent } = useGlobalStore();
+    const { userAgent, agentFirstMessage } = useGlobalStore();
+    const [messages, setMessages] = useState<Message[]>([]);
+    useEffect(() => {
+        setMessages([
+            {
+                type: 'bot',
+                text:
+                    agentFirstMessage ||
+                    '"From the time you take your first breath, you become eligible to die. You also become eligible to find your greatness and become the one warrior"',
+            },
+            { type: 'bot', text: 'What is your age?' },
+        ]);
+    }, [agentFirstMessage]);
     return (
         <div className="fixed bottom-0 right-0 w-[400px]   overflow-hidden z-50  ">
             <div
@@ -68,7 +86,11 @@ const ChatButton = ({ chatId }: { chatId: number }) => {
             </div>
             {open && (
                 <div className=" no-scrollbar overflow-x-hidden overflow-y-scroll transition-all ease-in-out duration-200  min-h-[calc(100vh-300px)]  max-h-[calc(100vh-300px)] bg-slate-100  mx-1 p-2">
-                    <ChatMessages chatId={chatId}  />
+                    <ChatMessages
+                        chatId={chatId}
+                        messages={messages}
+                        setMessages={setMessages}
+                    />
                 </div>
             )}
         </div>

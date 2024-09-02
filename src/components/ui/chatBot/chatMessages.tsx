@@ -6,18 +6,20 @@ import React, { useEffect, useRef, useState } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import '@/styles/chat.css';
 import axios from 'axios';
-interface Message {
-    type: 'bot' | 'user' | 'loading';
-    text?: string | null;
-    options?: string[];
-    isComponent?: boolean;
-    component?: React.ReactNode;
-}
+import { Message } from './chatbutton';
 
-const ChatMessages = ({ chatId }: { chatId: number }) => {
+const ChatMessages = ({
+    chatId,
+    messages,
+    setMessages,
+}: {
+    chatId: number;
+    messages: Message[];
+    setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
+}) => {
     const [downloadUrl, setDownloadUrl] = useState('');
     const [downloadUrlDiet, setDownloadUrlDiet] = useState('');
-    const [messages, setMessages] = useState<Message[]>([]);
+
     const [userResponse, setUserResponse] = useState<string>('');
     const [step, setStep] = useState<number>(0);
     const [isTyping, setIsTyping] = useState<boolean>(false);
@@ -40,19 +42,7 @@ const ChatMessages = ({ chatId }: { chatId: number }) => {
         dietRequired: '',
     });
 
-    const { provider, agentFirstMessage } = useGlobalStore();
-
-    useEffect(() => {
-        setMessages([
-            {
-                type: 'bot',
-                text:
-                    agentFirstMessage ||
-                    '"From the time you take your first breath, you become eligible to die. You also become eligible to find your greatness and become the one warrior"',
-            },
-            { type: 'bot', text: 'What is your age?' },
-        ]);
-    }, [agentFirstMessage]);
+    const { provider } = useGlobalStore();
 
     useEffect(() => {
         // Focus on the input when component mounts
@@ -116,7 +106,7 @@ const ChatMessages = ({ chatId }: { chatId: number }) => {
                         isComponent: true,
                         component: (
                             <a
-                                href={downloadUrl}
+                                href={downloadUrlDiet}
                                 download="report.pdf"
                                 className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
                             >
