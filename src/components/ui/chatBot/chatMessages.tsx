@@ -8,12 +8,15 @@ import '@/styles/chat.css';
 import axios from 'axios';
 interface Message {
     type: 'bot' | 'user' | 'loading';
-    text: string | null;
+    text?: string | null;
     options?: string[];
+    isComponent?: boolean;
+    component?: React.ReactNode;
 }
 
 const ChatMessages = ({ chatId }: { chatId: number }) => {
     const [downloadUrl, setDownloadUrl] = useState('');
+    const [downloadUrlDiet, setDownloadUrlDiet] = useState('');
     const [messages, setMessages] = useState<Message[]>([]);
     const [userResponse, setUserResponse] = useState<string>('');
     const [step, setStep] = useState<number>(0);
@@ -27,12 +30,14 @@ const ChatMessages = ({ chatId }: { chatId: number }) => {
         height: string;
         weight: string;
         goal: string;
+        dietRequired: string;
     }>({
         age: '',
         gender: '',
         height: '',
         weight: '',
         goal: '',
+        dietRequired: '',
     });
 
     const { provider, agentFirstMessage } = useGlobalStore();
@@ -62,38 +67,99 @@ const ChatMessages = ({ chatId }: { chatId: number }) => {
         });
     }, [messages, isTyping]);
 
-    const fetchMessages = async () => {
+    const fetchMessages = async (type: string | undefined) => {
         setTimeout(async () => {
             const newMessages = await getNewMessages(chatId, 0);
             console.log(newMessages);
-            const resp = newMessages[newMessages.length - 2].content;
-            if (resp) {
-                handleGeneratePDF(resp);
+            const resp = newMessages[newMessages.length - 1].content;
+            if (type) {
+                if (resp) {
+                    handleGeneratePDFDiet(resp);
+                }
+            } else {
+                if (resp) {
+                    handleGeneratePDF(resp);
+                }
             }
         }, 20000);
     };
-
-    const generateUserReport = async (formattedProfile: string) => {
+    const generateUserReport = async (
+        formattedProfile: string,
+        type?: string
+    ) => {
         try {
             const response = await addMessage({
                 message: formattedProfile,
                 agentRunID: chatId,
                 provider,
             });
-
             if (response.dispatch) {
-                await fetchMessages();
+                await fetchMessages(type);
             }
         } catch (error) {
             console.error('Error generating user report:', error);
         }
     };
-
+    const handleGeneratePDFDiet = async (text: string) => {
+        try {
+            const response = await axios.post('/api/generate-pdf', { text });
+            if (response.data.url) {
+                setDownloadUrlDiet(response.data.url);
+                setMessages((prevMessages) => [
+                    ...prevMessages,
+                    {
+                        type: 'bot',
+                        text: "Here's your personalized diet plan!",
+                    },
+                    {
+                        type: 'bot',
+                        isComponent: true,
+                        component: (
+                            <a
+                                href={downloadUrl}
+                                download="report.pdf"
+                                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                            >
+                                Download as PDF
+                            </a>
+                        ),
+                    },
+                ]);
+            }
+        } catch (error) {
+            console.error('Error generating PDF:', error);
+        }
+    };
     const handleGeneratePDF = async (text: string) => {
         try {
             const response = await axios.post('/api/generate-pdf', { text });
             if (response.data.url) {
                 setDownloadUrl(response.data.url);
+                setMessages((prevMessages) => [
+                    ...prevMessages,
+                    {
+                        type: 'bot',
+                        text: "Here's your personalized fitness plan!",
+                    },
+                    {
+                        type: 'bot',
+                        isComponent: true,
+                        component: (
+                            <a
+                                href={downloadUrl}
+                                download="report.pdf"
+                                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                            >
+                                Download as PDF
+                            </a>
+                        ),
+                    },
+                    {
+                        type: 'bot',
+                        text: `Do you want a diet plan for above details?`,
+                        options: ['Vegan', 'Veg', 'Non-Veg'],
+                    },
+                ]);
             }
         } catch (error) {
             console.error('Error generating PDF:', error);
@@ -176,10 +242,6 @@ const ChatMessages = ({ chatId }: { chatId: number }) => {
                     // Format profile and generate report
                     const formattedProfile = formatUserProfile(newProfile);
                     await generateUserReport(formattedProfile);
-                    newMessages.push({
-                        type: 'bot',
-                        text: "Here's your personalized fitness plan!",
-                    });
                 }
                 break;
             case 5:
@@ -195,10 +257,22 @@ const ChatMessages = ({ chatId }: { chatId: number }) => {
                 // Format profile and generate report
                 const formattedProfile = formatUserProfile(newProfile);
                 await generateUserReport(formattedProfile);
-                newMessages.push({
-                    type: 'bot',
-                    text: "Here's your personalized fitness plan!",
-                });
+                break;
+            case 6:
+                newProfile.dietRequired = response;
+                newStep = 7;
+                newMessages = [
+                    {
+                        type: 'bot',
+                        text: `Thank you! We are generating your diet plan please wait...`,
+                    },
+                ];
+                if (newProfile.dietRequired) {
+                    await generateUserReport(
+                        `Send the diet schedule for above workout with ${newProfile.dietRequired} diet`,
+                        'diet'
+                    );
+                }
                 break;
         }
 
@@ -259,9 +333,19 @@ const ChatMessages = ({ chatId }: { chatId: number }) => {
                                         : 'bg-green-200'
                                 }`}
                             >
-                                <p className="text-gray-800 p-1 mx-1 text-sm">
-                                    {message.text}
-                                </p>
+                                {message.type === 'bot' ? (
+                                    message.isComponent ? (
+                                        <>{message.component}</>
+                                    ) : (
+                                        <p className="text-gray-800 p-1 mx-1 text-sm">
+                                            {message.text}
+                                        </p>
+                                    )
+                                ) : (
+                                    <p className="text-gray-800 p-1 mx-1 text-sm">
+                                        {message.text}
+                                    </p>
+                                )}
                                 {message.options && (
                                     <div className="flex justify-center space-x-2 p-2">
                                         {message.options.map((option, idx) => (
@@ -292,19 +376,6 @@ const ChatMessages = ({ chatId }: { chatId: number }) => {
                         </div>
                     </CSSTransition>
                 )}
-
-                {messages.length > 0 &&
-                    messages[messages.length - 1].text ===
-                        "Here's your personalized fitness plan!" &&
-                    downloadUrl && (
-                        <a
-                            href={downloadUrl}
-                            download="report.pdf"
-                            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-                        >
-                            Download as PDF
-                        </a>
-                    )}
             </div>
 
             {(step === 0 || step === 2 || step === 3 || step === 5) && (
