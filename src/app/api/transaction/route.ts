@@ -4,7 +4,7 @@ import type { FrameTransactionResponse } from "@coinbase/onchainkit/frame";
 import { getXmtpFrameMessage } from "@coinbase/onchainkit/xmtp";
 import { NextRequest, NextResponse } from "next/server";
 import { encodeFunctionData, parseUnits } from "viem";
-import { spicy } from "viem/chains";
+import { morphHolesky, spicy } from "viem/chains";
 
 async function getResponse(req: NextRequest): Promise<NextResponse | Response> {
   // const provider = new ethers.providers.JsonRpcProvider(
@@ -50,11 +50,12 @@ async function getResponse(req: NextRequest): Promise<NextResponse | Response> {
   // const transactionFee = BigInt(gasPrice?.toString() || "0") * BigInt(gasUnits);
 
   const txData: FrameTransactionResponse = {
-    chainId: `eip155:${spicy.id}`,
+    chainId: `eip155:${morphHolesky.id}`,
     method: "eth_sendTransaction",
     params: {
       abi: CHILIZ_FAN_BATTLE_ABI,
-      to: CHILIZ_FAN_BATTLE_ADDRESS,
+      // to: CHILIZ_FAN_BATTLE_ADDRESS,
+      to: "0x4a95E7e42c968A6c7BFBBb2F2AA908463B46059E",
       value: "0",
       data,
     },
