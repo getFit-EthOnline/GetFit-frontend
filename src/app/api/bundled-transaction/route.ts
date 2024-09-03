@@ -15,7 +15,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse | Response> {
   }
 
   const approvalUsdcAmount = body.priceInUsd;
-  const approvePriceInUsdc = parseUnits("10", 6);
+  const approvePriceInUsdc = parseUnits("1", 6);
 
   const approvalData = encodeFunctionData({
     abi: USDC_ABI,
