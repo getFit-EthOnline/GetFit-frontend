@@ -29,6 +29,16 @@ import mmalive3 from './sportsImages/mmalive3.jpg';
 import mmalive4 from './sportsImages/mmalive4.jpg';
 import devonLarratt from './sportsImages/devonLarratt.jpg';
 import johnbrzenkarmwrestling from './sportsImages/johnbrzenkarmwrestling.jpeg';
+import predictionLogo from './sportsImages/predictionLogo.png';
+import socialsLogo from './sportsImages/socials.png';
+import ticketLogo from './sportsImages/ticket.png';
+import fantasySportsLogo from './sportsImages/fantasy sports.png';
+import merchendiseLogo from './sportsImages/merchendise.png';
+import predictionBg from './sportsImages/predictionBg.jpg.png';
+import FantacyChallengesBg from './sportsImages/FantacyChallengesBg.jpg.png';
+import ticketBg from './sportsImages/Tickets.jpg.png';
+import p2pFanBattlesBg from './sportsImages/predictionBg.jpg.png';
+import SocialsBg from './sportsImages/SocialsBg.jpg.png';
 import m2eImage1 from './M2E images/m2eimage1.jpg';
 import m2eImage2 from './M2E images/m2eimage2.jpg';
 import m2eImage3 from './M2E images/m2eimage3.jpg';
@@ -89,4 +99,14 @@ export {
     m2ementalFitness5,
     m2ementalFitness6,
     m2ementalFitness7,
+    predictionLogo,
+    socialsLogo,
+    ticketLogo,
+    fantasySportsLogo,
+    merchendiseLogo,
+    predictionBg,
+    FantacyChallengesBg,
+    ticketBg,
+    p2pFanBattlesBg,
+    SocialsBg,
 };

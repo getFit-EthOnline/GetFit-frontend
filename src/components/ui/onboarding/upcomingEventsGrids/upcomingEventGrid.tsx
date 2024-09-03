@@ -1,101 +1,139 @@
-import React, { useState } from 'react'
-import { ArmWrestleLogo, MmaLogo, weightLiftinglogo } from '../../../../../public'
-import Image from 'next/image'
-import { motion } from 'framer-motion'
-import { WeightLiftingGrid } from './WeightLiftingGrid'
-import { MmaGrid } from './mma'
-import { ArmWrestleGrid } from './armwrestling'
-
-
-
+import React, { useState } from 'react';
+import {
+    FantacyChallengesBg,
+    fantasySportsLogo,
+    merchendiseLogo,
+    p2pFanBattlesBg,
+    predictionBg,
+    predictionLogo,
+    SocialsBg,
+    socialsLogo,
+    ticketBg,
+    ticketLogo,
+} from '../../../../../public';
+import Image from 'next/image';
+import { motion } from 'framer-motion';
 const events = [
     {
         id: 1,
-        title: "Fantasy",
-        icon: weightLiftinglogo,
-        color: "#D61415"
-
+        title: 'Predictions',
+        icon: predictionLogo,
     },
     {
         id: 2,
-        title: "Tickets",
-        icon: ArmWrestleLogo,
-        color: "#00DCF6"
-
+        title: 'Fantasy sports',
+        icon: fantasySportsLogo,
     },
     {
         id: 3,
-        title: "merchandise",
-        icon: MmaLogo,
-        color: "#FF5200"
+        title: 'merchandise',
+        icon: merchendiseLogo,
     },
     {
         id: 4,
-        title: "prediction",
-        icon: MmaLogo,
-        color: "#FF5200"
+        title: 'Socials',
+        icon: socialsLogo,
     },
     {
         id: 5,
-        title: "Social",
-        icon: MmaLogo,
-        color: "#FF5200"
+        title: 'Tickets',
+        icon: ticketLogo,
     },
-]
-
+];
 const UpComingEventGrid = () => {
-
-
     const [clickedButtonId, setClickedButtonId] = useState<number | null>(1);
     const handleButtonClick = (id: number) => {
         setClickedButtonId(id);
     };
     return (
         <div>
-            <div className='flex  justify-center gap-4'>
+            <div className="flex  justify-center gap-4">
                 {events.map((event) => (
                     <BounceButton
                         key={event.id}
                         label={event.title}
                         icon={event.icon}
-                        color={event.color}
                         isClicked={clickedButtonId === event.id}
                         onClick={() => handleButtonClick(event.id)}
                     />
                 ))}
             </div>
-
-            <div>
-                {clickedButtonId === 1 && <WeightLiftingGrid />}
-                {clickedButtonId === 2 && <ArmWrestleGrid />}
-                {clickedButtonId === 3 && <MmaGrid />}
-                {clickedButtonId === 4 && <MmaGrid />}
-                {clickedButtonId === 5 && <MmaGrid />}
+            <div className=" mt-10">
+                {clickedButtonId === 1 && (
+                    <div className="max-w-[1000px]   rounded-md ">
+                        <Image
+                            src={predictionBg}
+                            alt="prediction logo "
+                            className=" object-contain rounded-md"
+                        />{' '}
+                    </div>
+                )}
+                {clickedButtonId === 2 && (
+                    <div className="max-w-[1000px]  rounded-md ">
+                        <Image
+                            src={FantacyChallengesBg}
+                            alt="prediction logo "
+                            className=" object-contain rounded-md"
+                        />{' '}
+                    </div>
+                )}
+                {clickedButtonId === 3 && (
+                    <div className="max-w-[1000px] rounded-md ">
+                        <Image
+                            src={p2pFanBattlesBg}
+                            alt="prediction logo "
+                            className=" object-contain rounded-md"
+                        />{' '}
+                    </div>
+                )}
+                {clickedButtonId === 4 && (
+                    <div className="max-w-[1000px]  rounded-md ">
+                        <Image
+                            src={SocialsBg}
+                            alt="prediction logo "
+                            className=" object-contain rounded-md"
+                        />{' '}
+                    </div>
+                )}
+                {clickedButtonId === 5 && (
+                    <div className="max-w-[1000px] rounded-md ">
+                        <Image
+                            src={ticketBg}
+                            alt="prediction logo "
+                            className=" object-contain rounded-md"
+                        />{' '}
+                    </div>
+                )}
             </div>
         </div>
-    )
-}
-
-export default UpComingEventGrid
-
-
-
-
-const BounceButton = ({ label, icon, color, isClicked, onClick }: { label: string, icon: any, color: string, isClicked: boolean, onClick: () => void }) => {
-
+    );
+};
+export default UpComingEventGrid;
+const BounceButton = ({
+    label,
+    icon,
+    isClicked,
+    onClick,
+}: {
+    label: string;
+    icon: any;
+    isClicked: boolean;
+    onClick: () => void;
+}) => {
     return (
         <div>
             <motion.button
                 whileHover={{ scale: 1.1 }}
-                className={`flex w-[10em] h-[6em] rounded-md flex-col items-center justify-center transition-colors duration-300 ${isClicked ? "text-white" : ""}`}
-                style={{ backgroundColor: isClicked ? color : '#FFFFFF' }}
+                className={`flex w-[10em] h-[6em] rounded-md flex-col items-center  justify-center transition-colors duration-400 ${
+                    isClicked ? 'text-white' : ''
+                }`}
+                style={{ backgroundColor: isClicked ? '#80E142' : '#FFFFFF' }}
                 transition={{ type: 'spring', stiffness: 400, damping: 10 }}
                 onClick={onClick}
             >
-                <Image src={icon} alt={label} className='w-20 p-2' />
-                <p className='capitalize'>{label}</p>
+                <Image src={icon} alt={label} className="w-14 p-2" />
+                <p className="capitalize">{label}</p>
             </motion.button>
         </div>
-    )
-}
-
+    );
+};
