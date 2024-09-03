@@ -4,46 +4,43 @@ import { logoWhite } from '../../../public/index';
 import { WalletConnectButton } from './navBar';
 import Link from 'next/link';
 
-
 const navContents = [
     {
         id: 1,
         title: 'Market Prediction',
-        link: "/prediction"
+        link: '/prediction',
     },
     {
         id: 2,
         title: 'Fantasy Fitness Leagues',
-        link: "/fantasyFitnessLeagues"
+        link: '/fantasyFitnessLeagues',
     },
     {
         id: 3,
         title: 'Move To Earn',
-        link: "/m2e"
-
+        link: '/move-to-earn',
     },
     {
         id: 4,
         title: 'Tickets',
-        link: "/tickets"
+        link: '/tickets',
     },
     {
         id: 5,
         title: 'Membership',
-        link: "/membership"
+        link: '/membership',
     },
     {
         id: 6,
         title: 'Token Battles',
-        link: "/tokenBattles"
+        link: '/tokenBattles',
     },
     {
         id: 7,
         title: 'Marketplaces',
-        link: "/marketplaces"
+        link: '/marketplaces',
     },
 ];
-
 
 const HomeNav = () => {
     return (
@@ -82,12 +79,8 @@ const HomeNav = () => {
             <div className=" py-3 text-white  flex bg-[#313131] w-full  items-center  justify-center gap-x-16">
                 {navContents.map((item) => {
                     return (
-                        <Link href={item.link} key={item.id} >
-                            <div
-
-                                className=" flex items-center gap-x-1 justify-center "
-                            >
-
+                        <Link href={item.link} key={item.id}>
+                            <div className=" flex items-center gap-x-1 justify-center ">
                                 <p className="capitalize">{item.title}</p>
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
