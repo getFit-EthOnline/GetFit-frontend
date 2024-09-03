@@ -3,7 +3,7 @@ import { Button, Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import axios from 'axios';
 import React from 'react';
 import Markdown from 'react-markdown';
-const DietModal = ({
+const WorkoutModal = ({
     isOpen,
     setIsOpen,
     workoutResp,
@@ -39,7 +39,8 @@ const DietModal = ({
                         as="h3"
                         className="text-lg font-medium text-gray-900"
                     >
-                        Here is your diet plan, {userName}
+                        Here is your diet plan{' '}
+                        <span className="font-bold"> {userName}</span>
                     </DialogTitle>
                     <div className="mt-4">
                         <p className="text-sm text-gray-700">
@@ -69,4 +70,4 @@ const DietModal = ({
     );
 };
 
-export default DietModal;
+export default WorkoutModal;

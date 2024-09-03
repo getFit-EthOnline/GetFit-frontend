@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import Bell from '../../../../public/icons/bell.png';
 import ChatMessages from './chatMessages';
+import { RiExternalLinkLine } from 'react-icons/ri';
 export interface Message {
     type: 'bot' | 'user' | 'loading';
     text?: string | null;
@@ -11,9 +12,17 @@ export interface Message {
     isComponent?: boolean;
     component?: React.ReactNode;
 }
-const ChatButton = ({ chatId }: { chatId: number }) => {
-    const [open, setOpen] = useState(false);
-    const { userAgent, agentFirstMessage } = useGlobalStore();
+const ChatButton = ({
+    chatId,
+    open,
+    setOpen,
+}: {
+    chatId: number;
+    open: boolean;
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+    const { userAgent, agentFirstMessage, fitnessRunTrx } = useGlobalStore();
+
     const [messages, setMessages] = useState<Message[]>([]);
     useEffect(() => {
         setMessages([
@@ -21,9 +30,14 @@ const ChatButton = ({ chatId }: { chatId: number }) => {
                 type: 'bot',
                 text:
                     agentFirstMessage ||
-                    '"From the time you take your first breath, you become eligible to die. You also become eligible to find your greatness and become the one warrior"',
+                    `From the time you take your first breath, you become eligible to die. You also become eligible to find your greatness and become the one warrior --${userAgent?.name}`,
             },
-            { type: 'bot', text: 'What is your age?' },
+            {
+                type: 'bot',
+                text: `Welcome to getFit 💪🏻! Let's get you in shape! 🧘‍♂️
+                        Before we dive in, let’s get to know each other a bit better:`,
+            },
+            { type: 'bot', text: 'How old are you? 🎂' },
         ]);
     }, [agentFirstMessage]);
     return (
@@ -48,6 +62,16 @@ const ChatButton = ({ chatId }: { chatId: number }) => {
                             height={20}
                             width={20}
                         />
+                        {fitnessRunTrx && (
+                            <a
+                                className="cursor-pointer"
+                                href={`https://explorer.galadriel.com/tx/${fitnessRunTrx}`}
+                                target="_blank"
+                                rel="noreferrer"
+                            >
+                                <RiExternalLinkLine size={20} />
+                            </a>
+                        )}
                     </div>
                     <div>
                         {!open ? (

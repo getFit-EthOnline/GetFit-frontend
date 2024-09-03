@@ -60,90 +60,130 @@ const ChatMessages = ({
         });
     }, [messages, isTyping]);
 
-    const fetchMessages = async (type: string | undefined, trx: string) => {
+    const retryFetch = async (
+        trx: string,
+        retriesLeft: number,
+        formattedProfile: string,
+        type?: string | undefined
+    ) => {
+        if (retriesLeft === 0) {
+            // No more retries left; add message and generate user report
+            setMessages((prev) => [
+                ...prev,
+                {
+                    type: 'bot',
+                    text: 'AI response is not ready after 3 attempts. Exiting...',
+                },
+            ]);
+            generateUserReport(formattedProfile, type);
+            return;
+        }
+        console.log('calling after 10 seconds');
+        // If there are retries left, attempt fetching again after 10 seconds
         setTimeout(async () => {
+            await fetchMessages(type, trx, formattedProfile, retriesLeft - 1);
+        }, 10000); // 10-second delay before retry
+    };
+
+    const fetchMessages = async (
+        type: string | undefined,
+        trx: string,
+        formattedProfile: string,
+        retries = 2
+    ) => {
+        setTimeout(async () => {
+            console.log('calling');
             const newMessages = await getNewMessages(chatId, 0);
             console.log(newMessages);
-            const resp = newMessages[newMessages.length - 1].content;
-            if (type) {
-                if (resp) {
-                    setDietResp(resp);
-                    setMessages((prevMessages) => [
-                        ...prevMessages,
-                        {
-                            type: 'bot',
-                            text: "Here's your personalized diet plan!",
-                        },
-                        {
-                            type: 'bot',
-                            isComponent: true,
-                            component: (
-                                <div className="flex items-center gap-x-4">
-                                    <div
-                                        onClick={() => setIsDietWorkout(true)}
-                                        className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-                                    >
-                                        View Diet Plan
-                                    </div>
-
-                                    {trx && (
-                                        <a
-                                            className="cursor-pointer"
-                                            href={`https://explorer.galadriel.com/tx/${trx}`}
-                                            target="_blank"
-                                            rel="noreferrer"
+            const resp = newMessages[newMessages.length - 1];
+            if (resp.role === 'assistant') {
+                if (type) {
+                    if (resp.content) {
+                        setDietResp(resp.content);
+                        setMessages((prevMessages) => [
+                            ...prevMessages,
+                            {
+                                type: 'bot',
+                                text: "Here's your personalized diet plan! 🎯",
+                            },
+                            {
+                                type: 'bot',
+                                isComponent: true,
+                                component: (
+                                    <div className="flex items-center gap-x-4">
+                                        <div
+                                            onClick={() =>
+                                                setIsDietWorkout(true)
+                                            }
+                                            className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
                                         >
-                                            <RiExternalLinkLine size={20} />
-                                        </a>
-                                    )}
-                                </div>
-                            ),
-                        },
-                    ]);
+                                            View Diet Plan
+                                        </div>
+
+                                        {trx && (
+                                            <a
+                                                className="cursor-pointer"
+                                                href={`https://explorer.galadriel.com/tx/${trx}`}
+                                                target="_blank"
+                                                rel="noreferrer"
+                                            >
+                                                <RiExternalLinkLine size={20} />
+                                            </a>
+                                        )}
+                                    </div>
+                                ),
+                            },
+                        ]);
+                    }
+                } else {
+                    if (resp.content) {
+                        setWorkoutResp(resp.content);
+                        setMessages((prevMessages) => [
+                            ...prevMessages,
+                            {
+                                type: 'bot',
+                                text: "Here's your personalized fitness plan! 🎯",
+                            },
+                            {
+                                type: 'bot',
+                                isComponent: true,
+                                component: (
+                                    <div className="flex items-center gap-x-3">
+                                        <div
+                                            onClick={() =>
+                                                setIsOpenWorkout(true)
+                                            }
+                                            className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                                        >
+                                            View workout schedule
+                                        </div>
+
+                                        {trx && (
+                                            <a
+                                                className="cursor-pointer"
+                                                href={`https://explorer.galadriel.com/tx/${trx}`}
+                                                target="_blank"
+                                                rel="noreferrer"
+                                            >
+                                                <RiExternalLinkLine size={20} />
+                                            </a>
+                                        )}
+                                    </div>
+                                ),
+                            },
+                            {
+                                type: 'bot',
+                                text: `Would you like a diet plan tailored to these details? 🍽️`,
+                                options: ['Vegan 🌱', 'Keto 🥑', 'Regular 🍲'],
+                            },
+                        ]);
+                    }
                 }
             } else {
-                if (resp) {
-                    setWorkoutResp(resp);
-                    setMessages((prevMessages) => [
-                        ...prevMessages,
-                        {
-                            type: 'bot',
-                            text: "Here's your personalized fitness plan!",
-                        },
-                        {
-                            type: 'bot',
-                            isComponent: true,
-                            component: (
-                                <div className="flex items-center gap-x-3">
-                                    <div
-                                        onClick={() => setIsOpenWorkout(true)}
-                                        className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-                                    >
-                                        View workout scehdule
-                                    </div>
-
-                                    {trx && (
-                                        <a
-                                            className="cursor-pointer"
-                                            href={`https://explorer.galadriel.com/tx/${trx}`}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                        >
-                                            <RiExternalLinkLine size={20} />
-                                        </a>
-                                    )}
-                                </div>
-                            ),
-                        },
-                        {
-                            type: 'bot',
-                            text: `Do you want a diet plan for above details?`,
-                            options: ['Vegan', 'Veg', 'Non-Veg'],
-                        },
-                    ]);
-                }
+                // If AI is not ready, initiate a retry
+                await retryFetch(trx, retries, formattedProfile, type);
             }
-        }, 25000);
+        }, 20000); // Initial 20-second delay for the main fetch
     };
     const generateUserReport = async (
         formattedProfile: string,
@@ -158,7 +198,7 @@ const ChatMessages = ({
             if (response.dispatch) {
                 const balance = await getBalance(address);
                 setBalance(balance);
-                await fetchMessages(type, response.dispatch);
+                await fetchMessages(type, response.dispatch, formattedProfile);
             }
         } catch (error) {
             console.error('Error generating user report:', error);
@@ -186,8 +226,8 @@ const ChatMessages = ({
                 newMessages = [
                     {
                         type: 'bot',
-                        text: 'Awesome! Please select your gender?',
-                        options: ['M', 'F'],
+                        text: 'Fantastic! 🎉 Identify yourself',
+                        options: ['M 👦🏻', 'F 👧🏻'],
                     },
                 ];
                 break;
@@ -197,7 +237,7 @@ const ChatMessages = ({
                 newMessages = [
                     {
                         type: 'bot',
-                        text: 'Thank you! What is your height in cm?',
+                        text: 'Thank a bunch 🙌🏻! What is your height in cm? 📏',
                     },
                 ];
                 break;
@@ -205,7 +245,10 @@ const ChatMessages = ({
                 newProfile.height = response;
                 newStep = 3;
                 newMessages = [
-                    { type: 'bot', text: 'Great! What is your weight in kg?' },
+                    {
+                        type: 'bot',
+                        text: 'Great ⭐️ ! What is your weight in kg? ⚖️',
+                    },
                 ];
                 break;
             case 3:
@@ -214,7 +257,7 @@ const ChatMessages = ({
                 newMessages = [
                     {
                         type: 'bot',
-                        text: 'Awesome! What is your fitness goal?',
+                        text: 'Awesome! 💪🏻 What is your fitness goal? 🏆',
                         options: ['Muscle Building', 'Fat Loss', 'Others'],
                     },
                 ];
@@ -226,7 +269,7 @@ const ChatMessages = ({
                     newMessages = [
                         {
                             type: 'bot',
-                            text: 'Please specify your fitness goal:',
+                            text: 'Awesome! 💪🏻 What is your fitness goal? 🏆',
                         },
                     ];
                 } else {
@@ -235,7 +278,7 @@ const ChatMessages = ({
                     newMessages = [
                         {
                             type: 'bot',
-                            text: `Thank you! Your fitness goal is ${response}. We are generating your weekly fitness plan.`,
+                            text: `Thank you! Your fitness goal is ${response}. Generating your weekly 🗓️ fitness plan.`,
                         },
                     ];
 
@@ -250,7 +293,7 @@ const ChatMessages = ({
                 newMessages = [
                     {
                         type: 'bot',
-                        text: `Thank you! Your specified fitness goal is ${response}. We are generating your weekly fitness plan.`,
+                        text: `Thank you! Your specified fitness goal is ${response}. Generating your weekly 🗓️ fitness plan.`,
                     },
                 ];
 
@@ -264,7 +307,7 @@ const ChatMessages = ({
                 newMessages = [
                     {
                         type: 'bot',
-                        text: `Thank you! We are generating your diet plan please wait...`,
+                        text: `Thank you! Generating your diet 🥗 plan please wait...`,
                     },
                 ];
                 if (newProfile.dietRequired) {
@@ -317,6 +360,7 @@ const ChatMessages = ({
                     isOpen={isOpenWorkout}
                     setIsOpen={setIsOpenWorkout}
                     workoutResp={workoutResp}
+                    userProfile={userProfile}
                 />
             )}
             {isDietWorkout && (
@@ -339,13 +383,15 @@ const ChatMessages = ({
                                 classNames="fade"
                             >
                                 <div
-                                    className={`w-fit mt-2   ${message.type === 'bot'
-                                        ? 'm-0'
-                                        : 'ml-[80%]'
-                                        }  rounded-md ${message.type === 'bot'
+                                    className={`w-fit mt-2   ${
+                                        message.type === 'bot'
+                                            ? 'm-0'
+                                            : 'ml-[80%]'
+                                    }  rounded-md ${
+                                        message.type === 'bot'
                                             ? 'bg-blue-100'
                                             : 'bg-green-200'
-                                        }`}
+                                    }`}
                                 >
                                     {message.type === 'bot' ? (
                                         message.isComponent ? (

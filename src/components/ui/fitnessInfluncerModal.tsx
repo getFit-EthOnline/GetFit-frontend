@@ -1,5 +1,9 @@
 'use client';
-import { getNewMessages, startFitnessRun } from '@/contracts/galadriel';
+import {
+    getBalance,
+    getNewMessages,
+    startFitnessRun,
+} from '@/contracts/galadriel';
 import useGlobalStore, { userAgentProps } from '@/store';
 import { Button, Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import Image from 'next/image';
@@ -30,13 +34,22 @@ const InfluencerDetails = [
 
 const InfluencerModal = ({
     setChatId,
+    setChatOpen,
 }: {
     setChatId: React.Dispatch<React.SetStateAction<number>>;
+    setChatOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
     const [isOpen, setIsOpen] = useState(true);
     const [selectedInfluencer, setSelectedInfluencer] =
         useState<userAgentProps | null>(null);
-    const { provider, setUserAgnet, setAgentFirstMessage } = useGlobalStore();
+    const {
+        provider,
+        setUserAgnet,
+        setAgentFirstMessage,
+        address,
+        setFitnessRunTrx,
+        setBalance,
+    } = useGlobalStore();
     const [loading, setLoading] = useState(false);
     useEffect(() => {
         const hasModalBeenShown = localStorage.getItem('hasModalBeenShown');
@@ -51,17 +64,23 @@ const InfluencerModal = ({
             localStorage.setItem('hasModalBeenShown', 'true');
             setLoading(false);
             setIsOpen(false);
+            setChatOpen(true);
         }, 20000);
     };
     const closeModal = async () => {
         setUserAgnet(selectedInfluencer);
         setLoading(true);
         const resp = await startFitnessRun({
-            message: `Create a fitness motivational quote from the influencer ${selectedInfluencer?.name}`,
+            message: `Create a fitness motivational quote from the influencer ${selectedInfluencer?.name}, only share a motivation quote `,
             provider,
         });
+        if (resp.dispatch) {
+            setFitnessRunTrx(resp.dispatch);
+        }
         if (resp.runId) {
             setChatId(resp.runId);
+            const balance = await getBalance(address);
+            setBalance(balance);
             fetchMessages(resp.runId);
         }
     };
