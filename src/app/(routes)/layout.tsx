@@ -20,7 +20,7 @@ export default function Layout({
             <body className={` bg-black ${inter.className}`}>
 
                 <HomeNav />
-                <div className=' bg-[#E2E2E2]  mx-auto'>
+                <div className=' bg-[#E2E2E2]   mx-auto'>
                     <Toaster position='top-center' reverseOrder={false} />
                     {children}</div>
             </body>

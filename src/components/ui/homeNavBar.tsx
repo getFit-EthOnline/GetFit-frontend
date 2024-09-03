@@ -2,37 +2,48 @@
 import Image from 'next/image';
 import { logoWhite } from '../../../public/index';
 import { WalletConnectButton } from './navBar';
+import Link from 'next/link';
+
 
 const navContents = [
     {
         id: 1,
         title: 'Market Prediction',
+        link: "/prediction"
     },
     {
         id: 2,
         title: 'Fantasy Fitness Leagues',
+        link: "/fantasyFitnessLeagues"
     },
     {
         id: 3,
         title: 'Move To Earn',
+        link: "/m2e"
+
     },
     {
         id: 4,
         title: 'Tickets',
+        link: "/tickets"
     },
     {
         id: 5,
         title: 'Membership',
+        link: "/membership"
     },
     {
         id: 6,
         title: 'Token Battles',
+        link: "/tokenBattles"
     },
     {
         id: 7,
         title: 'Marketplaces',
+        link: "/marketplaces"
     },
 ];
+
 
 const HomeNav = () => {
     return (
@@ -71,26 +82,29 @@ const HomeNav = () => {
             <div className=" py-3 text-white  flex bg-[#313131] w-full  items-center  justify-center gap-x-16">
                 {navContents.map((item) => {
                     return (
-                        <div
-                            key={item.id}
-                            className=" flex items-center gap-x-1 justify-center "
-                        >
-                            <p className="capitalize">{item.title}</p>
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth={1.5}
-                                stroke="currentColor"
-                                className="size-4"
+                        <Link href={item.link} key={item.id} >
+                            <div
+
+                                className=" flex items-center gap-x-1 justify-center "
                             >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                                />
-                            </svg>
-                        </div>
+
+                                <p className="capitalize">{item.title}</p>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={1.5}
+                                    stroke="currentColor"
+                                    className="size-4"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                                    />
+                                </svg>
+                            </div>
+                        </Link>
                     );
                 })}
             </div>

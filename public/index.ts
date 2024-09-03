@@ -27,6 +27,22 @@ import mmalive1 from "./sportsImages/mmalive1.jpg";
 import mmalive2 from "./sportsImages/mmalive2.jpg";
 import mmalive3 from "./sportsImages/mmalive3.jpg";
 import mmalive4 from "./sportsImages/mmalive4.jpg";
+import devonLarratt from "./sportsImages/devonLarratt.jpg";
+import johnbrzenkarmwrestling from "./sportsImages/johnbrzenkarmwrestling.jpeg";
+import m2eImage1 from "./M2E images/m2eimage1.jpg";
+import m2eImage2 from "./M2E images/m2eimage2.jpg";
+import m2eImage3 from "./M2E images/m2eimage3.jpg";
+import m2eImage4 from "./M2E images/m2eimage4.jpg";
+import m2eImage5 from "./M2E images/m2eimage5.jpg";
+import m2eImage6 from "./M2E images/m2eimage6.jpg";
+import m2eImage7 from "./M2E images/m2eimage7.jpg";
+import m2ementalFitness1 from "./M2E images/m2ementalFitness1.jpg";
+import m2ementalFitness2 from "./M2E images/m2ementalFitness2.jpg";
+import m2ementalFitness3 from "./M2E images/m2ementalFitness3.jpg";
+import m2ementalFitness4 from "./M2E images/m2ementalFitness4.jpg";
+import m2ementalFitness5 from "./M2E images/m2ementalFitness5.jpg";
+import m2ementalFitness6 from "./M2E images/m2ementalFitness6.jpg";
+import m2ementalFitness7 from "./M2E images/m2ementalFitness7.jpg";
 
 export {
 	logoWhite,
@@ -57,4 +73,20 @@ export {
 	mmalive2,
 	mmalive3,
 	mmalive4,
+	devonLarratt,
+	johnbrzenkarmwrestling,
+	m2eImage1,
+	m2eImage2,
+	m2eImage3,
+	m2eImage4,
+	m2eImage5,
+	m2eImage6,
+	m2eImage7,
+	m2ementalFitness1,
+	m2ementalFitness2,
+	m2ementalFitness3,
+	m2ementalFitness4,
+	m2ementalFitness5,
+	m2ementalFitness6,
+	m2ementalFitness7,
 };
