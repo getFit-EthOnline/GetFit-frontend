@@ -2,7 +2,7 @@ import useGlobalStore from '@/store';
 import { Button, Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import axios from 'axios';
 import React from 'react';
-
+import Markdown from 'react-markdown';
 const WorkoutModal = ({
     isOpen,
     setIsOpen,
@@ -42,7 +42,9 @@ const WorkoutModal = ({
                         Here is your workout plan, {userName}
                     </DialogTitle>
                     <div className="mt-4">
-                        <p className="text-sm text-gray-700">{workoutResp}</p>
+                        <p className="text-sm text-gray-700">
+                            <Markdown>{workoutResp}</Markdown>
+                        </p>
                     </div>
                     <div className="mt-4 flex justify-end">
                         <Button

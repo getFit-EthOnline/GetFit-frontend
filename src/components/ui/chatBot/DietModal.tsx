@@ -1,9 +1,9 @@
 import useGlobalStore from '@/store';
 import { Button, Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import axios from 'axios';
-import React, { useState } from 'react';
-
-const DietModal = ({
+import React from 'react';
+import Markdown from 'react-markdown';
+const WorkoutModal = ({
     isOpen,
     setIsOpen,
     workoutResp,
@@ -12,27 +12,19 @@ const DietModal = ({
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
     workoutResp: string;
 }) => {
-    const [downloadUrl, setDownloadUrl] = useState('');
-
-    const { userName } = useGlobalStore();
-
-    const handleDownload = async () => {
-        try {
-            const response = await axios.post('/api/generate-pdf', {
-                workoutResp,
-            });
-            if (response.data.url) {
-                setDownloadUrl(response.data.url);
-            }
-        } catch (error) {
-            console.error('Error generating PDF:', error);
-        }
-    };
-
     function close() {
         setIsOpen(false);
     }
-
+    const { userName } = useGlobalStore();
+    const [downloadUrl, setDownlaodUrl] = React.useState('');
+    const handleDownload = async () => {
+        const response = await axios.post('/api/generate-pdf', {
+            workoutResp,
+        });
+        if (response.data.url) {
+            setDownlaodUrl(response.data.url);
+        }
+    };
     return (
         <Dialog
             open={isOpen}
@@ -50,7 +42,9 @@ const DietModal = ({
                         Here is your diet plan, {userName}
                     </DialogTitle>
                     <div className="mt-4">
-                        <p className="text-sm text-gray-700">{workoutResp}</p>
+                        <p className="text-sm text-gray-700">
+                            <Markdown>{workoutResp}</Markdown>
+                        </p>
                     </div>
                     <div className="mt-4 flex justify-end">
                         <Button
@@ -75,4 +69,4 @@ const DietModal = ({
     );
 };
 
-export default DietModal;
+export default WorkoutModal;
