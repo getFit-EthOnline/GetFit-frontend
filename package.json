@@ -36,6 +36,7 @@
     "react-toastify": "^10.0.5",
     "react-transition-group": "^4.4.5",
     "sharp": "^0.33.5",
+    "swiper": "^11.1.12",
     "tailwind-merge": "^2.5.2",
     "toast": "^0.5.4",
     "web3": "^4.12.1",

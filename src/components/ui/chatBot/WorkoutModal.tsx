@@ -35,7 +35,6 @@ const WorkoutModal = ({
             setDownlaodUrl(response.data.url);
         }
     };
-    console.log(userProfile);
     return (
         <Dialog
             open={isOpen}
