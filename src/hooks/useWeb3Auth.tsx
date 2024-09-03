@@ -125,7 +125,7 @@ function useWeb3Auth() {
         const balance = await getBalance(address);
         setBalance(balance);
         if (parseFloat(balance) < 0.01) {
-            const tokens = await sendTestTokens();
+            const tokens = await sendTestTokens(address);
             console.log(tokens);
         }
         return address;

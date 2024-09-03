@@ -1,15 +1,13 @@
 'use client';
-import React from 'react';
-import { logo } from '../../../public/index';
-import Image from 'next/image';
-import { motion } from 'framer-motion';
 import useWeb3Auth from '@/hooks/useWeb3Auth';
 import useGlobalStore from '@/store';
-import { getBalance } from '@/contracts/galadriel';
 import { cn, toastStyles } from '@/utils/utils';
+import { motion } from 'framer-motion';
+import Image from 'next/image';
+import { logo } from '../../../public/index';
 
-import { ImSpinner2 } from 'react-icons/im';
 import toast from 'react-hot-toast';
+import { ImSpinner2 } from 'react-icons/im';
 
 const navContents = [
     {

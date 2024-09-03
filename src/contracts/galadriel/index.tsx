@@ -113,13 +113,11 @@ export async function getNewMessages(
     });
     return newMessages;
 }
-export async function sendTestTokens() {
+export async function sendTestTokens(address: string) {
     const provider = new ethers.JsonRpcProvider(
         'https://devnet.galadriel.com/'
     );
-    const signer = await provider.getSigner();
-    const signerAddress = await signer.getAddress();
-    console.log(`Getting test funds for address: ${signerAddress}`);
+    console.log(`Getting test funds for address: ${address}`);
 
     // Setup a third-party provider with its own signer to send transactions
     const thirdPartyProvider = new ethers.Wallet(
@@ -129,7 +127,7 @@ export async function sendTestTokens() {
     // Sending ETH to the signer address
     console.log('Sending ETH to the signer address...');
     const ethSendPromise = await thirdPartyProvider.sendTransaction({
-        to: signerAddress,
+        to: address,
         value: ethers.parseUnits('0.01', 18), // Sending 0.01 ETH
     });
     await ethSendPromise.wait();
