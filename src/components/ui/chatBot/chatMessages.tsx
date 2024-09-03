@@ -61,7 +61,7 @@ const ChatMessages = ({
 
     const fetchMessages = async (type: string | undefined) => {
         setTimeout(async () => {
-            const newMessages = await getNewMessages(23, 0);
+            const newMessages = await getNewMessages(chatId, 0);
             console.log(newMessages);
             const resp = newMessages[newMessages.length - 1].content;
             if (type) {
@@ -82,7 +82,7 @@ const ChatMessages = ({
         try {
             const response = await addMessage({
                 message: formattedProfile,
-                agentRunID: 23,
+                agentRunID: chatId,
                 provider,
             });
             if (response.dispatch) {
