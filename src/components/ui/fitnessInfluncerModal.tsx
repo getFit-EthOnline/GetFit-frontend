@@ -1,5 +1,9 @@
 'use client';
-import { getNewMessages, startFitnessRun } from '@/contracts/galadriel';
+import {
+    getBalance,
+    getNewMessages,
+    startFitnessRun,
+} from '@/contracts/galadriel';
 import useGlobalStore, { userAgentProps } from '@/store';
 import { Button, Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import Image from 'next/image';
@@ -36,8 +40,14 @@ const InfluencerModal = ({
     const [isOpen, setIsOpen] = useState(true);
     const [selectedInfluencer, setSelectedInfluencer] =
         useState<userAgentProps | null>(null);
-    const { provider, setUserAgnet, setAgentFirstMessage, setFitnessRunTrx } =
-        useGlobalStore();
+    const {
+        provider,
+        setUserAgnet,
+        setAgentFirstMessage,
+        address,
+        setFitnessRunTrx,
+        setBalance,
+    } = useGlobalStore();
     const [loading, setLoading] = useState(false);
     useEffect(() => {
         const hasModalBeenShown = localStorage.getItem('hasModalBeenShown');
@@ -52,7 +62,7 @@ const InfluencerModal = ({
             localStorage.setItem('hasModalBeenShown', 'true');
             setLoading(false);
             setIsOpen(false);
-        }, 20000);
+        }, 25000);
     };
     const closeModal = async () => {
         setUserAgnet(selectedInfluencer);
@@ -66,6 +76,8 @@ const InfluencerModal = ({
         }
         if (resp.runId) {
             setChatId(resp.runId);
+            const balance = await getBalance(address);
+            setBalance(balance);
             fetchMessages(resp.runId);
         }
     };

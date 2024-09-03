@@ -68,10 +68,12 @@ const openloginAdapter = new OpenloginAdapter({
 web3auth.configureAdapter(openloginAdapter);
 function useWeb3Auth() {
     const [loggedIn, setLoggedIn] = useState(false);
-    const { provider, setAddress, setProvider, setBalance } = useGlobalStore();
+    const { provider, setAddress, setProvider, setBalance, setUserName } =
+        useGlobalStore();
     useEffect(() => {
         if (loggedIn) {
             getAccounts();
+            getUserInfo();
         }
     }, [loggedIn]);
     useEffect(() => {
@@ -126,13 +128,17 @@ function useWeb3Auth() {
         setBalance(balance);
         if (parseFloat(balance) < 0.01) {
             const tokens = await sendTestTokens(address);
+            if (tokens.trxhash) {
+                const balance = await getBalance(address);
+                setBalance(balance);
+            }
             console.log(tokens);
         }
         return address;
     };
     const getUserInfo = async () => {
         const user = await web3auth.getUserInfo();
-        console.log(user);
+        setUserName(user?.name);
     };
     return { login, loggedIn, logout, getUserInfo };
 }

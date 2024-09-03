@@ -6,6 +6,8 @@ export interface userAgentProps {
     profilePic: StaticImageData;
 }
 interface GlobalStore {
+    userName: string | undefined;
+    setUserName: (name: string | undefined) => void;
     balance: string | null;
     setBalance: (balance: string | null) => void;
     fitnessRunTrx: string | null;
@@ -21,6 +23,8 @@ interface GlobalStore {
 }
 
 const useGlobalStore = create<GlobalStore>()((set) => ({
+    userName: '',
+    setUserName: (name) => set({ userName: name }),
     balance: null,
     setBalance: (balance) => set({ balance }),
     fitnessRunTrx: null,

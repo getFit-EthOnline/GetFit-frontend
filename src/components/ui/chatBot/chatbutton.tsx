@@ -14,7 +14,8 @@ export interface Message {
 }
 const ChatButton = ({ chatId }: { chatId: number }) => {
     const [open, setOpen] = useState(false);
-    const { userAgent, agentFirstMessage, fitnessRunTrx } = useGlobalStore();
+    const { userAgent, agentFirstMessage, fitnessRunTrx, balance } =
+        useGlobalStore();
     const [messages, setMessages] = useState<Message[]>([]);
     useEffect(() => {
         setMessages([
