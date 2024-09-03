@@ -2,18 +2,20 @@ import { spicy } from "@/web3auth/Providers";
 import { Bundler } from "@biconomy/account";
 import { morphHolesky } from "viem/chains";
 
-const BUNDLER_ENTRYPOINT_ADDRESS = "0x00000061FEfce24A79343c27127435286BB7A4E1";
+const CHILIZ_BUNDLER_ENTRYPOINT_ADDRESS =
+  "0x00000061FEfce24A79343c27127435286BB7A4E1";
+const MORPH_HOLESKY_BUNDLER_ENTRYPOINT_ADDRESS =
+  "0x00000061FEfce24A79343c27127435286BB7A4E1";
 
 export const chilizBundler = new Bundler({
   bundlerUrl: `https://bundler.biconomy.io/api/v2/${spicy.id}/nJPK7B3ru.dd7f7861-190d-41bd-af80-6877f74b8f44`,
   chainId: spicy.id,
-  entryPointAddress: BUNDLER_ENTRYPOINT_ADDRESS,
+  entryPointAddress: CHILIZ_BUNDLER_ENTRYPOINT_ADDRESS,
 });
 
 export const morphHoleskyBundler = new Bundler({
   bundlerUrl: `https://bundler.biconomy.io/api/v2/${morphHolesky.id}/nJPK7B3ru.dd7f7861-190d-41bd-af80-6877f74b8f44`,
   chainId: morphHolesky.id,
-  entryPointAddress: BUNDLER_ENTRYPOINT_ADDRESS,
 });
 
 const BICONOMY_CONFIG = {

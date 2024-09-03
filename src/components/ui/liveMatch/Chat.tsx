@@ -1,5 +1,7 @@
 import { useEthersProvider } from "@/hooks/useEthersProvider";
 import { useEthersSigner } from "@/hooks/useEthersSigner";
+import useGlobalStore from "@/store";
+import { PaymasterMode } from "@biconomy/account";
 import { FramesClient } from "@xmtp/frames-client";
 import { useEffect, useRef, useState } from "react";
 import { useWalletClient } from "wagmi";
@@ -7,7 +9,6 @@ import { Frame } from "./Frames/Frame";
 import { getFrameTitle, getOrderedButtons, isValidFrame, isXmtpFrame } from "./Frames/FrameInfo";
 import { fetchFrameFromUrl, urlRegex } from "./Frames/utils";
 import { PEER_ADDRESS } from "./LiveChat";
-import useGlobalStore from "@/store";
 
 function Chat({ client, messageHistory, conversation }) {
     const [inputValue, setInputValue] = useState("");
@@ -150,44 +151,19 @@ export const MessageItem = ({ msg, index, client, inputValue }) => {
                     );
                     setFrameMetadata(completeTransactionMetadata);
                 } else {
-                    const address = transactionInfo.params.to;
                     debugger;
                     try {
-
-                        // const receipt = await tx.wait()
-                        // const tx = await contract.joinTeam(["Goggins"])
-                        const bundleTransaction = await smartAccount.sendTransaction(transactions, {
+                        const bundleTransaction = await smartAccount.sendTransaction(transactionInfo.transactions, {
                             paymasterServiceData: { mode: PaymasterMode.SPONSORED },
                         });
-
                         const { transactionHash } = await bundleTransaction.waitForTxHash();
-
-                        const tx = await signer?.sendTransaction({
-                            to: address,
-                            data: transactionInfo.params.data,
-                        })
-                        debugger
-                        // const txHash = await walletClient.writeContract({
-                        //     abi: abi,
-                        //     address: getAddress("0x593126a49ACb15450CEc39EC271d25fA2e2cABd6"),
-                        //     functionName: 'increment',
-                        //     account: client.address,
-                        // })
-                        debugger
-                        // const hash = await walletClient.sendTransaction({
-                        //     account: client.address,
-                        //     to: address,
-                        //     value: transactionInfo.params.value, // 1 as bigint
-                        //     data: transactionInfo.params.data,
-                        // });
-
                         const buttonPostUrl =
                             frameMetadata.extractedTags["fc:frame:button:1:post_url"];
                         const completeTransactionMetadata = await framesClient.proxy.post(
                             buttonPostUrl,
                             {
                                 ...payload,
-                                transactionId: hash,
+                                transactionId: transactionHash,
                             },
                         );
                         setFrameMetadata(completeTransactionMetadata);
