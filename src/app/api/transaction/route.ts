@@ -7,22 +7,6 @@ import { encodeFunctionData, parseUnits } from "viem";
 import { morphHolesky, spicy } from "viem/chains";
 
 async function getResponse(req: NextRequest): Promise<NextResponse | Response> {
-  // const provider = new ethers.providers.JsonRpcProvider(
-  //   spicy.rpcUrls.default.http[0]
-  // );
-  // const gasPrice = await provider.getGasPrice();
-  // const gasUnits = await new Contract(
-  //   CHILIZ_FAN_BATTLE_ADDRESS,
-  //   CHILIZ_FAN_BATTLE_ABI,
-  //   provider
-  // ).estimateGas.joinTeam("Goggins");
-  // const transactionFee = gasPrice.mul(gasUnits);
-  // console.log("transactionFee in wei: " + transactionFee.toString());
-  // console.log(
-  //   "transactionFee in ether: " +
-  //     ethers.utils.formatUnits(transactionFee, "ether")
-  // );
-  // return NextResponse.json({ transactionFee });
 
   const body = await req.json();
   const { isValid } = await getXmtpFrameMessage(body);
@@ -36,18 +20,6 @@ async function getResponse(req: NextRequest): Promise<NextResponse | Response> {
     args: ["Goggins"],
   });
 
-  // const gasPrice = (await ethers.getDefaultProvider().getFeeData()).gasPrice;
-
-  // const contract = new Contract(
-  //   CHILIZ_FAN_BATTLE_ADDRESS,
-  //   CHILIZ_FAN_BATTLE_ABI,
-  //   ethers.getDefaultProvider()
-  // );
-
-  // // @ts-ignore
-  // const gasUnits = await contract.estimateGas.joinTeam("Goggins");
-
-  // const transactionFee = BigInt(gasPrice?.toString() || "0") * BigInt(gasUnits);
 
   const txData: FrameTransactionResponse = {
     chainId: `eip155:${morphHolesky.id}`,
@@ -57,6 +29,8 @@ async function getResponse(req: NextRequest): Promise<NextResponse | Response> {
       // to: CHILIZ_FAN_BATTLE_ADDRESS,
       to: "0x4a95E7e42c968A6c7BFBBb2F2AA908463B46059E",
       value: "0",
+      toUsdc: "",
+      
       data,
     },
   };
