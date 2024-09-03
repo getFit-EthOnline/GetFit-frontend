@@ -1,12 +1,9 @@
 import { BETTING_CONTRACT_ABI } from "@/abi/BETTING_CONTRACT_ABI";
 import { USDC_ABI } from "@/abi/USDC_ABI";
 import { BETTING_CONTRACT_ADDRESS, USDC_ADDRESS } from "@/config/addresses";
-import type { FrameTransactionResponse } from "@coinbase/onchainkit/frame";
 import { getXmtpFrameMessage } from "@coinbase/onchainkit/xmtp";
 import { NextRequest, NextResponse } from "next/server";
 import { encodeFunctionData, parseUnits } from "viem";
-import { morphHolesky, spicy } from "viem/chains";
-import { ethers } from "ethers";
 
 async function getResponse(req: NextRequest): Promise<NextResponse | Response> {
   const body = await req.json();
@@ -40,7 +37,10 @@ async function getResponse(req: NextRequest): Promise<NextResponse | Response> {
     data: betData,
   };
 
-  const txs: FrameTransactionResponse[] = [approvalTransaction, betTransaction];
+  const txs: {
+    to: string;
+    data: `0x${string}`;
+  }[] = [approvalTransaction, betTransaction];
 
   return NextResponse.json({ transactions: txs });
 }

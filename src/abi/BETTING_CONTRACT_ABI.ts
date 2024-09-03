@@ -1,4 +1,4 @@
-const BETTING_CONTRACT_ABI = [
+export const BETTING_CONTRACT_ABI = [
   {
     inputs: [
       {
