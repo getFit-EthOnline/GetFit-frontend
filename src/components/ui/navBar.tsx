@@ -118,7 +118,9 @@ export const WalletConnectButton = () => {
                               '...' +
                               address.slice(-4) +
                               ' ' +
-                              parseFloat(balance || '0').toFixed(2)
+                              parseFloat(balance || '0').toFixed(3) +
+                              ' ' +
+                              'ETH'
                             : 'Connect wallet',
                     })}
                 </span>

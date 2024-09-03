@@ -39,7 +39,8 @@ const WorkoutModal = ({
                         as="h3"
                         className="text-lg font-medium text-gray-900"
                     >
-                        Here is your diet plan, {userName}
+                        Here is your diet plan{' '}
+                        <span className="font-bold"> {userName}</span>
                     </DialogTitle>
                     <div className="mt-4">
                         <p className="text-sm text-gray-700">

@@ -14,8 +14,7 @@ export interface Message {
 }
 const ChatButton = ({ chatId }: { chatId: number }) => {
     const [open, setOpen] = useState(false);
-    const { userAgent, agentFirstMessage, fitnessRunTrx, balance } =
-        useGlobalStore();
+    const { userAgent, agentFirstMessage, fitnessRunTrx } = useGlobalStore();
     const [messages, setMessages] = useState<Message[]>([]);
     useEffect(() => {
         setMessages([
@@ -23,9 +22,14 @@ const ChatButton = ({ chatId }: { chatId: number }) => {
                 type: 'bot',
                 text:
                     agentFirstMessage ||
-                    '"From the time you take your first breath, you become eligible to die. You also become eligible to find your greatness and become the one warrior"',
+                    `From the time you take your first breath, you become eligible to die. You also become eligible to find your greatness and become the one warrior --${userAgent?.name}`,
             },
-            { type: 'bot', text: 'What is your age?' },
+            {
+                type: 'bot',
+                text: `Welcome to getFit 💪🏻! Let's get you in shape! 🧘‍♂️
+                        Before we dive in, let’s get to know each other a bit better:`,
+            },
+            { type: 'bot', text: 'How old are you? 🎂' },
         ]);
     }, [agentFirstMessage]);
     return (

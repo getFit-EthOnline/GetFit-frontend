@@ -72,7 +72,7 @@ const ChatMessages = ({
                         ...prevMessages,
                         {
                             type: 'bot',
-                            text: "Here's your personalized diet plan!",
+                            text: "Here's your personalized diet plan! 🎯",
                         },
                         {
                             type: 'bot',
@@ -108,7 +108,7 @@ const ChatMessages = ({
                         ...prevMessages,
                         {
                             type: 'bot',
-                            text: "Here's your personalized fitness plan!",
+                            text: "Here's your personalized fitness plan! 🎯",
                         },
                         {
                             type: 'bot',
@@ -137,8 +137,8 @@ const ChatMessages = ({
                         },
                         {
                             type: 'bot',
-                            text: `Do you want a diet plan for above details?`,
-                            options: ['Vegan', 'Veg', 'Non-Veg'],
+                            text: `Would you like a diet plan tailored to these details? 🍽️`,
+                            options: ['Vegan 🌱', 'Keto 🥑', 'Regular 🍲'],
                         },
                     ]);
                 }
@@ -186,8 +186,8 @@ const ChatMessages = ({
                 newMessages = [
                     {
                         type: 'bot',
-                        text: 'Awesome! Please select your gender?',
-                        options: ['M', 'F'],
+                        text: 'Fantastic! 🎉 Identify yourself',
+                        options: ['M 👦🏻', 'F 👧🏻'],
                     },
                 ];
                 break;
@@ -197,7 +197,7 @@ const ChatMessages = ({
                 newMessages = [
                     {
                         type: 'bot',
-                        text: 'Thank you! What is your height in cm?',
+                        text: 'Thank a bunch 🙌🏻! What is your height in cm? 📏',
                     },
                 ];
                 break;
@@ -205,7 +205,10 @@ const ChatMessages = ({
                 newProfile.height = response;
                 newStep = 3;
                 newMessages = [
-                    { type: 'bot', text: 'Great! What is your weight in kg?' },
+                    {
+                        type: 'bot',
+                        text: 'Great ⭐️ ! What is your weight in kg? ⚖️',
+                    },
                 ];
                 break;
             case 3:
@@ -214,7 +217,7 @@ const ChatMessages = ({
                 newMessages = [
                     {
                         type: 'bot',
-                        text: 'Awesome! What is your fitness goal?',
+                        text: 'Awesome! 💪🏻 What is your fitness goal? 🏆',
                         options: ['Muscle Building', 'Fat Loss', 'Others'],
                     },
                 ];
@@ -226,7 +229,7 @@ const ChatMessages = ({
                     newMessages = [
                         {
                             type: 'bot',
-                            text: 'Please specify your fitness goal:',
+                            text: 'Awesome! 💪🏻 What is your fitness goal? 🏆',
                         },
                     ];
                 } else {
@@ -235,7 +238,7 @@ const ChatMessages = ({
                     newMessages = [
                         {
                             type: 'bot',
-                            text: `Thank you! Your fitness goal is ${response}. We are generating your weekly fitness plan.`,
+                            text: `Thank you! Your fitness goal is ${response}. Generating your weekly 🗓️ fitness plan.`,
                         },
                     ];
 
@@ -250,7 +253,7 @@ const ChatMessages = ({
                 newMessages = [
                     {
                         type: 'bot',
-                        text: `Thank you! Your specified fitness goal is ${response}. We are generating your weekly fitness plan.`,
+                        text: `Thank you! Your specified fitness goal is ${response}. Generating your weekly 🗓️ fitness plan.`,
                     },
                 ];
 
@@ -264,7 +267,7 @@ const ChatMessages = ({
                 newMessages = [
                     {
                         type: 'bot',
-                        text: `Thank you! We are generating your diet plan please wait...`,
+                        text: `Thank you! Generating your diet 🥗 plan please wait...`,
                     },
                 ];
                 if (newProfile.dietRequired) {
@@ -317,6 +320,7 @@ const ChatMessages = ({
                     isOpen={isOpenWorkout}
                     setIsOpen={setIsOpenWorkout}
                     workoutResp={workoutResp}
+                    userProfile={userProfile}
                 />
             )}
             {isDietWorkout && (
