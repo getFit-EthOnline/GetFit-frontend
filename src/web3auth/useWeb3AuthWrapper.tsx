@@ -13,28 +13,27 @@ import { useAccount } from "wagmi";
 function useWeb3AuthWrapper() {
     const { chainId } = useAccount()
     const signer = useEthersSigner()
-    const { setSmartAccount, setSmartAddress } = useGlobalStore()
+    const { setSmartAccount, setSmartAddress, smartAccount } = useGlobalStore()
 
     return useQuery({
-        queryKey: [!!signer, chainId],
+        queryKey: [!!signer, chainId, !!smartAccount],
         enabled: !!signer || chainId !== galadriel_devnet.id,
         queryFn: async () => {
             if (signer && chainId) {
-                if (chainId === galadriel_devnet.id) {
-                    return
-                }
-                if (!process.env.NEXT_SMART_ACCOUNT_ENABLED) {
-                    return
+                if (chainId === galadriel_devnet.id ||
+                    !process.env.NEXT_PUBLIC_SMART_ACCOUNT_ENABLED ||
+                    smartAccount) {
+                    return;
                 }
                 const biconomy_config = BICONOMY_CONFIG[chainId as keyof typeof BICONOMY_CONFIG];
-                const smartAccount = await createSmartAccountClient({
+                const smartAccountCreationg = await createSmartAccountClient({
                     signer: signer,
                     bundler: biconomy_config.bundler,
                     paymasterUrl: biconomy_config.paymasterUrl,
                     biconomyPaymasterApiKey: biconomy_config.paymasterApiKey
                 });
-                setSmartAccount(smartAccount)
-                const address = await smartAccount.getAccountAddress();
+                setSmartAccount(smartAccountCreationg)
+                const address = await smartAccountCreationg.getAccountAddress();
                 setSmartAddress(address)
             }
 

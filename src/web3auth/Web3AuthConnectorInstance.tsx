@@ -21,8 +21,6 @@ export default function Web3AuthConnectorInstance(chains: Chain[]) {
     blockExplorerUrl: chains[0].blockExplorers?.default.url[0] as string,
   };
 
-  console.log(chainConfig, "chainConfig");
-
   const privateKeyProvider = new EthereumPrivateKeyProvider({ config: { chainConfig } });
 
   const web3AuthInstance = new Web3Auth({

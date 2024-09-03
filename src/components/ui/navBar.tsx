@@ -7,6 +7,7 @@ import { logo } from '../../../public/index';
 import toast from 'react-hot-toast';
 import { ImSpinner2 } from 'react-icons/im';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
+import useWeb3AuthWrapper from '@/web3auth/useWeb3AuthWrapper';
 
 const navContents = [
     {
@@ -25,6 +26,7 @@ const navContents = [
 
 const NavBar = () => {
     const { chain } = useAccount()
+    useWeb3AuthWrapper()
     return (
         <div className=" flex shadow-lg  justify-between items-center py-4 ">
             <div className=" flex justify-center items-center w-1/4">
