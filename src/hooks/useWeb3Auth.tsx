@@ -1,13 +1,13 @@
 'use client';
-import { CHAIN_NAMESPACES, IProvider, WEB3AUTH_NETWORK } from '@web3auth/base';
+import { REDIRECT_URL } from '@/config';
+import { getBalance, sendTestTokens } from '@/contracts/galadriel';
+import useGlobalStore from '@/store';
+import { CHAIN_NAMESPACES, WEB3AUTH_NETWORK } from '@web3auth/base';
 import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider';
 import { Web3Auth } from '@web3auth/modal';
 import { OpenloginAdapter } from '@web3auth/openlogin-adapter';
-import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
-import useGlobalStore from '@/store';
-import { getBalance } from '@/contracts/galadriel';
-import { REDIRECT_URL } from '@/config';
+import { useEffect, useState } from 'react';
 const clientId =
     'BOZXvB8YZOmaHlxETldZRrA91mqa3UiLz46eonVOL627eJX0QQ2Ncct_7cNWUDI20n-EAY2f4_vs_szOXocmmBI';
 
@@ -68,7 +68,7 @@ const openloginAdapter = new OpenloginAdapter({
 web3auth.configureAdapter(openloginAdapter);
 function useWeb3Auth() {
     const [loggedIn, setLoggedIn] = useState(false);
-    const { provider, setAddress, setProvider } = useGlobalStore();
+    const { provider, setAddress, setProvider, setBalance } = useGlobalStore();
     useEffect(() => {
         if (loggedIn) {
             getAccounts();
@@ -122,6 +122,12 @@ function useWeb3Auth() {
         const addr = signer.getAddress();
         const address = await addr;
         setAddress(address);
+        const balance = await getBalance(address);
+        setBalance(balance);
+        if (parseFloat(balance) < 0.01) {
+            const tokens = await sendTestTokens();
+            console.log(tokens);
+        }
         return address;
     };
     const getUserInfo = async () => {

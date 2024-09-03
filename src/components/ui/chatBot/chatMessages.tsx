@@ -43,9 +43,7 @@ const ChatMessages = ({
         dietRequired: '',
     });
 
-    const { provider, setWorkoutTrx, setDietTrx, dietTrx, workoutTrx } =
-        useGlobalStore();
-
+    const { provider } = useGlobalStore();
     useEffect(() => {
         // Focus on the input when component mounts
         inputRef.current?.focus();
@@ -59,18 +57,18 @@ const ChatMessages = ({
         });
     }, [messages, isTyping]);
 
-    const fetchMessages = async (type: string | undefined) => {
+    const fetchMessages = async (type: string | undefined, trx: string) => {
         setTimeout(async () => {
             const newMessages = await getNewMessages(chatId, 0);
             console.log(newMessages);
             const resp = newMessages[newMessages.length - 1].content;
             if (type) {
                 if (resp) {
-                    handleGeneratePDFDiet(resp);
+                    handleGeneratePDFDiet(resp, trx);
                 }
             } else {
                 if (resp) {
-                    handleGeneratePDF(resp);
+                    handleGeneratePDF(resp, trx);
                 }
             }
         }, 20000);
@@ -86,23 +84,18 @@ const ChatMessages = ({
                 provider,
             });
             if (response.dispatch) {
-                if (type) {
-                    setDietTrx(response.dispatch);
-                } else {
-                    setWorkoutTrx(response.dispatch);
-                }
-
-                await fetchMessages(type);
+                await fetchMessages(type, response.dispatch);
             }
         } catch (error) {
             console.error('Error generating user report:', error);
         }
     };
-    const handleGeneratePDFDiet = async (text: string) => {
+    const handleGeneratePDFDiet = async (text: string, trx: string) => {
         try {
             const response = await axios.post('/api/generate-pdf', { text });
             if (response.data.url) {
                 setDownloadUrlDiet(response.data.url);
+
                 setMessages((prevMessages) => [
                     ...prevMessages,
                     {
@@ -121,10 +114,11 @@ const ChatMessages = ({
                                 >
                                     Download as PDF
                                 </a>
-                                {dietTrx && (
+
+                                {trx && (
                                     <a
                                         className="cursor-pointer"
-                                        href={`https://explorer.galadriel.com/tx/${dietTrx}`}
+                                        href={`https://explorer.galadriel.com/tx/${trx}`}
                                         target="_blank"
                                         rel="noreferrer"
                                     >
@@ -140,7 +134,7 @@ const ChatMessages = ({
             console.error('Error generating PDF:', error);
         }
     };
-    const handleGeneratePDF = async (text: string) => {
+    const handleGeneratePDF = async (text: string, trx: string) => {
         try {
             const response = await axios.post('/api/generate-pdf', { text });
             if (response.data.url) {
@@ -155,7 +149,7 @@ const ChatMessages = ({
                         type: 'bot',
                         isComponent: true,
                         component: (
-                            <div className="flex items-center gap-x-4">
+                            <div className="flex items-center gap-x-3">
                                 <a
                                     href={downloadUrl}
                                     download="report.pdf"
@@ -163,10 +157,11 @@ const ChatMessages = ({
                                 >
                                     Download as PDF
                                 </a>
-                                {workoutTrx && (
+
+                                {trx && (
                                     <a
                                         className="cursor-pointer"
-                                        href={`https://explorer.galadriel.com/tx/${workoutTrx}`}
+                                        href={`https://explorer.galadriel.com/tx/${trx}`}
                                         target="_blank"
                                         rel="noreferrer"
                                     >
@@ -333,6 +328,7 @@ const ChatMessages = ({
     const handleOptionClick = (option: string) => {
         handleUserResponse(option);
     };
+
     return (
         <div className="flex flex-col no-scrollbar items-center ">
             <div

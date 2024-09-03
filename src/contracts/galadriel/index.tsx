@@ -46,7 +46,6 @@ export async function addMessage({
     agentRunID,
     provider,
 }: addMessageProps) {
-    console.log(provider);
     if (!provider) {
         throw new Error('Provider not found');
     }
@@ -148,8 +147,5 @@ export const getBalance = async (address: string | null) => {
     const balance = await provider.getBalance(address || '');
     const balanceInEth = ethers.formatEther(balance);
     console.log(balanceInEth);
-    if (parseInt(balanceInEth) < 0.01) {
-        const tokens = await sendTestTokens();
-        console.log(tokens);
-    }
+    return balanceInEth;
 };

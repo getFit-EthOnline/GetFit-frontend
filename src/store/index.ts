@@ -6,12 +6,10 @@ export interface userAgentProps {
     profilePic: StaticImageData;
 }
 interface GlobalStore {
+    balance: string | null;
+    setBalance: (balance: string | null) => void;
     fitnessRunTrx: string | null;
     setFitnessRunTrx: (trx: string | null) => void;
-    workoutTrx: string | null;
-    setWorkoutTrx: (trx: string | null) => void;
-    dietTrx: string | null;
-    setDietTrx: (trx: string | null) => void;
     address: string | null;
     setAddress: (address: string | null) => void;
     provider: any;
@@ -23,12 +21,10 @@ interface GlobalStore {
 }
 
 const useGlobalStore = create<GlobalStore>()((set) => ({
+    balance: null,
+    setBalance: (balance) => set({ balance }),
     fitnessRunTrx: null,
     setFitnessRunTrx: (trx) => set({ fitnessRunTrx: trx }),
-    workoutTrx: null,
-    setWorkoutTrx: (trx) => set({ workoutTrx: trx }),
-    dietTrx: null,
-    setDietTrx: (trx) => set({ dietTrx: trx }),
     address: '',
     setAddress: (address) => set({ address }),
     provider: null,
