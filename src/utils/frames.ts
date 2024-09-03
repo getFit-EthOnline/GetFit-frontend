@@ -8,7 +8,7 @@ export const confirmationFrameHtml = getFrameHtmlResponse({
   buttons: [
     {
       action: "post_redirect",
-      label: "Learn more about transaction frames",
+      label: "Transaction successful",
     },
   ],
   postUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/end`,
