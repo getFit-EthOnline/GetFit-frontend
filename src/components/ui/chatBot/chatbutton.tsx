@@ -12,9 +12,17 @@ export interface Message {
     isComponent?: boolean;
     component?: React.ReactNode;
 }
-const ChatButton = ({ chatId }: { chatId: number }) => {
-    const [open, setOpen] = useState(false);
+const ChatButton = ({
+    chatId,
+    open,
+    setOpen,
+}: {
+    chatId: number;
+    open: boolean;
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
     const { userAgent, agentFirstMessage, fitnessRunTrx } = useGlobalStore();
+
     const [messages, setMessages] = useState<Message[]>([]);
     useEffect(() => {
         setMessages([

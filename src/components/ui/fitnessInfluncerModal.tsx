@@ -34,8 +34,10 @@ const InfluencerDetails = [
 
 const InfluencerModal = ({
     setChatId,
+    setChatOpen,
 }: {
     setChatId: React.Dispatch<React.SetStateAction<number>>;
+    setChatOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
     const [isOpen, setIsOpen] = useState(true);
     const [selectedInfluencer, setSelectedInfluencer] =
@@ -62,7 +64,8 @@ const InfluencerModal = ({
             localStorage.setItem('hasModalBeenShown', 'true');
             setLoading(false);
             setIsOpen(false);
-        }, 25000);
+            setChatOpen(true);
+        }, 20000);
     };
     const closeModal = async () => {
         setUserAgnet(selectedInfluencer);

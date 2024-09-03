@@ -45,6 +45,7 @@ const SportsBets = ({
     const { loggedIn } = useWeb3Auth();
     const [chatId, setChatId] = useState(0);
     const { address } = useGlobalStore();
+    const [open, setOpen] = useState(false);
     return (
         <div className="mx-20">
             <h1 className=" text-2xl capitalize ml-28 font-bold">
@@ -79,9 +80,13 @@ const SportsBets = ({
                         </div>
                     ))}
                 </div>
-                {address && <ChatButton chatId={chatId} />}
+                {address && (
+                    <ChatButton chatId={chatId} open={open} setOpen={setOpen} />
+                )}
             </div>
-            {loggedIn && <InfluencerModal setChatId={setChatId} />}
+            {loggedIn && (
+                <InfluencerModal setChatId={setChatId} setChatOpen={setOpen} />
+            )}
         </div>
     );
 };
