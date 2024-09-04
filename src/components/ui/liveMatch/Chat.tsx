@@ -117,9 +117,12 @@ export const MessageItem = ({ msg, index, client, inputValue }) => {
                 conversationTopic: msg.conversation.topic,
                 participantAccountAddresses: [PEER_ADDRESS, client.address],
                 address: client.address,
-                state: frameInfo.state,
+                state: {
+                    ...frameInfo.state,
+                    transactionId: "123"
+                },
             });
-
+            debugger
             if (action === "tx") {
                 const transactionInfo = await framesClient.proxy.postTransaction(
                     button.target,
