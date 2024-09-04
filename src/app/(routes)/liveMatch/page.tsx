@@ -42,8 +42,8 @@ const Page = () => {
     const videoId = '91w2-Zs0XuU';
     const url = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1`;
     return (
-        <div className="flex w-full px-16  py-10  gap-x-16">
-            <div className="] gap-y-10 flex flex-col items-center ">
+        <div className="flex flex-col lg:flex-row w-full px-4 lg:px-16 py-10 gap-y-10 lg:gap-x-16">
+            <div className="flex flex-col gap-y-10 items-center w-full lg:max-w-[60%]">
                 <div className=" ">
                     <iframe
                         width="860"
@@ -102,7 +102,7 @@ const Page = () => {
                 </motion.button>
                 {predictionEnabled && <PlayerAnalysis stats={stas} />}
             </div>
-            <div className="  w-[40%]  max-h-[calc(100vh-10px)]  min-h-[calc(100vh-10px)]  shadow-lg   ">
+            <div className="w-full lg:w-[40%] max-h-[calc(100vh-10px)] shadow-lg">
                 <LiveChat />
             </div>
         </div>

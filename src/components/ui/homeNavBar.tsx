@@ -10,35 +10,26 @@ const navContents = [
         title: 'Market Prediction',
         link: '/prediction',
     },
+
     {
         id: 2,
-        title: 'Fantasy Fitness Leagues',
-        link: '/fantasyFitnessLeagues',
-    },
-    {
-        id: 3,
         title: 'Move To Earn',
         link: '/move-to-earn',
     },
     {
-        id: 4,
+        id: 3,
         title: 'Tickets',
         link: '/tickets',
     },
     {
-        id: 5,
+        id: 4,
         title: 'Membership',
         link: '/membership',
     },
     {
-        id: 6,
+        id: 5,
         title: 'Token Battles',
         link: '/tokenBattles',
-    },
-    {
-        id: 7,
-        title: 'Marketplaces',
-        link: '/marketplaces',
     },
 ];
 
@@ -46,9 +37,9 @@ const HomeNav = () => {
     return (
         <>
             <div className=" flex shadow-lg  justify-between bg-[#1E1E1E] items-center py-2 px-10 ">
-                <div className=" flex  items-center w-1/2">
+                <Link href="/" className=" flex  items-center w-1/2">
                     <Image src={logoWhite} alt="GetFit" className="w-32 " />
-                </div>
+                </Link>
 
                 <div className=" items-center flex justify-end gap-x-5  w-1/2">
                     <div className=" relative ">
