@@ -28,7 +28,6 @@
     "@web3auth/wallet-services-plugin": "^8.12.3",
     "@web3auth/web3auth-wagmi-connector": "^6.0.0",
     "@xmtp/frames-client": "^0.5.4",
-    "@xmtp/react-sdk": "^8.0.1",
     "axios": "^1.7.7",
     "cloudinary": "^2.4.0",
     "clsx": "^2.1.1",
