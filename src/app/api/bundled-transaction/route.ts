@@ -7,15 +7,17 @@ import { encodeFunctionData, parseUnits } from "viem";
 
 async function getResponse(req: NextRequest): Promise<NextResponse | Response> {
   const body = await req.json();
-  console.log(body, "body");
+  const state = body.untrustedData.state;
+  delete body.untrustedData.state;
 
   const { isValid } = await getXmtpFrameMessage(body);
+
   if (!isValid) {
     return new NextResponse("Message not valid", { status: 500 });
   }
 
-  const approvalUsdcAmount = body.priceInUsd;
-  const approvePriceInUsdc = parseUnits("1", 6);
+  const approvalUsdcAmount = state.amount;
+  const approvePriceInUsdc = parseUnits(approvalUsdcAmount, 6);
 
   const approvalData = encodeFunctionData({
     abi: USDC_ABI,
@@ -31,7 +33,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse | Response> {
   const betData = encodeFunctionData({
     abi: BETTING_CONTRACT_ABI,
     functionName: "placeBet",
-    args: ["john", approvePriceInUsdc],
+    args: [state.name, approvePriceInUsdc],
   });
 
   const betTransaction = {
