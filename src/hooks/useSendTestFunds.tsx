@@ -1,6 +1,7 @@
 import { getAddressesForChain } from '@/config/addresses'
 import { galadriel_devnet, isMorphHolesky } from '@/config/chains'
 import useGlobalStore from '@/store'
+import { config } from '@/web3auth/Providers'
 import { useMutation } from '@tanstack/react-query'
 import { Chain, createWalletClient, erc20Abi, getAddress, http } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
@@ -19,7 +20,7 @@ const useSendTestFundsMutation = ({ chain }: { chain?: Chain }) => {
     const client = createWalletClient({
         account: account,
         chain: chain,
-        transport: http(),
+        transport: http(chain ? config.chains[chain.id].rpcUrls.default.http[0] : galadriel_devnet.rpcUrls.default.http[0]),
         // transport: http(config.chains[chain?.id ?? 0].rpcUrls.default.http[0])
     })
 
