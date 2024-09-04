@@ -57,19 +57,13 @@ const ButtonGroup = ({ buttons, handleClick, frameButtonUpdating }) => {
 
     const handlePress = () => handleClick(button.buttonIndex, button.action);
     const isDisabled = frameButtonUpdating === index + 1;
-    const buttonStyle = {
-      ...styles.button,
-      marginRight: index % 2 === 0 ? "4px" : "0px", // Adjust marginRight for every second button
-      backgroundColor: isDisabled ? "#f0f0f0" : styles.button.backgroundColor, // Greyed out effect when disabled
-      color: isDisabled ? "#a0a0a0" : "initial", // Text color change when disabled
-      cursor: isDisabled ? "not-allowed" : "pointer", // Cursor change when disabled
-    };
     return (
       <button
         key={`${button}-${index}`}
         onClick={handlePress}
         disabled={isDisabled}
-        style={buttonStyle}>
+        className="bg-green-500 rounded-md mb-1 text-white disabled:cursor-not-allowed w-full py-3 border-0"
+      >
         {button.label}
         {button.action === "post_redirect" && (
           <span style={styles.redirectIcon}>↪</span>
