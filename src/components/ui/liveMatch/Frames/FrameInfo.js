@@ -1,5 +1,3 @@
-import { PROTOCOL_VERSION } from "@xmtp/frames-client";
-
 const OG_TITLE_TAG = "og:title";
 
 export function getOrderedButtons(metadata) {

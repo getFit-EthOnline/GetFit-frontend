@@ -97,7 +97,12 @@ export const MessageItem = ({ msg, index, client, inputValue }) => {
             debugger
             const metadata = await fetchFrameFromUrl(msg);
             debugger
+            // Extract amount and player from the URL
+
             const frameMetadata = metadata
+            const urlParams = new URLSearchParams(new URL(frameMetadata.url).search);
+            const amount = urlParams.get("amount");
+            const name = urlParams.get("player");
             if (!frameMetadata || !client || !walletClient || !frameMetadata?.frameInfo?.buttons) {
                 return;
             }
@@ -119,7 +124,8 @@ export const MessageItem = ({ msg, index, client, inputValue }) => {
                 address: client.address,
                 state: {
                     ...frameInfo.state,
-                    transactionId: "123"
+                    name: name,
+                    amount: amount,
                 },
             });
             debugger
