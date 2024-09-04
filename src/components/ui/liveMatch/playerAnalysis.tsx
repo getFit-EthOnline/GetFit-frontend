@@ -1,12 +1,14 @@
 import Image from 'next/image';
 import React from 'react';
 import { devonLarratt, johnbrzenkarmwrestling } from '../../../../public';
-
-const MatchComparison = () => {
-    // Hypothetical stats for Devon Larratt and John Brzenk
+import { motion } from 'framer-motion';
+import { extractData } from '@/utils/predictionExractor';
+const MatchComparison = ({ stats }: { stats: string }) => {
+    console.log(stats);
+    const extractedData = extractData(stats);
     const devonStats = {
-        name: 'Devon Larratt',
-        wins: 45,
+        name: 'Floyd Mayweather Jr.',
+        wins: extractedData?.probabilities?.floydMayweather,
         losses: 7,
         draws: 2,
         lastMatch: 'Win by pin',
@@ -20,8 +22,8 @@ const MatchComparison = () => {
     };
 
     const johnStats = {
-        name: 'John Brzenk',
-        wins: 55,
+        name: 'Conor McGregor',
+        wins: extractedData?.probabilities?.conorMcGregor,
         losses: 5,
         draws: 1,
         lastMatch: 'Loss by pin',
@@ -33,9 +35,13 @@ const MatchComparison = () => {
         reach: '76 inches',
         image: johnbrzenkarmwrestling,
     };
-
     return (
-        <div className="flex justify-center items-center w-full   bg-gray-100">
+        <motion.div
+            initial={{ y: 200, opacity: 0, scale: 0.8 }}
+            animate={{ y: 0, opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6 }}
+            className="flex justify-center items-center w-full   bg-gray-100"
+        >
             <div className="flex w-full h-full bg-white shadow-lg rounded-lg overflow-hidden">
                 {/* Devon Larratt */}
                 <div className="w-1/3 flex flex-col  justify-start p-4">
@@ -187,7 +193,7 @@ const MatchComparison = () => {
                                     Total Matches:
                                 </td>
                                 <td className="px-4 py-2 border-b border-gray-300">
-                                    {devonStats.totalMatches}
+                                    {johnStats.totalMatches}
                                 </td>
                             </tr>
                             <tr className="bg-gray-100">
@@ -203,7 +209,7 @@ const MatchComparison = () => {
                                     Country:
                                 </td>
                                 <td className="px-4 py-2 border-b border-gray-300">
-                                    {devonStats.country}
+                                    {johnStats.country}
                                 </td>
                             </tr>
                             <tr className="bg-gray-100">
@@ -234,7 +240,7 @@ const MatchComparison = () => {
                     </table>
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 };
 

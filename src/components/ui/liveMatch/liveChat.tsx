@@ -131,7 +131,7 @@ const LiveChat = () => {
                         (msg, index) =>
                             msg && (
                                 <div
-                                    key={msg.id || index}
+                                    key={index + 1}
                                     className={`p-2 mb-2 rounded-md ${
                                         msg.user === 'System'
                                             ? 'bg-blue-400 italic'
