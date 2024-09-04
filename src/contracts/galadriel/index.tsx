@@ -51,12 +51,10 @@ export async function addMessage({
     }
     const web3 = new Web3(provider);
     const accounts = await web3.eth.getAccounts();
-
     const fitnessAgentContract = new web3.eth.Contract(
         FITNESS_ABI,
         FITNESS_AGENT_ADDRESS
     );
-
     console.log('Adding message to fitness run...');
     const addMessageTx: any = await fitnessAgentContract.methods
         .addMessage(message, agentRunID)
@@ -66,7 +64,25 @@ export async function addMessage({
 
     return { dispatch: addMessageTx.transactionHash };
 }
-
+export async function liveAddMessage({
+    message,
+    agentRunID,
+    provider,
+}: addMessageProps) {
+    if (!provider) {
+        throw new Error('Provider not found');
+    }
+    const fitnessAgentContract = new ethers.Contract(
+        FITNESS_AGENT_ADDRESS,
+        FITNESS_ABI,
+        provider
+    );
+    const addMessageTx = await fitnessAgentContract.addMessage(
+        message,
+        agentRunID
+    );
+    return { dispatch: addMessageTx.hash };
+}
 function getAgentRunId(receipt: TransactionReceipt) {
     let agentRunID;
     const provider = new ethers.JsonRpcProvider(
