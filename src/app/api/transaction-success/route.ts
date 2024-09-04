@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 async function getResponse(req: NextRequest): Promise<NextResponse> {
   const body = await req.json();
+  delete body.untrustedData.state;
   const { isValid } = await getXmtpFrameMessage(body);
 
   if (!isValid) {
