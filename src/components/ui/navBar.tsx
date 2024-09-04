@@ -4,10 +4,10 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { logo } from '../../../public/index';
 
+import useWeb3AuthWrapper from '@/web3auth/useWeb3AuthWrapper';
 import toast from 'react-hot-toast';
 import { ImSpinner2 } from 'react-icons/im';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
-import useWeb3AuthWrapper from '@/web3auth/useWeb3AuthWrapper';
 
 const navContents = [
     {
@@ -72,7 +72,6 @@ export const WalletConnectButton = () => {
     const { address } = useAccount();
     const handleLogin = async () => {
         const res = await connect({ connector: connectors[0] });
-        debugger
         console.log(res);
         // if (res) {
         //     await getBalance(res);

@@ -112,8 +112,6 @@ export const MessageItem: React.FC<MessageItemProps> = ({ msg, index, client, in
     const handleFrameButtonClick = async (buttonIndex, action = "post") => {
         try {
             const metadata = await fetchFrameFromUrl(msg);
-            // Extract amount and player from the URL
-
             const frameMetadata = metadata
             const urlParams = new URLSearchParams(new URL(frameMetadata.url).search);
             const amount = urlParams.get("amount");
@@ -143,7 +141,6 @@ export const MessageItem: React.FC<MessageItemProps> = ({ msg, index, client, in
                     amount: amount,
                 },
             });
-            debugger
             if (action === "tx") {
                 const transactionInfo = await framesClient.proxy.postTransaction(
                     button.target,
@@ -175,7 +172,6 @@ export const MessageItem: React.FC<MessageItemProps> = ({ msg, index, client, in
                     );
                     setFrameMetadata(completeTransactionMetadata);
                 } else {
-                    debugger;
                     try {
                         const bundleTransaction = await smartAccount.sendTransaction(transactionInfo.transactions, {
                             paymasterServiceData: { mode: PaymasterMode.SPONSORED },
@@ -192,7 +188,6 @@ export const MessageItem: React.FC<MessageItemProps> = ({ msg, index, client, in
                         );
                         setFrameMetadata(completeTransactionMetadata);
                     } catch (e) {
-                        debugger;
                         console.log("Transaction error", e);
                     }
                 }
