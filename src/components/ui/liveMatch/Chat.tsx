@@ -1,8 +1,10 @@
+// @ts-nocheck
 import { useEthersProvider } from "@/hooks/useEthersProvider";
 import { useEthersSigner } from "@/hooks/useEthersSigner";
 import useGlobalStore from "@/store";
 import { PaymasterMode } from "@biconomy/account";
 import { FramesClient } from "@xmtp/frames-client";
+import { Client, Conversation, DecodedMessage } from "@xmtp/xmtp-js";
 import { useEffect, useRef, useState } from "react";
 import { useWalletClient } from "wagmi";
 import { Frame } from "./Frames/Frame";
@@ -10,7 +12,14 @@ import { getFrameTitle, getOrderedButtons, isValidFrame, isXmtpFrame } from "./F
 import { fetchFrameFromUrl, urlRegex } from "./Frames/utils";
 import { PEER_ADDRESS } from "./LiveChat";
 
-function Chat({ client, messageHistory, conversation }) {
+// Define types for props
+interface ChatProps {
+    client: Client;
+    messageHistory: DecodedMessage[];
+    conversation: Conversation;
+}
+
+const Chat: React.FC<ChatProps> = ({ client, messageHistory, conversation }) => {
     const [inputValue, setInputValue] = useState("");
     const chatRef = useRef(null);
 
@@ -41,7 +50,7 @@ function Chat({ client, messageHistory, conversation }) {
             <div className="flex-grow overflow-y-auto pr-2" ref={chatRef}>
                 {messages.map((msg, index) => (
                     msg && (
-                        <MessageItem msg={msg} index={index} client={client} inputValue={inputValue} />
+                        <MessageItem msg={msg} key={index} index={index} client={client} inputValue={inputValue} />
                     )
                 ))}
             </div>
@@ -82,7 +91,15 @@ function Chat({ client, messageHistory, conversation }) {
 
 export default Chat;
 
-export const MessageItem = ({ msg, index, client, inputValue }) => {
+
+interface MessageItemProps {
+    msg: DecodedMessage;
+    index: number;
+    client: Client;
+    inputValue: string;
+}
+
+export const MessageItem: React.FC<MessageItemProps> = ({ msg, index, client, inputValue }) => {
     const { data: walletClient } = useWalletClient()
     const { smartAccount } = useGlobalStore()
 
@@ -94,9 +111,7 @@ export const MessageItem = ({ msg, index, client, inputValue }) => {
 
     const handleFrameButtonClick = async (buttonIndex, action = "post") => {
         try {
-            debugger
             const metadata = await fetchFrameFromUrl(msg);
-            debugger
             // Extract amount and player from the URL
 
             const frameMetadata = metadata

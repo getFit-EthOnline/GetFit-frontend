@@ -66,13 +66,16 @@ export const Frame = ({
         onClose={onClose}
         message={alertMessage}
       />
-      <a
-        href={frameUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        style={styles.imageFrameA}>
-        <img src={image} alt={title} style={styles.imageFrame} />
-      </a>
+      {/* {image && (
+        <a
+          href={frameUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={styles.imageFrameA}
+        >
+          <Image src={image} alt={title} style={styles.imageFrame} />
+        </a>
+      )} */}
       {textInput !== undefined && (
         <input
           type="text"

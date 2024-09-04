@@ -1,21 +1,17 @@
-import Image from 'next/image'
-import React from 'react'
+import Image from 'next/image';
 import {
-    armWrestlingEvents,
     armWrestlinglive1,
     armWrestlinglive2,
     armWrestlinglive3,
     armWrestlinglive4,
-    mmahomeEvents,
     mmalive1,
     mmalive2,
     mmalive3,
     mmalive4,
-    weightliftingHomeevents,
     weightLiftinglive1,
     weightLiftinglive2,
     weightLiftinglive3,
-    weightLiftinglive4,
+    weightLiftinglive4
 } from '../../../../public';
 
 import { StaticImageData } from 'next/image';
@@ -98,7 +94,6 @@ const LiveMatches = ({ selected }: { selected: string }) => {
             <div>
                 <div className=" flex flex-wrap items-center justify-center">
                     {selectedEvents.map((event: any) => (
-
                         <div
                             key={event.id}
                             className="relative w-[21%] p-2 group  "

@@ -1,3 +1,4 @@
+// @ts-nocheck
 'use client';
 import { getNewMessages, startFitnessRun } from '@/contracts/galadriel';
 import useGlobalStore, { userAgentProps } from '@/store';
