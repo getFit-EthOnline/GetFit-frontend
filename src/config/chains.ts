@@ -1,4 +1,5 @@
 import { defineChain } from "viem";
+import { morphHolesky } from "viem/chains";
 
 export const galadriel_devnet = defineChain({
   id: 696969,
@@ -14,3 +15,5 @@ export const galadriel_devnet = defineChain({
     },
   },
 });
+
+export const isMorphHolesky = (chainid: number) => chainid === morphHolesky.id;

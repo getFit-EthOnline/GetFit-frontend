@@ -39,7 +39,7 @@ export const spicy = defineChain({
     testnet: true,
 })
 
-const config = createConfig({
+export const config = createConfig({
     chains: [galadriel_devnet, spicy, morphHolesky],
     transports: {
         [galadriel_devnet.id]: http(),

@@ -1,15 +1,17 @@
 import { CHILIZ_FAN_BATTLE_ABI } from "@/abi/CHILIZ_FAN_BATTLE_ABI";
-import { CHILIZ_FAN_BATTLE_ADDRESS } from "@/config/addresses";
+import { getAddressesForChain } from "@/config/addresses";
 import useGlobalStore from "@/store";
 import { PaymasterMode } from "@biconomy/account";
 import { encodeFunctionData } from "viem";
-import { usePublicClient } from "wagmi";
+import { useAccount, usePublicClient } from "wagmi";
 
 const useChilizFanBattle = () => {
   const publicClient = usePublicClient();
+  const { chainId } = useAccount()
   const { smartAccount } = useGlobalStore();
   const participateInBattle = async (team: string) => {
-    if (!publicClient || !smartAccount) return;
+    if (!publicClient || !smartAccount || !chainId) return;
+    const addresses = getAddressesForChain(chainId)
     const txData = encodeFunctionData({
       abi: CHILIZ_FAN_BATTLE_ABI,
       functionName: "joinTeam",
@@ -17,7 +19,7 @@ const useChilizFanBattle = () => {
     });
     console.log(txData);
     const tx = {
-      to: CHILIZ_FAN_BATTLE_ADDRESS,
+      to: addresses.BETTING_CONTRACT_ADDRESS,
       data: txData,
     };
     const userOpResponse = await smartAccount.sendTransaction([tx], {
