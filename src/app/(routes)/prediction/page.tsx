@@ -27,7 +27,7 @@ const events = [
     },
 ];
 
-const Page = () => {
+const PredictionPage = () => {
     const [selected, setSelected] = useState<string>('weightLifting');
     return (
         <div className="pt-10">
@@ -40,4 +40,4 @@ const Page = () => {
     );
 };
 
-export default Page;
+export default PredictionPage;
