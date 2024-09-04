@@ -39,17 +39,19 @@ const Page = () => {
             fetchMessages(92);
         }
     };
+    const videoId = '91w2-Zs0XuU';
+    const url = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1`;
     return (
         <div className="flex w-full px-16  py-10  gap-x-16">
             <div className="] gap-y-10 flex flex-col items-center ">
                 <div className=" ">
                     <iframe
-                        className="rounded-md"
                         width="860"
                         height="415"
-                        src="https://www.youtube.com/embed/cefwt-dOLrg?si=q1dCfmbZr-JT3EvL&amp;start=64"
+                        src={url}
                         title="YouTube video player"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allow="autoplay; encrypted-media"
+                        allowFullScreen
                     ></iframe>
                 </div>
                 <motion.button
