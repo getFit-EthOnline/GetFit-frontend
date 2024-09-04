@@ -56,7 +56,7 @@ const NavBar = () => {
                     );
                 })}
             </div>
-            <div className=" items-center flex justify-center  w-1/4">
+            <div className=" items-center flex justify-center  w-1/4 gap-x-2">
                 <WalletConnectButton />
             </div>
         </div>

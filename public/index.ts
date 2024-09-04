@@ -36,8 +36,9 @@ import fantasySportsLogo from './sportsImages/fantasy sports.png';
 import merchendiseLogo from './sportsImages/merchendise.png';
 import predictionBg from './sportsImages/predictionBg.jpg.png';
 import FantacyChallengesBg from './sportsImages/FantacyChallengesBg.jpg.png';
+import Membership from './sportsImages/Membership.jpg.png';
 import ticketBg from './sportsImages/Tickets.jpg.png';
-import p2pFanBattlesBg from './sportsImages/predictionBg.jpg.png';
+import p2pFanBattlesBg from './sportsImages/p2pFanBattles.jpg.png';
 import SocialsBg from './sportsImages/SocialsBg.jpg.png';
 import m2eImage1 from './M2E images/m2eimage1.jpg';
 import m2eImage2 from './M2E images/m2eimage2.jpg';
@@ -109,4 +110,5 @@ export {
     ticketBg,
     p2pFanBattlesBg,
     SocialsBg,
+    Membership,
 };

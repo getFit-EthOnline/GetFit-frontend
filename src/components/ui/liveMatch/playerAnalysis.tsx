@@ -135,7 +135,7 @@ const MatchComparison = ({ stats }: { stats: string }) => {
                 <div className="w-1/3 flex flex-col justify-center items-center bg-blue-200 hover:bg-red-300 transition ease-in-out duration-300 ">
                     <h3 className="text-xl font-bold mb-2">Match Comparison</h3>
                     <div className="w-full h-[1px] bg-gray-400 my-4"></div>
-                    <p className="text-sm mb-4">Record Comparison</p>
+                    <p className="text-sm mb-4">AI Expert Prediction</p>
                     <div className="flex justify-around w-full mt-4">
                         <div className="flex flex-col items-center">
                             <h4 className="text-md font-bold">

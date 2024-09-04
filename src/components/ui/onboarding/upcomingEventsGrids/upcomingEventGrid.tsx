@@ -1,37 +1,37 @@
-import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import Image from 'next/image';
+import { useState } from 'react';
 import {
     FantacyChallengesBg,
     fantasySportsLogo,
+    Membership,
     merchendiseLogo,
     p2pFanBattlesBg,
     predictionBg,
     predictionLogo,
-    SocialsBg,
     socialsLogo,
     ticketBg,
     ticketLogo,
 } from '../../../../../public';
-import Image from 'next/image';
-import { motion } from 'framer-motion';
 const events = [
     {
         id: 1,
-        title: 'Predictions',
-        icon: predictionLogo,
+        title: 'Membership',
+        icon: merchendiseLogo,
     },
     {
         id: 2,
-        title: 'Fantasy sports',
+        title: 'Move to Earn',
         icon: fantasySportsLogo,
     },
     {
         id: 3,
-        title: 'merchandise',
-        icon: merchendiseLogo,
+        title: 'Predictions',
+        icon: predictionLogo,
     },
     {
         id: 4,
-        title: 'Socials',
+        title: 'Fitness Battles',
         icon: socialsLogo,
     },
     {
@@ -47,7 +47,7 @@ const UpComingEventGrid = () => {
     };
     return (
         <div>
-            <div className="flex  justify-center gap-4">
+            <div className="flex  justify-center gap-4 ">
                 {events.map((event) => (
                     <BounceButton
                         key={event.id}
@@ -62,7 +62,7 @@ const UpComingEventGrid = () => {
                 {clickedButtonId === 1 && (
                     <div className="max-w-[1000px]   rounded-md ">
                         <Image
-                            src={predictionBg}
+                            src={Membership}
                             alt="prediction logo "
                             className=" object-contain rounded-md"
                         />{' '}
@@ -80,7 +80,7 @@ const UpComingEventGrid = () => {
                 {clickedButtonId === 3 && (
                     <div className="max-w-[1000px] rounded-md ">
                         <Image
-                            src={p2pFanBattlesBg}
+                            src={predictionBg}
                             alt="prediction logo "
                             className=" object-contain rounded-md"
                         />{' '}
@@ -89,7 +89,7 @@ const UpComingEventGrid = () => {
                 {clickedButtonId === 4 && (
                     <div className="max-w-[1000px]  rounded-md ">
                         <Image
-                            src={SocialsBg}
+                            src={p2pFanBattlesBg}
                             alt="prediction logo "
                             className=" object-contain rounded-md"
                         />{' '}
