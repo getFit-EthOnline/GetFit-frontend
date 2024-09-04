@@ -10,7 +10,7 @@ import { useWalletClient } from "wagmi";
 import { Frame } from "./Frames/Frame";
 import { getFrameTitle, getOrderedButtons, isValidFrame, isXmtpFrame } from "./Frames/FrameInfo";
 import { fetchFrameFromUrl, urlRegex } from "./Frames/utils";
-import { PEER_ADDRESS } from "./LiveChat";
+import { PEER_ADDRESS } from "./liveChat";
 
 // Define types for props
 interface ChatProps {

@@ -1,5 +1,5 @@
 'use client'
-import LiveChat from "@/components/ui/liveMatch/LiveChat"
+import LiveChat from "@/components/ui/liveMatch/liveChat"
 import PlayerAnalysis from "@/components/ui/liveMatch/playerAnalysis"
 
 const LiveMatch = () => {
