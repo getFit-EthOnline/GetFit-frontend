@@ -1,6 +1,6 @@
-import { spicy } from "@/web3auth/Providers";
 import { Bundler } from "@biconomy/account";
 import { morphHolesky } from "viem/chains";
+import { spicy } from "./chains";
 
 const CHILIZ_BUNDLER_ENTRYPOINT_ADDRESS =
   "0x00000061FEfce24A79343c27127435286BB7A4E1";

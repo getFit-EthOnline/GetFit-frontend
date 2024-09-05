@@ -6,12 +6,12 @@ import { PaymasterMode } from "@biconomy/account";
 import { FramesClient } from "@xmtp/frames-client";
 import { Client, Conversation, DecodedMessage } from "@xmtp/xmtp-js";
 import { useEffect, useRef, useState } from "react";
-import { spicy } from "viem/chains";
 import { useAccount, useWalletClient } from "wagmi";
 import { Frame } from "./Frames/Frame";
 import { getFrameTitle, getOrderedButtons, isValidFrame, isXmtpFrame } from "./Frames/FrameInfo";
 import { fetchFrameFromUrl, urlRegex } from "./Frames/utils";
 import { PEER_ADDRESS } from "./liveChat";
+import { spicy } from "@/config/chains";
 
 // Define types for props
 interface ChatProps {

@@ -1,5 +1,6 @@
 import { Address } from "viem";
-import { morphHolesky, spicy } from "viem/chains";
+import { morphHolesky } from "viem/chains";
+import { spicy } from "./chains";
 export const GALADRIEL_FITNESS_AGENT_ADDRESS =
   "0x054ba199Ef61ef15226e2CeB61138f7d5E2F8408";
 

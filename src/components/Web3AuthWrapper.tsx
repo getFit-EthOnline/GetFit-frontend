@@ -1,8 +1,9 @@
 import useWeb3AuthWrapper from '@/web3auth/useWeb3AuthWrapper';
+import { ComponentProps } from 'react';
 
-const Web3AuthWrapper = () => {
+const Web3AuthWrapper: React.FC<ComponentProps<"div">> = ({ children }) => {
     useWeb3AuthWrapper();
-    return null
+    return children
 };
 
 export default Web3AuthWrapper;

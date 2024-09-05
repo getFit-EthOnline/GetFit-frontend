@@ -2,12 +2,11 @@ import { createSmartAccountClient } from "@biconomy/account";
 import { useQuery } from "@tanstack/react-query";
 
 import BICONOMY_CONFIG from "@/config/biconomy";
-import { galadriel_devnet } from "@/config/chains";
+import { galadriel_devnet, spicy } from "@/config/chains";
 import { useEthersSigner } from "@/hooks/useEthersSigner";
 import useSendTestFundsMutation from "@/hooks/useSendTestFunds";
 import useGlobalStore from "@/store";
 import { useEffect, useState } from "react";
-import { spicy } from "viem/chains";
 import { useAccount } from "wagmi";
 
 function useWeb3AuthWrapper() {
@@ -24,7 +23,6 @@ function useWeb3AuthWrapper() {
     queryKey: [!!signer, chainId, !!smartAccount],
     enabled: isClient && !!signer || chainId !== galadriel_devnet.id,
     queryFn: async () => {
-
       if (!chain) return
       if (signer && chainId) {
         if (chainId === galadriel_devnet.id || chainId === spicy.id ||

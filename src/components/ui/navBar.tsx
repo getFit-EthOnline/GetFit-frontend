@@ -31,7 +31,6 @@ const navContents = [
 
 const NavBar = () => {
     const { chain } = useAccount()
-    useWeb3AuthWrapper()
 
     return (
         <div className=" flex shadow-lg  justify-between items-center py-4 ">

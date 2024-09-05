@@ -1,7 +1,6 @@
 import { getAddressesForChain } from '@/config/addresses'
-import { galadriel_devnet, isMorphHolesky } from '@/config/chains'
+import { galadriel_devnet, isMorphHolesky, spicy } from '@/config/chains'
 import useGlobalStore from '@/store'
-import { spicy } from '@/web3auth/Providers'
 import { useMutation } from '@tanstack/react-query'
 import { Chain, createWalletClient, erc20Abi, getAddress, http } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
