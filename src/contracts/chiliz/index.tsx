@@ -107,3 +107,26 @@ export async function getFanTokenBalance(userAddress: string) {
     console.error("Error in getFanTokenBalance", error);
   }
 }
+
+export async function sendTestTokens(address: string) {
+  const provider = new ethers.JsonRpcProvider("https://spicy-rpc.chiliz.com/");
+  console.log(`Getting test funds for address: ${address}`);
+
+  // Setup a third-party provider with its own signer to send transactions
+  const thirdPartyProvider = new ethers.Wallet(
+    process.env.NEXT_PUBLIC_P_KEY || "",
+    provider
+  );
+  // Sending CHZ to the signer address
+  console.log("Sending CHZ to the signer address...");
+  const ethSendPromise = await thirdPartyProvider.sendTransaction({
+    to: address,
+    value: ethers.parseUnits("1", 18), // Sending 1 CHZ
+  });
+  await ethSendPromise.wait();
+  console.log(
+    `CHZ transfer successful, transaction hash: ${ethSendPromise.hash}`
+  );
+
+  return { trxhash: ethSendPromise.hash };
+}
