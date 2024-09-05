@@ -1,13 +1,10 @@
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import '../globals.css';
-import NavBar from '@/components/ui/navBar';
-import HomeNav from '@/components/ui/homeNavBar';
-import { Toaster } from 'react-hot-toast';
+"use client";
+import HomeNav from "@/components/ui/homeNavBar";
+import { Inter } from "next/font/google";
+import { Toaster } from "react-hot-toast";
+import "../globals.css";
 
-const inter = Inter({ subsets: ['latin'] });
-
-
+const inter = Inter({ subsets: ["latin"] });
 
 export default function Layout({
     children,
@@ -16,13 +13,12 @@ export default function Layout({
 }>) {
     return (
         <html lang="en">
-
             <body className={` bg-black ${inter.className}`}>
-
                 <HomeNav />
-                <div className=' bg-[#E2E2E2]  mx-auto'>
-                    <Toaster position='top-center' reverseOrder={false} />
-                    {children}</div>
+                <div className=" bg-[#E2E2E2]  mx-auto">
+                    <Toaster position="top-center" reverseOrder={false} />
+                    {children}
+                </div>
             </body>
         </html>
     );
