@@ -8,7 +8,6 @@ import { WagmiProvider, createConfig, http, useAccount, useChainId, useConnect, 
 import Web3AuthConnectorInstance from "./Web3AuthConnectorInstance";
 const queryClient = new QueryClient()
 
-
 export const spicy = defineChain({
     id: 88_882,
     name: 'Chiliz Spicy Testnet',

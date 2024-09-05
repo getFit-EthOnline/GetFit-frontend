@@ -24,6 +24,7 @@ function useWeb3AuthWrapper() {
     queryKey: [!!signer, chainId, !!smartAccount],
     enabled: isClient && !!signer || chainId !== galadriel_devnet.id,
     queryFn: async () => {
+
       if (!chain) return
       if (signer && chainId) {
         if (chainId === galadriel_devnet.id || chainId === spicy.id ||

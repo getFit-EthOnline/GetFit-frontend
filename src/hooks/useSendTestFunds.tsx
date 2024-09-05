@@ -1,11 +1,10 @@
 import { getAddressesForChain } from '@/config/addresses'
 import { galadriel_devnet, isMorphHolesky } from '@/config/chains'
 import useGlobalStore from '@/store'
-import { config } from '@/web3auth/Providers'
+import { spicy } from '@/web3auth/Providers'
 import { useMutation } from '@tanstack/react-query'
 import { Chain, createWalletClient, erc20Abi, getAddress, http } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
-import { spicy } from 'viem/chains'
 import { useAccount, usePublicClient } from 'wagmi'
 
 const account = privateKeyToAccount(process.env.NEXT_PUBLIC_PK as `0x${string}`)
@@ -17,11 +16,11 @@ const useSendTestFundsMutation = ({ chain }: { chain?: Chain }) => {
     const { smartAccount, smartAddress } = useGlobalStore()
     const publicClient = usePublicClient()
 
+
     const client = createWalletClient({
         account: account,
         chain: chain,
-        transport: http(chain && chain.id !== galadriel_devnet.id ? config.chains[chain.id].rpcUrls.default.http[0] : galadriel_devnet.rpcUrls.default.http[0]),
-        // transport: http(config.chains[chain?.id ?? 0].rpcUrls.default.http[0])
+        transport: http(chain && chain.id === spicy.id ? "https://chiliz-spicy-rpc.publicnode.com" : "https://rpc-quicknode-holesky.morphl2.io"),
     })
 
 
@@ -34,6 +33,7 @@ const useSendTestFundsMutation = ({ chain }: { chain?: Chain }) => {
             const { USDC_TOKEN_ADDRESS } = getAddressesForChain(chain.id)
             const args = isMorphHolesky(chain.id) && smartAccount ? getAddress(smartAddress ?? '') : getAddress(address ?? '')
             let balance;
+            let nativeBalance;
             try {
                 balance = await publicClient.readContract({
                     abi: erc20Abi,
@@ -41,14 +41,14 @@ const useSendTestFundsMutation = ({ chain }: { chain?: Chain }) => {
                     functionName: 'balanceOf',
                     args: [args],
                 });
+                nativeBalance = await publicClient.getBalance({
+                    address: args,
+                })
             } catch (error) {
-                debugger
                 console.error('Error reading contract balance:', error);
                 throw error;
             }
-            debugger
-            if (balance > BigInt(0)) return
-            debugger
+            if (balance > BigInt(0) && nativeBalance > BigInt(0)) return
             if (chain.id === spicy.id) {
                 let tx;
                 try {
@@ -59,7 +59,6 @@ const useSendTestFundsMutation = ({ chain }: { chain?: Chain }) => {
                         chain: chain,
                     });
                 } catch (error) {
-                    debugger
                     console.error('Error sending transaction:', error);
                     throw error;
                 }

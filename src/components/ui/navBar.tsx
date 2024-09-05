@@ -1,15 +1,15 @@
 'use client';
 import { cn, toastStyles } from '@/utils/utils';
 import { motion } from 'framer-motion';
-import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { logo } from '../../../public/index';
 
-const DynamicWeb3AuthWrapper = dynamic(
-    () => import('@/components/Web3AuthWrapper'),
-    { ssr: false }
-);
+// const DynamicWeb3AuthWrapper = dynamic(
+//     () => import('@/components/Web3AuthWrapper'),
+//     { ssr: false }
+// );
 
+import useWeb3AuthWrapper from '@/web3auth/useWeb3AuthWrapper';
 import toast from 'react-hot-toast';
 import { ImSpinner2 } from 'react-icons/im';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
@@ -31,10 +31,10 @@ const navContents = [
 
 const NavBar = () => {
     const { chain } = useAccount()
+    useWeb3AuthWrapper()
 
     return (
         <div className=" flex shadow-lg  justify-between items-center py-4 ">
-            <DynamicWeb3AuthWrapper />
             <div className=" flex justify-center items-center w-1/4">
                 <Image src={logo} alt="GetFit" className="w-44 " />
             </div>

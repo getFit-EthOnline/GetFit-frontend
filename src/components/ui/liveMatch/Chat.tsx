@@ -177,10 +177,10 @@ export const MessageItem: React.FC<MessageItemProps> = ({ msg, index, client, in
                 } else {
                     try {
                         if (chain.id === spicy.id) {
-                            const tx = await walletClient.sendTransaction(transactionInfo.transactions[0])
-                            debugger
-                            const receipt = await publicClient.waitForTransactionReceipt(tx.hash)
-                            console.log(tx)
+                            const tx = await signer?.sendTransaction(transactionInfo.transactions[0])
+                            const receipt = await tx?.wait()
+                            const tx1 = await signer?.sendTransaction(transactionInfo.transactions[1])
+                            const receipt1 = await tx1?.wait()
                             return
                         }
                         const bundleTransaction = await smartAccount.sendTransaction(transactionInfo.transactions, {
