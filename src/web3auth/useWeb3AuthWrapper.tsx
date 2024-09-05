@@ -6,10 +6,15 @@ import { galadriel_devnet } from "@/config/chains";
 import { useEthersSigner } from "@/hooks/useEthersSigner";
 import useSendTestFundsMutation from "@/hooks/useSendTestFunds";
 import useGlobalStore from "@/store";
+import { useEffect, useState } from "react";
 import { spicy } from "viem/chains";
 import { useAccount } from "wagmi";
 
 function useWeb3AuthWrapper() {
+  const [isClient, setIsClient] = useState(false);
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
   const { chainId, chain } = useAccount()
   const signer = useEthersSigner()
   const { mutateAsync } = useSendTestFundsMutation({ chain: chain })
@@ -17,7 +22,7 @@ function useWeb3AuthWrapper() {
 
   return useQuery({
     queryKey: [!!signer, chainId, !!smartAccount],
-    enabled: !!signer || chainId !== galadriel_devnet.id,
+    enabled: isClient && !!signer || chainId !== galadriel_devnet.id,
     queryFn: async () => {
       if (!chain) return
       if (signer && chainId) {
