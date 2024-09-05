@@ -1,15 +1,20 @@
 'use client';
+import {
+    getFanTokenBalance,
+    recordWorkoutWithPrivateKey,
+} from '@/contracts/chiliz';
 import { recordWorkoutGaslessBundle } from '@/contracts/morph';
+import useWeb3Auth from '@/hooks/useWeb3Auth';
 import useGlobalStore from '@/store';
-import { toastStyles } from '@/utils/utils';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
-import toast from 'react-hot-toast';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { useChainId } from 'wagmi';
+import { spicy } from 'wagmi/chains';
 import {
     m2eImage1,
     m2eImage2,
@@ -111,8 +116,10 @@ const categories = [
 
 const PhysicalFitness = () => {
     const swiperRef = useRef(null);
-
-    const { smartAccount } = useGlobalStore();
+    const chainId = useChainId();
+    const { getSignerValue } = useWeb3Auth();
+    const { address, smartAccount, balance, setBalance, provider, userId } =
+        useGlobalStore();
     const [streak, setStreak] = useState([
         false,
         false,
@@ -144,42 +151,68 @@ const PhysicalFitness = () => {
         }
     };
     const startWorkout = async (index: number) => {
-        if (index > 0 && !streak[index - 1]) {
-            toast.success(
-                'Please complete your previous workout goal before starting this one.',
-                toastStyles
+        if (chainId === 2810) {
+            const resp = await recordWorkoutGaslessBundle(smartAccount);
+            console.log(resp);
+        } else if (chainId === spicy.id) {
+            const result = await recordWorkoutWithPrivateKey(
+                userId ? userId : '',
+                'https://spicy-rpc.chiliz.com/'
             );
-            setAlertShown((prev) => {
-                const newAlertShown = [...prev];
-                newAlertShown[index] = true;
-                return newAlertShown;
-            });
-            return;
+            console.log(result);
+            //call function
         }
-        if (!streak[index]) {
-            if (index === 0) {
-                const resp = await recordWorkoutGaslessBundle(smartAccount);
-                console.log(resp);
-            }
+        // if (index > 0 && !streak[index - 1]) {
+        //     toast.success(
+        //         'Please complete your previous workout goal before starting this one.',
+        //         toastStyles
+        //     );
+        //     setAlertShown((prev) => {
+        //         const newAlertShown = [...prev];
+        //         newAlertShown[index] = true;
+        //         return newAlertShown;
+        //     });
+        //     return;
+        // }
+        // if (!streak[index]) {
+        //     if (index === 0) {
+        //         if (chainId === 2810) {
+        //             const resp = await recordWorkoutGaslessBundle(smartAccount);
+        //             console.log(resp);
+        //         } else if (chainId === 88882) {
+        //             const balance = await getBalance(address);
+        //             setBalance(balance);
+        //             if (parseFloat(balance) < 0.01) {
+        //                 const tokens = await sendTestTokens(address);
+        //                 if (tokens.trxhash) {
+        //                     const balance = await getBalance(address);
+        //                     setBalance(balance);
+        //                 }
+        //             }
+        //             const result = await recordWorkoutWithSigner(provider);
+        //             console.log(result);
+        //             //call function
+        //         }
+        //     }
 
-            setStreak((prevStreak) => {
-                const newStreak = [...prevStreak];
-                newStreak[index] = true; // Set the streak for this index to true (completed)
-                return newStreak;
-            });
+        //     setStreak((prevStreak) => {
+        //         const newStreak = [...prevStreak];
+        //         newStreak[index] = true; // Set the streak for this index to true (completed)
+        //         return newStreak;
+        //     });
 
-            toast.success(
-                `You have started ${workouts[index].title}`,
-                toastStyles
-            );
-        }
+        //     toast.success(
+        //         `You have started ${workouts[index].title}`,
+        //         toastStyles
+        //     );
+        // }
     };
+
     return (
         <div className="w-full py-10 p-4  bg-gray-300">
             <h2 className="text-2xl font-bold mb-4">
                 Training that will make you sweat.
             </h2>
-
             <div className=" flex justify-between items-center ">
                 <p className="text-gray-600 mb-4">
                     GetFit members have over 4,000 workouts at their fingertips.
@@ -189,6 +222,14 @@ const PhysicalFitness = () => {
                     <span className=" font-bold uppercase  text-neutral-500 ">
                         your streak
                     </span>
+                    <div
+                        onClick={async () => {
+                            const r = await getFanTokenBalance(address);
+                            console.log(r);
+                        }}
+                    >
+                        fan token
+                    </div>
                     {streak.map((completed, index) => (
                         <svg
                             key={index}

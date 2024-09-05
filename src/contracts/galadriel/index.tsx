@@ -153,9 +153,11 @@ export async function sendTestTokens(address: string) {
 
     return { trxhash: ethSendPromise.hash };
 }
-export const getBalance = async (address: string | null) => {
+export const getBalance = async (address: string | null, chain?: string) => {
     const provider = new ethers.JsonRpcProvider(
-        'https://devnet.galadriel.com/'
+        chain
+            ? 'https://spicy-rpc.chiliz.com/'
+            : 'https://devnet.galadriel.com/'
     );
 
     const balance = await provider.getBalance(address || '');

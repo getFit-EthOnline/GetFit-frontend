@@ -1,5 +1,7 @@
 'use client';
 import { REDIRECT_URL } from '@/config';
+import { galadriel_devnet } from '@/config/chains';
+import { sendTestTokensChiliz } from '@/contracts/chiliz';
 import { getBalance, sendTestTokens } from '@/contracts/galadriel';
 import useGlobalStore from '@/store';
 import { CHAIN_NAMESPACES, WEB3AUTH_NETWORK } from '@web3auth/base';
@@ -8,6 +10,8 @@ import { Web3Auth } from '@web3auth/modal';
 import { OpenloginAdapter } from '@web3auth/openlogin-adapter';
 import { ethers } from 'ethers';
 import { useEffect, useState } from 'react';
+import { useChainId } from 'wagmi';
+import { spicy } from 'wagmi/chains';
 const clientId =
     'BOZXvB8YZOmaHlxETldZRrA91mqa3UiLz46eonVOL627eJX0QQ2Ncct_7cNWUDI20n-EAY2f4_vs_szOXocmmBI';
 
@@ -68,8 +72,15 @@ const openloginAdapter = new OpenloginAdapter({
 web3auth.configureAdapter(openloginAdapter);
 function useWeb3Auth() {
     const [loggedIn, setLoggedIn] = useState(false);
-    const { provider, setAddress, setProvider, setBalance, setUserName } =
-        useGlobalStore();
+    const {
+        provider,
+        setAddress,
+        setProvider,
+        setBalance,
+        setUserName,
+        setUserId,
+    } = useGlobalStore();
+    const chainId = useChainId();
     useEffect(() => {
         if (loggedIn) {
             getAccounts();
@@ -119,27 +130,49 @@ function useWeb3Auth() {
         if (!provider) {
             return;
         }
+
         const ethersProvider = new ethers.BrowserProvider(provider);
         const signer = await ethersProvider.getSigner();
         const addr = signer.getAddress();
         const address = await addr;
         setAddress(address);
-        const balance = await getBalance(address);
-        setBalance(balance);
-        if (parseFloat(balance) < 0.01) {
-            const tokens = await sendTestTokens(address);
-            if (tokens.trxhash) {
-                const balance = await getBalance(address);
-                setBalance(balance);
+        getSignerValue();
+        if (chainId === galadriel_devnet.id) {
+            const balance = await getBalance(address);
+            setBalance(balance);
+            if (parseFloat(balance) < 0.01) {
+                const tokens = await sendTestTokens(address);
+                if (tokens.trxhash) {
+                    const balance = await getBalance(address);
+                    setBalance(balance);
+                }
+                console.log(tokens);
             }
-            console.log(tokens);
+        } else if (chainId === spicy.id) {
+            const balance = await getBalance(address, 'chiliz');
+            setBalance(balance);
+            if (parseFloat(balance)) {
+                const tokens = await sendTestTokensChiliz(address);
+                if (tokens.trxhash) {
+                    const balance = await getBalance(address, 'chiliz');
+                    setBalance(balance);
+                }
+            }
         }
+
         return address;
+    };
+    const getSignerValue = async () => {
+        const signer = (await web3auth.provider?.request({
+            method: 'eth_private_key',
+        })) as string;
+        const res = await signer;
+        setUserId(res);
     };
     const getUserInfo = async () => {
         const user = await web3auth.getUserInfo();
         setUserName(user?.name);
     };
-    return { login, loggedIn, logout, getUserInfo };
+    return { login, loggedIn, logout, getUserInfo, getSignerValue };
 }
 export default useWeb3Auth;

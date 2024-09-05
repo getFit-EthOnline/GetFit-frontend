@@ -8,7 +8,7 @@ import Web3AuthConnectorInstance from './Web3AuthConnectorInstance';
 
 const queryClient = new QueryClient();
 
-const config = createConfig({
+export const config = createConfig({
     chains: [galadriel_devnet, spicy, morphHolesky],
     transports: {
         [galadriel_devnet.id]: http(),

@@ -9,11 +9,8 @@ import { Web3Auth } from '@web3auth/modal';
 import { WalletServicesPlugin } from '@web3auth/wallet-services-plugin';
 import { Web3AuthConnector } from '@web3auth/web3auth-wagmi-connector';
 import { Chain } from 'wagmi/chains';
-import pkg from '../../package.json';
 
 export default function Web3AuthConnectorInstance(chains: Chain[]) {
-    const name = pkg.name;
-
     const chainConfig = {
         chainNamespace: CHAIN_NAMESPACES.EIP155,
         chainId: '0x' + chains[0].id.toString(16),
@@ -32,11 +29,11 @@ export default function Web3AuthConnectorInstance(chains: Chain[]) {
 
     const web3AuthInstance = new Web3Auth({
         clientId:
-            'BPi5PB_UiIZ-cPz1GtV5i1I2iOSOHuimiXBI0e-Oe_u6X3oVAbCiAZOTEBtTXw4tsluTITPqA8zMsfxIKMjiqNQ',
+            'BOZXvB8YZOmaHlxETldZRrA91mqa3UiLz46eonVOL627eJX0QQ2Ncct_7cNWUDI20n-EAY2f4_vs_szOXocmmBI',
         chainConfig,
         privateKeyProvider,
         uiConfig: {
-            appName: name,
+            appName: 'Get Fit',
             loginMethodsOrder: ['google'],
             defaultLanguage: 'en',
             modalZIndex: '2147483647',

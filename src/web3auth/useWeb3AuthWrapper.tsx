@@ -1,12 +1,11 @@
 'use client';
+import BICONOMY_CONFIG from '@/config/biconomy';
+import { galadriel_devnet } from '@/config/chains';
+import { useEthersSigner } from '@/hooks/useEthersSigners';
+import useGlobalStore from '@/store';
 import { createSmartAccountClient } from '@biconomy/account';
 import { useQuery } from '@tanstack/react-query';
-
-import useGlobalStore from '@/store';
 import { useAccount } from 'wagmi';
-import { useEthersSigner } from '@/hooks/useEthersSigners';
-import { galadriel_devnet } from '@/config/chains';
-import BICONOMY_CONFIG from '@/config/biconomy';
 
 function useWeb3AuthWrapper() {
     const { chainId } = useAccount();

@@ -8,6 +8,8 @@ import { logo } from '../../../public/index';
 
 import toast from 'react-hot-toast';
 import { ImSpinner2 } from 'react-icons/im';
+import { useChainId } from 'wagmi';
+import { galadriel_devnet } from '@/config/chains';
 
 const NavBar = () => {
     return (
@@ -26,6 +28,7 @@ export default NavBar;
 export const WalletConnectButton = () => {
     const { login, logout } = useWeb3Auth();
     const { address, balance } = useGlobalStore();
+    const chainId = useChainId();
     const handleCopy = (address: string) => {
         navigator.clipboard
             .writeText(address)
@@ -36,6 +39,7 @@ export const WalletConnectButton = () => {
                 toast.success('Something went wrong', toastStyles);
             });
     };
+    const currency = chainId === galadriel_devnet.id ? 'ETH' : 'CHZ';
     return (
         <div className="flex justify-center gap-x-4  items-center ">
             <motion.button
@@ -80,7 +84,7 @@ export const WalletConnectButton = () => {
                               ' ' +
                               parseFloat(balance || '0').toFixed(3) +
                               ' ' +
-                              'ETH'
+                              currency
                             : 'Connect wallet',
                     })}
                 </span>

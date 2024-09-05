@@ -40,7 +40,6 @@ const HomeNav = () => {
     const { chains, switchChain } = useSwitchChain();
     useWeb3AuthWrapper();
     const url = usePathname();
-    console.log(url);
     return (
         <>
             <div className=" flex shadow-lg  justify-between bg-[#1E1E1E] items-center py-2 px-10 ">
