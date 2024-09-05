@@ -20,7 +20,7 @@ const useSendTestFundsMutation = ({ chain }: { chain?: Chain }) => {
     const client = createWalletClient({
         account: account,
         chain: chain,
-        transport: http(chain ? config.chains[chain.id].rpcUrls.default.http[0] : galadriel_devnet.rpcUrls.default.http[0]),
+        transport: http(chain && chain.id !== galadriel_devnet.id ? config.chains[chain.id].rpcUrls.default.http[0] : galadriel_devnet.rpcUrls.default.http[0]),
         // transport: http(config.chains[chain?.id ?? 0].rpcUrls.default.http[0])
     })
 

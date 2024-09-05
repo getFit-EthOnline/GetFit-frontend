@@ -16,7 +16,7 @@ export const fetchFrameFromUrl = async (message) => {
       });
       const metadataResults = await Promise.all(metadataPromises);
       const validMetadata = metadataResults.filter(
-        (metadata) => metadata !== undefined,
+        (metadata) => metadata !== undefined
       );
       return validMetadata[0]; // Return the first valid metadata found, or undefined if none
     } catch (e) {

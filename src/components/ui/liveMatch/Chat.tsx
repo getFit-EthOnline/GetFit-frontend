@@ -6,7 +6,8 @@ import { PaymasterMode } from "@biconomy/account";
 import { FramesClient } from "@xmtp/frames-client";
 import { Client, Conversation, DecodedMessage } from "@xmtp/xmtp-js";
 import { useEffect, useRef, useState } from "react";
-import { useWalletClient } from "wagmi";
+import { spicy } from "viem/chains";
+import { useAccount, useWalletClient } from "wagmi";
 import { Frame } from "./Frames/Frame";
 import { getFrameTitle, getOrderedButtons, isValidFrame, isXmtpFrame } from "./Frames/FrameInfo";
 import { fetchFrameFromUrl, urlRegex } from "./Frames/utils";
@@ -102,6 +103,7 @@ interface MessageItemProps {
 export const MessageItem: React.FC<MessageItemProps> = ({ msg, index, client, inputValue }) => {
     const { data: walletClient } = useWalletClient()
     const { smartAccount } = useGlobalStore()
+    const { chain } = useAccount()
 
     const provider = useEthersProvider()
     const signer = useEthersSigner()
@@ -139,6 +141,7 @@ export const MessageItem: React.FC<MessageItemProps> = ({ msg, index, client, in
                     ...frameInfo.state,
                     name: name,
                     amount: amount,
+                    chain: chain?.id
                 },
             });
             if (action === "tx") {
@@ -173,6 +176,13 @@ export const MessageItem: React.FC<MessageItemProps> = ({ msg, index, client, in
                     setFrameMetadata(completeTransactionMetadata);
                 } else {
                     try {
+                        if (chain.id === spicy.id) {
+                            const tx = await walletClient.sendTransaction(transactionInfo.transactions[0])
+                            debugger
+                            const receipt = await publicClient.waitForTransactionReceipt(tx.hash)
+                            console.log(tx)
+                            return
+                        }
                         const bundleTransaction = await smartAccount.sendTransaction(transactionInfo.transactions, {
                             paymasterServiceData: { mode: PaymasterMode.SPONSORED },
                         });

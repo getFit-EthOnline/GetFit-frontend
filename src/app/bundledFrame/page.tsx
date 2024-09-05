@@ -5,7 +5,6 @@ const frameMetadata = getFrameMetadata({
     // Accepts and isOpenFrame keys are required for Open Frame compatibility
     accepts: { xmtp: "2024-02-09" },
     isOpenFrame: true,
-
     buttons: [
         {
             // Whatever label you want your first button to have
@@ -23,7 +22,7 @@ const frameMetadata = getFrameMetadata({
     // This is the image shown on the default screen
     // Add whatever path is needed for your starting image
     // In this case, using an Open Graph image
-    image: `${process.env.NEXT_PUBLIC_BASE_URL}/api/og?transaction=null`,
+    image: `https://hatrabbits.com/wp-content/uploads/2017/01/random.jpg`,
 });
 
 export const metadata: Metadata = {
@@ -35,9 +34,5 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-    return (
-        <>
-            <h1>Open Frames Tx Frame Updated</h1>
-        </>
-    );
+    return <h1>Open Frames Tx Frame Updated</h1>
 }
