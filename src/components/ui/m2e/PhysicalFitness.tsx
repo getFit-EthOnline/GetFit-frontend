@@ -1,6 +1,16 @@
 'use client';
+import { recordWorkoutGaslessBundle } from '@/contracts/morph';
+import useGlobalStore from '@/store';
+import { toastStyles } from '@/utils/utils';
+import useWeb3AuthWrapper from '@/web3auth/useWeb3AuthWrapper';
 import Image from 'next/image';
-import React, { useState, useRef } from 'react';
+import { useRef, useState } from 'react';
+import toast from 'react-hot-toast';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import { Navigation } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
 import {
     m2eImage1,
     m2eImage2,
@@ -10,13 +20,6 @@ import {
     m2eImage6,
     m2eImage7,
 } from '../../../../public';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/pagination';
-import 'swiper/css/navigation';
-import toast from 'react-hot-toast';
-import { toastStyles } from '@/utils/utils';
 const workouts = [
     {
         id: 1,
@@ -108,9 +111,10 @@ const categories = [
 ];
 
 const PhysicalFitness = () => {
-    const [currentIndex, setCurrentIndex] = useState(0);
     const swiperRef = useRef(null);
 
+    const { smartAccount } = useGlobalStore();
+    useWeb3AuthWrapper();
     const [streak, setStreak] = useState([
         false,
         false,
@@ -141,8 +145,7 @@ const PhysicalFitness = () => {
             (swiperRef.current as any).swiper.slideNext();
         }
     };
-
-    const startWorkout = (index: number) => {
+    const startWorkout = async (index: number) => {
         if (index > 0 && !streak[index - 1]) {
             toast.success(
                 'Please complete your previous workout goal before starting this one.',
@@ -156,6 +159,8 @@ const PhysicalFitness = () => {
             return;
         }
         if (!streak[index]) {
+            const resp = await recordWorkoutGaslessBundle(smartAccount);
+            console.log(resp);
             setStreak((prevStreak) => {
                 const newStreak = [...prevStreak];
                 newStreak[index] = true; // Set the streak for this index to true (completed)
@@ -168,7 +173,6 @@ const PhysicalFitness = () => {
             );
         }
     };
-
     return (
         <div className="w-full py-10 p-4  bg-gray-300">
             <h2 className="text-2xl font-bold mb-4">

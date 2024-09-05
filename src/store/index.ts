@@ -1,11 +1,16 @@
 import { StaticImageData } from 'next/image';
 import { create } from 'zustand';
+import { BiconomySmartAccountV2 } from '@biconomy/account';
 export interface userAgentProps {
     id: number;
     name: string;
     profilePic: StaticImageData;
 }
 interface GlobalStore {
+    smartAddress: string | null;
+    setSmartAddress: (smartAccount: string | null) => void;
+    smartAccount: BiconomySmartAccountV2 | null;
+    setSmartAccount: (smartAccount: BiconomySmartAccountV2) => void;
     userName: string | undefined;
     setUserName: (name: string | undefined) => void;
     balance: string | null;
@@ -23,6 +28,10 @@ interface GlobalStore {
 }
 
 const useGlobalStore = create<GlobalStore>()((set) => ({
+    smartAddress: null,
+    setSmartAddress: (smartAddress) => set({ smartAddress: smartAddress }),
+    smartAccount: null,
+    setSmartAccount: (smartAccount) => set({ smartAccount: smartAccount }),
     userName: '',
     setUserName: (name) => set({ userName: name }),
     balance: null,

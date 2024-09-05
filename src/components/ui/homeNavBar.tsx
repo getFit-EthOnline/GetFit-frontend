@@ -1,8 +1,10 @@
 'use client';
+import useWeb3AuthWrapper from '@/web3auth/useWeb3AuthWrapper';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useSwitchChain } from 'wagmi';
 import { logoWhite } from '../../../public/index';
 import { WalletConnectButton } from './navBar';
-import Link from 'next/link';
 
 const navContents = [
     {
@@ -34,6 +36,8 @@ const navContents = [
 ];
 
 const HomeNav = () => {
+    const { chains, switchChain } = useSwitchChain();
+    useWeb3AuthWrapper();
     return (
         <>
             <div className=" flex shadow-lg  justify-between bg-[#1E1E1E] items-center py-2 px-10 ">
@@ -65,7 +69,19 @@ const HomeNav = () => {
                     </div>
                     <WalletConnectButton />
                 </div>
-                <div></div>
+                <div className="flex items-center space-x-3 justify-center">
+                    {chains.map((chain) => (
+                        <button
+                            key={chain.id}
+                            onClick={() => switchChain({ chainId: chain.id })}
+                            className=" text-white  px-10"
+                        >
+                            {chain.name}
+                            <br />
+                            {chain.id}
+                        </button>
+                    ))}
+                </div>
             </div>
             <div className=" py-3 text-white  flex bg-[#313131] w-full  items-center  justify-center gap-x-16">
                 {navContents.map((item) => {
