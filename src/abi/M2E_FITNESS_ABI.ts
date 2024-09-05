@@ -43,70 +43,30 @@ export const M2E_FITNESS_ABI = [
     type: "event",
   },
   {
-    inputs: [],
-    name: "joinFitnessChallenge",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "recordDailyWorkout",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
+    anonymous: false,
     inputs: [
       {
+        indexed: false,
         internalType: "uint256",
-        name: "_newReward",
+        name: "newInterval",
         type: "uint256",
       },
     ],
-    name: "setDailyReward",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
+    name: "RewardIntervalUpdated",
+    type: "event",
   },
   {
+    anonymous: false,
     inputs: [
       {
+        indexed: true,
         internalType: "address",
-        name: "_rewardTokenAddress",
+        name: "user",
         type: "address",
       },
     ],
-    name: "setRewardToken",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_newRequirement",
-        type: "uint256",
-      },
-    ],
-    name: "setStreakRequirement",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_newReward",
-        type: "uint256",
-      },
-    ],
-    name: "setWeeklyChallengeReward",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
+    name: "UserReset",
+    type: "event",
   },
   {
     anonymous: false,
@@ -184,6 +144,46 @@ export const M2E_FITNESS_ABI = [
   },
   {
     inputs: [],
+    name: "joinFitnessChallenge",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "recordDailyWorkout",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_user",
+        type: "address",
+      },
+    ],
+    name: "resetUser",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "rewardInterval",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "rewardToken",
     outputs: [
       {
@@ -193,6 +193,71 @@ export const M2E_FITNESS_ABI = [
       },
     ],
     stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_newReward",
+        type: "uint256",
+      },
+    ],
+    name: "setDailyReward",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_newInterval",
+        type: "uint256",
+      },
+    ],
+    name: "setRewardInterval",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_rewardTokenAddress",
+        type: "address",
+      },
+    ],
+    name: "setRewardToken",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_newRequirement",
+        type: "uint256",
+      },
+    ],
+    name: "setStreakRequirement",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_newReward",
+        type: "uint256",
+      },
+    ],
+    name: "setWeeklyChallengeReward",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
