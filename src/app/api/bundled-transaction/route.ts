@@ -4,6 +4,7 @@ import { getAddressesForChain } from "@/config/addresses";
 import { getXmtpFrameMessage } from "@coinbase/onchainkit/xmtp";
 import { NextRequest, NextResponse } from "next/server";
 import { encodeFunctionData, parseUnits } from "viem";
+import { morphHolesky } from "viem/chains";
 
 async function getResponse(req: NextRequest): Promise<NextResponse | Response> {
   const body = await req.json();
@@ -16,7 +17,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse | Response> {
   if (!isValid) {
     return new NextResponse("Message not valid", { status: 500 });
   }
-  const addresses = getAddressesForChain(chain);
+  const addresses = getAddressesForChain(chain ?? morphHolesky.id);
 
   const approvalUsdcAmount = state.amount;
   const approvePriceInUsdc = parseUnits(approvalUsdcAmount, 6);
