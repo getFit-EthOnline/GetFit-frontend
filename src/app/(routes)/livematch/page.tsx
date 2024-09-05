@@ -4,7 +4,7 @@ import PlayerAnalysis from "@/components/ui/liveMatch/playerAnalysis"
 import useWeb3AuthWrapper from "@/web3auth/useWeb3AuthWrapper"
 
 const LiveMatch = () => {
-    // useWeb3AuthWrapper()
+    useWeb3AuthWrapper()
     return (
         <div className='min-h-screen w-full h-full flex items-start pt-20 max-w-[1300px] mx-auto space-x-4 justify-center'>
             <div className='w-[60%] h-full min-h-[calc(100vh-200px)] overflow-hidden'>

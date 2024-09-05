@@ -228,7 +228,7 @@ export const MessageItem: React.FC<MessageItemProps> = ({ msg, index, client, in
             }
         };
         fetchMetadata();
-    }, [msg?.content]);
+    }, [msg, msg.content]);
 
     const showFrame = isValidFrame(frameMetadata);
 

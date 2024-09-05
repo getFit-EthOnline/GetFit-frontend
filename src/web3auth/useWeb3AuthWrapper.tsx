@@ -1,4 +1,3 @@
-"use client";
 import { createSmartAccountClient } from "@biconomy/account";
 import { useQuery } from "@tanstack/react-query";
 
@@ -37,7 +36,6 @@ function useWeb3AuthWrapper() {
         });
         setSmartAccount(smartAccountCreationg)
         const address = await smartAccountCreationg.getAccountAddress();
-        debugger
         setSmartAddress(address)
         await mutateAsync()
       }
