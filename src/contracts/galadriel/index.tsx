@@ -7,6 +7,7 @@ import {
     startFitnessRunProps,
 } from '../../types/types';
 import { FITNESS_AGENT_ADDRESS } from '@/config/addresses';
+import { spicy } from 'wagmi/chains';
 // Contract address for the FitnessAgent
 
 // Function to start a new fitness run
@@ -153,9 +154,9 @@ export async function sendTestTokens(address: string) {
 
     return { trxhash: ethSendPromise.hash };
 }
-export const getBalance = async (address: string | null, chain?: string) => {
+export const getBalance = async (address: string | null, chainId?: number) => {
     const provider = new ethers.JsonRpcProvider(
-        chain
+        chainId === spicy.id
             ? 'https://spicy-rpc.chiliz.com/'
             : 'https://devnet.galadriel.com/'
     );

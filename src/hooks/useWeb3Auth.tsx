@@ -148,16 +148,6 @@ function useWeb3Auth() {
                 }
                 console.log(tokens);
             }
-        } else if (chainId === spicy.id) {
-            const balance = await getBalance(address, 'chiliz');
-            setBalance(balance);
-            if (parseFloat(balance)) {
-                const tokens = await sendTestTokensChiliz(address);
-                if (tokens.trxhash) {
-                    const balance = await getBalance(address, 'chiliz');
-                    setBalance(balance);
-                }
-            }
         }
 
         return address;

@@ -6,6 +6,12 @@ import { useSwitchChain } from 'wagmi';
 import { logoWhite } from '../../../public/index';
 import { WalletConnectButton } from './navBar';
 import { usePathname } from 'next/navigation';
+import { spicy } from 'wagmi/chains';
+import { getBalance } from '@/contracts/galadriel';
+import useGlobalStore from '@/store';
+import { sendTestTokensChiliz } from '@/contracts/chiliz';
+import toast from 'react-hot-toast';
+import { toastStyles } from '@/utils/utils';
 
 const navContents = [
     {
@@ -38,8 +44,25 @@ const navContents = [
 
 const HomeNav = () => {
     const { chains, switchChain } = useSwitchChain();
+    const { address, setBalance } = useGlobalStore();
     useWeb3AuthWrapper();
     const url = usePathname();
+    const handleSwitchChain = async (chainId: number) => {
+        switchChain({ chainId: chainId });
+        if (chainId === spicy.id) {
+            const balance = await getBalance(address, chainId);
+            setBalance(balance);
+            if (parseFloat(balance) < 1) {
+                toast.loading('Sending test tokens 💸', toastStyles);
+                const tokens = await sendTestTokensChiliz(address);
+                if (tokens.trxhash) {
+                    const balance = await getBalance(address, chainId);
+                    setBalance(balance);
+                    toast.success('Tokens sent successfully 🚀', toastStyles);
+                }
+            }
+        }
+    };
     return (
         <>
             <div className=" flex shadow-lg  justify-between bg-[#1E1E1E] items-center py-2 px-10 ">
@@ -75,7 +98,7 @@ const HomeNav = () => {
                     {chains.map((chain) => (
                         <button
                             key={chain.id}
-                            onClick={() => switchChain({ chainId: chain.id })}
+                            onClick={() => handleSwitchChain(chain.id)}
                             className=" text-white  px-10"
                         >
                             {chain.name}

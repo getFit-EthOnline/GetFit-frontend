@@ -6,10 +6,11 @@ import {
 import { recordWorkoutGaslessBundle } from '@/contracts/morph';
 import useGlobalStore from '@/store';
 import Image from 'next/image';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import { davidGogginsProfilePic } from '../../../../public';
 import { Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { useChainId } from 'wagmi';
@@ -25,16 +26,20 @@ import {
 } from '../../../../public';
 import toast from 'react-hot-toast';
 import { toastStyles } from '@/utils/utils';
+import { RiExternalLinkLine } from 'react-icons/ri';
 const workouts = [
     {
         id: 1,
         image: m2eImage1,
         title: 'Power Shred: Active Arms - Day 1',
-        description: 'Cut fat and build power at home.',
+        description:
+            'Cut fat and build power at home and get your desired physique.',
         duration: '35 mins',
         trainer: 'Centr Team',
         trainerImage: m2eImage1,
         tags: ['Muscle-building', 'Dumbbells'],
+        chilizTx: '',
+        morphTx: '',
     },
     {
         id: 2,
@@ -46,6 +51,8 @@ const workouts = [
         trainer: 'Luke Zocchi',
         trainerImage: m2eImage2,
         tags: ['Functional Training', 'Dumbbells'],
+        chilizTx: '',
+        morphTx: '',
     },
     {
         id: 3,
@@ -57,6 +64,8 @@ const workouts = [
         trainer: 'Maricris Lapaix',
         trainerImage: m2eImage3,
         tags: ['Dumbbells', 'Basic equipment'],
+        chilizTx: '',
+        morphTx: '',
     },
     {
         id: 4,
@@ -68,6 +77,8 @@ const workouts = [
         trainer: 'Ingrid Clay',
         trainerImage: m2eImage4,
         tags: ['HIRT', 'Strength', 'Dumbbells'],
+        chilizTx: '',
+        morphTx: '',
     },
     {
         id: 5,
@@ -79,6 +90,8 @@ const workouts = [
         trainer: 'Sammy Clark',
         trainerImage: m2eImage5,
         tags: ['Cardio', 'No Equipment'],
+        chilizTx: '',
+        morphTx: '',
     },
     {
         id: 6,
@@ -90,6 +103,8 @@ const workouts = [
         trainer: 'Michael Morelli',
         trainerImage: m2eImage6,
         tags: ['Core', 'Stability', 'No Equipment'],
+        chilizTx: '',
+        morphTx: '',
     },
     {
         id: 7,
@@ -101,6 +116,8 @@ const workouts = [
         trainer: 'Emily Skye',
         trainerImage: m2eImage7,
         tags: ['Full Body', 'Strength', 'Dumbbells'],
+        chilizTx: '',
+        morphTx: '',
     },
 ];
 const categories = [
@@ -118,7 +135,7 @@ const categories = [
 const PhysicalFitness = () => {
     const swiperRef = useRef(null);
     const chainId = useChainId();
-    const { address, smartAccount, userId } = useGlobalStore();
+    const { smartAccount, userId, address } = useGlobalStore();
     const [streak, setStreak] = useState([
         false,
         false,
@@ -128,15 +145,12 @@ const PhysicalFitness = () => {
         false,
         false,
     ]);
-    const [alertShown, setAlertShown] = useState([
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-    ]);
+    const [loadingStates, setLoadingStates] = useState(
+        Array(workouts.length).fill('Start Your Workout')
+    );
+    const [fanTokenBalance, setFanTokenBalance] = useState<number | undefined>(
+        0
+    );
 
     const scrollLeft = () => {
         if (swiperRef.current && (swiperRef.current as any).swiper) {
@@ -151,28 +165,39 @@ const PhysicalFitness = () => {
     };
     const startWorkout = async (index: number) => {
         if (index > 0 && !streak[index - 1]) {
-            toast.success(
+            toast.error(
                 'Please complete your previous workout goal before starting this one.',
                 toastStyles
             );
-            setAlertShown((prev) => {
-                const newAlertShown = [...prev];
-                newAlertShown[index] = true;
-                return newAlertShown;
-            });
+
             return;
         }
         if (!streak[index]) {
+            const newLoadingStates = [...loadingStates];
+            newLoadingStates[index] = 'Starting, please wait...';
+            setLoadingStates(newLoadingStates);
+
             if (chainId === morphHolesky.id) {
                 const resp = await recordWorkoutGaslessBundle(smartAccount);
-                console.log(resp);
+                if (resp?.transactionHash) {
+                    newLoadingStates[index] = 'Workout completed 💪🏻';
+                    setLoadingStates(newLoadingStates);
+                    workouts[
+                        index
+                    ].morphTx = `https://explorer-holesky.morphl2.io/tx/${resp.transactionHash}`;
+                }
             } else if (chainId === spicy.id) {
                 const result = await recordWorkoutWithSigner(
                     userId,
                     'https://spicy-rpc.chiliz.com/'
                 );
-                console.log(result);
-                //call function
+                if (result?.hash) {
+                    newLoadingStates[index] = 'Workout completed 💪🏻';
+                    setLoadingStates(newLoadingStates);
+                    workouts[
+                        index
+                    ].chilizTx = `https://testnet.chiliscan.com/tx/${result.hash}`;
+                }
             }
 
             setStreak((prevStreak) => {
@@ -187,7 +212,15 @@ const PhysicalFitness = () => {
             );
         }
     };
-
+    const handleFetchBalance = async () => {
+        const fetchedBalance = await getFanTokenBalance(address);
+        setFanTokenBalance(fetchedBalance);
+    };
+    useEffect(() => {
+        if (streak[streak.length - 1]) {
+            handleFetchBalance();
+        }
+    }, [streak]);
     return (
         <div className="w-full py-10 p-4  bg-gray-300">
             <h2 className="text-2xl font-bold mb-4">
@@ -198,18 +231,10 @@ const PhysicalFitness = () => {
                     GetFit members have over 4,000 workouts at their fingertips.
                     Try one now.
                 </p>
-                <div className="flex  items-center justify-center gap-x-2 mr-20">
+                <div className="flex  items-center justify-center gap-x-2 mb-5">
                     <span className=" font-bold uppercase  text-neutral-500 ">
                         your streak
                     </span>
-                    <div
-                        onClick={async () => {
-                            const r = await getFanTokenBalance(address);
-                            console.log(r);
-                        }}
-                    >
-                        fan token
-                    </div>
                     {streak.map((completed, index) => (
                         <svg
                             key={index}
@@ -227,6 +252,18 @@ const PhysicalFitness = () => {
                             />
                         </svg>
                     ))}
+                    {streak[streak.length - 1] && (
+                        <div className="flex items-center gap-x-2">
+                            <Image
+                                src={davidGogginsProfilePic}
+                                alt="goggins"
+                                className="w-12 h-12 shadow-xl  rounded-full "
+                            />
+                            <div className="font-medium">
+                                {fanTokenBalance} DGC
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -302,7 +339,7 @@ const PhysicalFitness = () => {
                 {workouts.map((workout, idx) => (
                     <SwiperSlide
                         key={workout.id}
-                        className="bg-white min-h-[480px] relative p-4 rounded-lg shadow-md flex-shrink-0 flex flex-col justify-between"
+                        className="bg-white min-h-[520px] relative p-4 rounded-lg shadow-md flex-shrink-0 flex flex-col justify-between"
                     >
                         <Image
                             src={workout.image}
@@ -342,17 +379,40 @@ const PhysicalFitness = () => {
                                 </span>
                             ))}
                         </div>
-                        <div className="absolute bottom-1 m-2 right-0">
+                        <div className="absolute bottom-2 m-2 right-8">
                             <button
                                 onClick={() => startWorkout(idx)}
                                 className="group/button relative w-full  overflow-hidden rounded-md border border-black bg-black px-4 py-1 text-xs font-medium text-white transition-all duration-150 hover:border-[#B8FE22] active:scale-95"
                             >
                                 <span className="absolute bottom-0 left-0 z-0 h-0 w-full bg-gradient-to-t from-[#B8FE22] to-[#a8f10a] transition-all duration-500 group-hover/button:h-full" />
                                 <span className="relative z-10 transition-all duration-500 group-hover/button:text-white">
-                                    Start Your Workout
+                                    {loadingStates[idx]}
                                 </span>
                             </button>
                         </div>
+                        {chainId === spicy.id
+                            ? workout.chilizTx && (
+                                  <a
+                                      href={workout.chilizTx}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="absolute bottom-3 m-2 right-1 cursor-pointer"
+                                  >
+                                      <RiExternalLinkLine size={20} />
+                                  </a>
+                              )
+                            : chainId === morphHolesky.id
+                            ? workout.morphTx && (
+                                  <a
+                                      href={workout.morphTx}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="absolute bottom-3 m-2 right-1 cursor-pointer"
+                                  >
+                                      <RiExternalLinkLine size={20} />
+                                  </a>
+                              )
+                            : null}
                     </SwiperSlide>
                 ))}
             </Swiper>
