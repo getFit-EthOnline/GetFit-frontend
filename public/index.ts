@@ -12,6 +12,14 @@ import weightliftingHomeevents from './sportsImages/weightliftingHomeevents.png'
 import armWrestlingEvents from './sportsImages/armWrestlingEvents.png';
 import mmahomeEvents from './sportsImages/mmahomeEvents.png';
 import anatolyProfilePic from './influencerProfilePics/anatoly.jpg';
+import previousBattle1 from './influencerProfilePics/previousBattle1.png';
+import previousBattle2 from './influencerProfilePics/previousBattle2.png';
+import previousBattle3 from './influencerProfilePics/previousBattle3.png';
+import postPic from './influencerProfilePics/postPic.png';
+import postPic2 from './influencerProfilePics/postPic2.png';
+import jeoWicksProfilePic from './influencerProfilePics/jeoWicksProfilePic.jpg';
+import davidGogginsProfile from './influencerProfilePics/davigGoggins.png';
+import lazazAngeloProfilePic from './influencerProfilePics/lazazAngeloProfilePic.png';
 import davidGogginsProfilePic from './influencerProfilePics/david goggins.jpg';
 import larryWheelsProfilePic from './influencerProfilePics/larryWheels.jpg';
 import armWrestlinglive1 from './sportsImages/armWrestlinglive1.jpg';
@@ -111,4 +119,12 @@ export {
     p2pFanBattlesBg,
     SocialsBg,
     Membership,
+    postPic,
+    previousBattle1,
+    previousBattle2,
+    previousBattle3,
+    lazazAngeloProfilePic,
+    davidGogginsProfile,
+    jeoWicksProfilePic,
+    postPic2,
 };

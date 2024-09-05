@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useSwitchChain } from 'wagmi';
 import { logoWhite } from '../../../public/index';
 import { WalletConnectButton } from './navBar';
+import { usePathname } from 'next/navigation';
 
 const navContents = [
     {
@@ -30,14 +31,16 @@ const navContents = [
     },
     {
         id: 5,
-        title: 'Token Battles',
-        link: '/tokenBattles',
+        title: 'Fan Battles',
+        link: '/fanBattles',
     },
 ];
 
 const HomeNav = () => {
     const { chains, switchChain } = useSwitchChain();
     useWeb3AuthWrapper();
+    const url = usePathname();
+    console.log(url);
     return (
         <>
             <div className=" flex shadow-lg  justify-between bg-[#1E1E1E] items-center py-2 px-10 ">
@@ -87,7 +90,11 @@ const HomeNav = () => {
                 {navContents.map((item) => {
                     return (
                         <Link href={item.link} key={item.id}>
-                            <div className=" flex items-center gap-x-1 justify-center ">
+                            <div
+                                className={` ${
+                                    url === item.link ? 'text-[#80E142]' : ''
+                                }  flex items-center gap-x-1 justify-center `}
+                            >
                                 <p className="capitalize">{item.title}</p>
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"

@@ -2,7 +2,6 @@
 import { recordWorkoutGaslessBundle } from '@/contracts/morph';
 import useGlobalStore from '@/store';
 import { toastStyles } from '@/utils/utils';
-import useWeb3AuthWrapper from '@/web3auth/useWeb3AuthWrapper';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -114,7 +113,6 @@ const PhysicalFitness = () => {
     const swiperRef = useRef(null);
 
     const { smartAccount } = useGlobalStore();
-    useWeb3AuthWrapper();
     const [streak, setStreak] = useState([
         false,
         false,
@@ -159,8 +157,11 @@ const PhysicalFitness = () => {
             return;
         }
         if (!streak[index]) {
-            const resp = await recordWorkoutGaslessBundle(smartAccount);
-            console.log(resp);
+            if (index === 0) {
+                const resp = await recordWorkoutGaslessBundle(smartAccount);
+                console.log(resp);
+            }
+
             setStreak((prevStreak) => {
                 const newStreak = [...prevStreak];
                 newStreak[index] = true; // Set the streak for this index to true (completed)

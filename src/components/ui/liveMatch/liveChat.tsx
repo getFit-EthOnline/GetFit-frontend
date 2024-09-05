@@ -138,7 +138,7 @@ const LiveChat = () => {
                                             : msg.user === 'Moderator'
                                             ? 'bg-red-400 font-bold'
                                             : msg.user === 'You'
-                                            ? 'bg-green-600 text-right'
+                                            ? 'bg-[#B8FE22] text-right'
                                             : 'bg-gray-100'
                                     }`}
                                 >

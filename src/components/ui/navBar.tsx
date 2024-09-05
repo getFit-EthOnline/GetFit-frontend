@@ -9,54 +9,14 @@ import { logo } from '../../../public/index';
 import toast from 'react-hot-toast';
 import { ImSpinner2 } from 'react-icons/im';
 
-const navContents = [
-    {
-        id: 1,
-        title: 'fan tokens',
-    },
-    {
-        id: 2,
-        title: 'Rewards',
-    },
-    {
-        id: 3,
-        title: 'Marketplace',
-    },
-];
-
 const NavBar = () => {
     return (
         <div className=" flex shadow-lg  justify-between items-center py-4 ">
             <div className=" flex justify-center items-center w-1/4">
                 <Image src={logo} alt="GetFit" className="w-44 " />
             </div>
-            <div className=" w-1/3 flex  items-center justify-around">
-                {navContents.map((item) => {
-                    return (
-                        <div
-                            key={item.id}
-                            className=" flex items-center gap-x-1 justify-center "
-                        >
-                            <p className="capitalize">{item.title}</p>
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth={1.5}
-                                stroke="currentColor"
-                                className="size-4"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                                />
-                            </svg>
-                        </div>
-                    );
-                })}
-            </div>
-            <div className=" items-center flex justify-center  w-1/4 gap-x-2">
+
+            <div className=" items-center flex justify-center  w-1/4">
                 <WalletConnectButton />
             </div>
         </div>
@@ -77,7 +37,7 @@ export const WalletConnectButton = () => {
             });
     };
     return (
-        <>
+        <div className="flex justify-center gap-x-4  items-center ">
             <motion.button
                 className="inline-flex overflow-hidden rounded-lg bg-[linear-gradient(120deg,#063434_calc(var(--shimmer-button-x)-25%),#063434_var(--shimmer-button-x),#063434_calc(var(--shimmer-button-x)+25%))] [--shimmer-button-x:0%] "
                 initial={
@@ -142,7 +102,7 @@ export const WalletConnectButton = () => {
                     />
                 </svg>
             )}
-        </>
+        </div>
     );
 };
 
