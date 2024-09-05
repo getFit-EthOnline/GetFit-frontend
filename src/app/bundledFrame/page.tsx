@@ -37,7 +37,7 @@ export const metadata: Metadata = {
 export default function Home() {
     return (
         <>
-            <h1>Open Frames Tx Frame</h1>
+            <h1>Open Frames Tx Frame Updated</h1>
         </>
     );
 }
