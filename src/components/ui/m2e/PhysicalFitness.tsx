@@ -1,10 +1,9 @@
 'use client';
 import {
     getFanTokenBalance,
-    recordWorkoutWithPrivateKey,
+    recordWorkoutWithSigner,
 } from '@/contracts/chiliz';
 import { recordWorkoutGaslessBundle } from '@/contracts/morph';
-import useWeb3Auth from '@/hooks/useWeb3Auth';
 import useGlobalStore from '@/store';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
@@ -14,7 +13,7 @@ import 'swiper/css/pagination';
 import { Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { useChainId } from 'wagmi';
-import { spicy } from 'wagmi/chains';
+import { morphHolesky, spicy } from 'wagmi/chains';
 import {
     m2eImage1,
     m2eImage2,
@@ -24,6 +23,8 @@ import {
     m2eImage6,
     m2eImage7,
 } from '../../../../public';
+import toast from 'react-hot-toast';
+import { toastStyles } from '@/utils/utils';
 const workouts = [
     {
         id: 1,
@@ -117,9 +118,7 @@ const categories = [
 const PhysicalFitness = () => {
     const swiperRef = useRef(null);
     const chainId = useChainId();
-    const { getSignerValue } = useWeb3Auth();
-    const { address, smartAccount, balance, setBalance, provider, userId } =
-        useGlobalStore();
+    const { address, smartAccount, userId } = useGlobalStore();
     const [streak, setStreak] = useState([
         false,
         false,
@@ -151,61 +150,42 @@ const PhysicalFitness = () => {
         }
     };
     const startWorkout = async (index: number) => {
-        if (chainId === 2810) {
-            const resp = await recordWorkoutGaslessBundle(smartAccount);
-            console.log(resp);
-        } else if (chainId === spicy.id) {
-            const result = await recordWorkoutWithPrivateKey(
-                userId ? userId : '',
-                'https://spicy-rpc.chiliz.com/'
+        if (index > 0 && !streak[index - 1]) {
+            toast.success(
+                'Please complete your previous workout goal before starting this one.',
+                toastStyles
             );
-            console.log(result);
-            //call function
+            setAlertShown((prev) => {
+                const newAlertShown = [...prev];
+                newAlertShown[index] = true;
+                return newAlertShown;
+            });
+            return;
         }
-        // if (index > 0 && !streak[index - 1]) {
-        //     toast.success(
-        //         'Please complete your previous workout goal before starting this one.',
-        //         toastStyles
-        //     );
-        //     setAlertShown((prev) => {
-        //         const newAlertShown = [...prev];
-        //         newAlertShown[index] = true;
-        //         return newAlertShown;
-        //     });
-        //     return;
-        // }
-        // if (!streak[index]) {
-        //     if (index === 0) {
-        //         if (chainId === 2810) {
-        //             const resp = await recordWorkoutGaslessBundle(smartAccount);
-        //             console.log(resp);
-        //         } else if (chainId === 88882) {
-        //             const balance = await getBalance(address);
-        //             setBalance(balance);
-        //             if (parseFloat(balance) < 0.01) {
-        //                 const tokens = await sendTestTokens(address);
-        //                 if (tokens.trxhash) {
-        //                     const balance = await getBalance(address);
-        //                     setBalance(balance);
-        //                 }
-        //             }
-        //             const result = await recordWorkoutWithSigner(provider);
-        //             console.log(result);
-        //             //call function
-        //         }
-        //     }
+        if (!streak[index]) {
+            if (chainId === morphHolesky.id) {
+                const resp = await recordWorkoutGaslessBundle(smartAccount);
+                console.log(resp);
+            } else if (chainId === spicy.id) {
+                const result = await recordWorkoutWithSigner(
+                    userId,
+                    'https://spicy-rpc.chiliz.com/'
+                );
+                console.log(result);
+                //call function
+            }
 
-        //     setStreak((prevStreak) => {
-        //         const newStreak = [...prevStreak];
-        //         newStreak[index] = true; // Set the streak for this index to true (completed)
-        //         return newStreak;
-        //     });
+            setStreak((prevStreak) => {
+                const newStreak = [...prevStreak];
+                newStreak[index] = true; // Set the streak for this index to true (completed)
+                return newStreak;
+            });
 
-        //     toast.success(
-        //         `You have started ${workouts[index].title}`,
-        //         toastStyles
-        //     );
-        // }
+            toast.success(
+                `You have started ${workouts[index].title}`,
+                toastStyles
+            );
+        }
     };
 
     return (

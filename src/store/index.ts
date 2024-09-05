@@ -9,8 +9,8 @@ export interface userAgentProps {
 interface GlobalStore {
     smartAddress: string | null;
     setSmartAddress: (smartAccount: string | null) => void;
-    userId: string | null;
-    setUserId: (userId: string | null) => void;
+    userId: string;
+    setUserId: (userId: string) => void;
     smartAccount: BiconomySmartAccountV2 | null;
     setSmartAccount: (smartAccount: BiconomySmartAccountV2) => void;
     userName: string | undefined;
@@ -32,7 +32,7 @@ interface GlobalStore {
 const useGlobalStore = create<GlobalStore>()((set) => ({
     smartAddress: null,
     setSmartAddress: (smartAddress) => set({ smartAddress: smartAddress }),
-    userId: null,
+    userId: '',
     setUserId: (userId) => set({ userId: userId }),
     smartAccount: null,
     setSmartAccount: (smartAccount) => set({ smartAccount: smartAccount }),
