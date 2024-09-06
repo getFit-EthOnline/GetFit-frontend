@@ -1,3 +1,7 @@
+import { spicy } from "@/web3auth/Providers";
+import Image from "next/image";
+import { morphHolesky } from "viem/chains";
+import { useAccount } from "wagmi";
 import AlertComponent from "./AlertComponent";
 import ButtonGroup from "./ButtonGroup";
 
@@ -15,6 +19,7 @@ export const Frame = ({
   onTextInputChange,
   frameUrl,
 }) => {
+  const { chainId } = useAccount();
   const styles = {
     buttonContainer: {
       display: "flex",
@@ -66,16 +71,48 @@ export const Frame = ({
         onClose={onClose}
         message={alertMessage}
       />
-      {/* {image && (
-        <a
-          href={frameUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={styles.imageFrameA}
-        >
-          <Image src={image} alt={title} style={styles.imageFrame} />
-        </a>
-      )} */}
+      {chainId === spicy.id && (
+        <div className="mx-auto flex items-center py-2 justify-center">
+          <a
+            href={frameUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={styles.imageFrameA}
+          >
+            <Image
+              src={
+                "https://www.chiliz.com/wp-content/uploads/2023/02/chiliz-logo-v3.svg"
+              }
+              alt={title}
+              width={260}
+              height={170}
+              className="mx-auto"
+              style={styles.imageFrame}
+            />
+          </a>
+        </div>
+      )}
+      {chainId === morphHolesky.id && (
+        <div className="mx-auto flex items-center py-2 justify-center">
+          <a
+            href={frameUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={styles.imageFrameA}
+          >
+            <Image
+              src={
+                "https://pbs.twimg.com/profile_images/1787467144914931712/3uIItkW0_400x400.jpg"
+              }
+              width={260}
+              height={170}
+              className="mx-auto"
+              alt={title}
+              style={styles.imageFrame}
+            />
+          </a>
+        </div>
+      )}
       {textInput !== undefined && (
         <input
           type="text"

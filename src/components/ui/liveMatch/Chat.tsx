@@ -6,6 +6,7 @@ import { PaymasterMode } from "@biconomy/account";
 import { FramesClient } from "@xmtp/frames-client";
 import { Client, Conversation, DecodedMessage } from "@xmtp/xmtp-js";
 import { useEffect, useRef, useState } from "react";
+import Markdown from 'react-markdown';
 import { useWalletClient } from "wagmi";
 import { Frame } from "./Frames/Frame";
 import { getFrameTitle, getOrderedButtons, isValidFrame, isXmtpFrame } from "./Frames/FrameInfo";
@@ -219,7 +220,12 @@ export const MessageItem: React.FC<MessageItemProps> = ({ msg, index, client, in
     useEffect(() => {
         const fetchMetadata = async () => {
             setIsLoading(true);
-            const isUrl = !!msg.content.match(urlRegex)?.[0];
+            let isUrl = false;
+            try {
+                isUrl = !!msg.content.match(urlRegex)?.[0];
+            } catch (error) {
+                console.error("Error checking URL:", error);
+            }
             if (isUrl) {
                 const metadata = await fetchFrameFromUrl(msg);
                 setFrameMetadata(metadata);
@@ -256,7 +262,7 @@ export const MessageItem: React.FC<MessageItemProps> = ({ msg, index, client, in
                         frameUrl={frameMetadata?.url}
                     />
                 </>
-            ) : <div
+            ) : msg.content !== "" ? <div
                 key={msg.id || index}
                 className={`p-2 mb-2 rounded-md ${msg.senderAddress === PEER_ADDRESS
                     ? 'bg-blue-400 italic'
@@ -270,11 +276,11 @@ export const MessageItem: React.FC<MessageItemProps> = ({ msg, index, client, in
                 <div className="flex flex-col">
                     <div>
                         <span className="font-bold mr-2">{msg.senderAddress === client.address ? "You" : "Bot"}</span>
-                        <span className="ml-1">{msg.content}</span>
+                        <Markdown>{msg.content}</Markdown>
                     </div>
                     <span className="text-gray-500 text-xs mt-1">{msg.sent.toLocaleTimeString()}</span>
                 </div>
-            </div>}
+            </div> : null}
         </>
     )
 }
