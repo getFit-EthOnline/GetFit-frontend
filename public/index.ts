@@ -28,7 +28,7 @@ import armWrestlinglive3 from './sportsImages/armWrestlinglive3.jpg';
 import armWrestlinglive4 from './sportsImages/armWrestlinglive4.jpg';
 import weightLiftinglive1 from './sportsImages/weightLiftinglive1.jpeg';
 import weightLiftinglive2 from './sportsImages/weightLiftingLive2.jpg';
-
+import RibbleAvatar from './influencerProfilePics/rippleAvatar.png';
 import weightLiftinglive3 from './sportsImages/weightLiftingLive3.jpg';
 import weightLiftinglive4 from './sportsImages/weightLiftinglive4.jpeg';
 import mmalive1 from './sportsImages/mmalive1.jpg';
@@ -121,6 +121,7 @@ export {
     Membership,
     postPic,
     previousBattle1,
+    RibbleAvatar,
     previousBattle2,
     previousBattle3,
     lazazAngeloProfilePic,

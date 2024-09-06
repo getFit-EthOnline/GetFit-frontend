@@ -2,9 +2,15 @@
 import useGlobalStore from '@/store';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { RiExternalLinkLine } from 'react-icons/ri';
+import {
+    anatolyProfilePic,
+    davidGogginsProfilePic,
+    larryWheelsProfilePic,
+    RibbleAvatar,
+} from '../../../../public';
 import Bell from '../../../../public/icons/bell.png';
 import ChatMessages from './chatMessages';
-import { RiExternalLinkLine } from 'react-icons/ri';
 export interface Message {
     type: 'bot' | 'user' | 'loading';
     text?: string | null;
@@ -40,6 +46,24 @@ const ChatButton = ({
             { type: 'bot', text: 'How old are you? 🎂' },
         ]);
     }, [agentFirstMessage]);
+    const creatorName = localStorage.getItem('creatorName');
+    const parsedCreatorName = creatorName ? JSON.parse(creatorName) : null;
+    const profiles =
+        parsedCreatorName === 'david goggins'
+            ? davidGogginsProfilePic
+            : parsedCreatorName === 'anatoly'
+            ? anatolyProfilePic
+            : parsedCreatorName === 'larry Wheels'
+            ? larryWheelsProfilePic
+            : RibbleAvatar;
+    const creators =
+        parsedCreatorName === 'david goggins'
+            ? 'david goggins'
+            : parsedCreatorName === 'anatoly'
+            ? 'anatoly'
+            : parsedCreatorName === 'larry Wheels'
+            ? 'larry Wheels'
+            : 'Creating Your AI fitness trainer';
     return (
         <div className="fixed bottom-0 right-0 w-[400px]   overflow-hidden z-50  ">
             <div
@@ -49,13 +73,13 @@ const ChatButton = ({
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-x-3">
                         <Image
-                            src={userAgent?.profilePic || ''}
+                            src={userAgent?.profilePic || profiles}
                             alt="chat-bot"
                             className="rounded-full"
                             height={50}
                             width={50}
                         />
-                        <p>{userAgent?.name}</p>
+                        <p>{userAgent?.name || creators}</p>
                         <Image
                             src={Bell}
                             alt="notification"

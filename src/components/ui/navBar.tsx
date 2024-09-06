@@ -91,7 +91,11 @@ export const WalletConnectButton = () => {
             </motion.button>
             {address && (
                 <svg
-                    onClick={() => logout()}
+                    onClick={() => {
+                        localStorage.removeItem('hasModalBeenShown');
+                        localStorage.removeItem('creatorName');
+                        logout();
+                    }}
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"

@@ -62,13 +62,17 @@ const InfluencerModal = ({
             const messages = await getNewMessages(resp, 0);
             setAgentFirstMessage(messages[1].content);
             localStorage.setItem('hasModalBeenShown', 'true');
+            localStorage.setItem(
+                'creatorName',
+                JSON.stringify(selectedInfluencer?.name)
+            );
+            setUserAgnet(selectedInfluencer);
             setLoading(false);
             setIsOpen(false);
             setChatOpen(true);
         }, 20000);
     };
     const closeModal = async () => {
-        setUserAgnet(selectedInfluencer);
         setLoading(true);
         const resp = await startFitnessRun({
             message: `Create a fitness motivational quote from the influencer ${selectedInfluencer?.name}, only share a motivation quote `,
