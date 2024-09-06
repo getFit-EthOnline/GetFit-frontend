@@ -139,17 +139,16 @@ const categories = [
 const PhysicalFitness = () => {
     const swiperRef = useRef(null);
     const chainId = useChainId();
-    const { smartAccount, userId, address, setBalance, smartAddress } =
-        useGlobalStore();
-    const [streak, setStreak] = useState([
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-    ]);
+    const {
+        streak,
+        setStreak,
+        smartAccount,
+        userId,
+        address,
+        setBalance,
+        smartAddress,
+    } = useGlobalStore();
+
     const [loadingStates, setLoadingStates] = useState(
         Array(workouts.length).fill('Start Your Workout')
     );
@@ -206,12 +205,9 @@ const PhysicalFitness = () => {
                     setBalance(balance);
                 }
             }
-
-            setStreak((prevStreak) => {
-                const newStreak = [...prevStreak];
-                newStreak[index] = true; // Set the streak for this index to true (completed)
-                return newStreak;
-            });
+            const newStreak = [...streak];
+            newStreak[index] = true;
+            setStreak(newStreak);
 
             toast.success(
                 `You have started ${workouts[index].title}`,

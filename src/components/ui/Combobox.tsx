@@ -43,11 +43,7 @@ export default function ComboboxComponent() {
     };
     return (
         <div className="w-72">
-            <Combobox
-                value={selected}
-                onChange={(value) => setSelected(value)}
-                __demoMode
-            >
+            <Combobox value={selected} onChange={(value) => setSelected(value)}>
                 <div className="relative">
                     <ComboboxInput
                         className={clsx(

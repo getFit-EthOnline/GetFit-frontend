@@ -7,6 +7,8 @@ export interface userAgentProps {
     profilePic: StaticImageData;
 }
 interface GlobalStore {
+    streak: boolean[];
+    setStreak: (streak: boolean[]) => void;
     smartAddress: string | null;
     setSmartAddress: (smartAccount: string | null) => void;
     userId: string;
@@ -30,6 +32,8 @@ interface GlobalStore {
 }
 
 const useGlobalStore = create<GlobalStore>()((set) => ({
+    streak: [false, false, false, false, false, false, false],
+    setStreak: (streak) => set({ streak: streak }),
     smartAddress: null,
     setSmartAddress: (smartAddress) => set({ smartAddress: smartAddress }),
     userId: '',
