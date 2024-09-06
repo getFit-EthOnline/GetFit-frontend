@@ -28,7 +28,7 @@ import armWrestlinglive3 from './sportsImages/armWrestlinglive3.jpg';
 import armWrestlinglive4 from './sportsImages/armWrestlinglive4.jpg';
 import weightLiftinglive1 from './sportsImages/weightLiftinglive1.jpeg';
 import weightLiftinglive2 from './sportsImages/weightLiftingLive2.jpg';
-import RibbleAvatar from './influencerProfilePics/rippleAvatar.png';
+
 import weightLiftinglive3 from './sportsImages/weightLiftingLive3.jpg';
 import weightLiftinglive4 from './sportsImages/weightLiftinglive4.jpeg';
 import mmalive1 from './sportsImages/mmalive1.jpg';
@@ -62,6 +62,27 @@ import m2ementalFitness4 from './M2E images/m2ementalFitness4.jpg';
 import m2ementalFitness5 from './M2E images/m2ementalFitness5.jpg';
 import m2ementalFitness6 from './M2E images/m2ementalFitness6.jpg';
 import m2ementalFitness7 from './M2E images/m2ementalFitness7.jpg';
+import Chiliz from './icons/chiliz.png';
+import Galadriel from './icons/galadriel.png';
+import Morph from './icons/morphIcon.png';
+import RibbleAvatar from './influencerProfilePics/rippleAvatar.png';
+import davidBanner from './membershipImages/davidBanner.png';
+import davidProfilePic from './membershipImages/davidProfilePic.png';
+import davidPlan1 from './membershipImages/davidPlan1.png';
+import davidPlan2 from './membershipImages/davidPlan2.png';
+import davidPlan3 from './membershipImages/davidPlan3.png';
+import davidPlan4 from './membershipImages/davidPlan4.png';
+import lazarBanner from './membershipImages/lazarBanner.png';
+import lazarProfilePic from './membershipImages/lazarProfilePic.png';
+import lazarPlan1 from './membershipImages/lazarPlan1.png';
+import lazarPlan2 from './membershipImages/lazarPlan2.png';
+import lazarPlan3 from './membershipImages/lazarPlan3.png';
+import lazarPlan4 from './membershipImages/lazarPlan4.png';
+import anatolyBanner from './membershipImages/anatolyBanner.png';
+import anatolyProfilePic2 from './membershipImages/anatolyProfilePic.png';
+import plan1 from './membershipImages/plan1.png';
+import plan2 from './membershipImages/plan2.png';
+import plan3 from './membershipImages/plan3.png';
 
 export {
     logoWhite,
@@ -121,11 +142,31 @@ export {
     Membership,
     postPic,
     previousBattle1,
-    RibbleAvatar,
     previousBattle2,
     previousBattle3,
     lazazAngeloProfilePic,
     davidGogginsProfile,
     jeoWicksProfilePic,
     postPic2,
+    Chiliz,
+    Morph,
+    Galadriel,
+    davidBanner,
+    davidProfilePic,
+    davidPlan1,
+    davidPlan2,
+    davidPlan3,
+    davidPlan4,
+    lazarBanner,
+    RibbleAvatar,
+    lazarProfilePic,
+    lazarPlan1,
+    lazarPlan2,
+    lazarPlan3,
+    lazarPlan4,
+    anatolyBanner,
+    anatolyProfilePic2,
+    plan1,
+    plan2,
+    plan3,
 };
