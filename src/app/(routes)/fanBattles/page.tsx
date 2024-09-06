@@ -1,5 +1,5 @@
-import { title } from 'process';
-import React from 'react';
+'use client';
+import React, { useState } from 'react';
 import {
     anatolyProfilePic,
     davidGogginsProfile,
@@ -13,6 +13,13 @@ import {
 } from '../../../../public';
 import ProfileCard from '@/components/ui/tokenBattles/ProfileCard';
 import ChallengeCard from '@/components/ui/tokenBattles/ChallengeCard';
+import { joinTeamWithSigner } from '@/contracts/chiliz';
+import useGlobalStore from '@/store';
+import { RiExternalLinkLine } from 'react-icons/ri';
+import toast from 'react-hot-toast';
+import { toastStyles } from '@/utils/utils';
+import { getBalance } from '@/contracts/galadriel';
+import { useChainId } from 'wagmi';
 
 const challangeList = [
     {
@@ -41,7 +48,26 @@ const challangeList = [
     },
 ];
 
-const page = () => {
+const Page = () => {
+    const { address, userId, setBalance } = useGlobalStore();
+    const [registerHash, setRegisterHash] = useState('');
+    const [loading, setLoading] = useState(false);
+    const chainId = useChainId();
+    const handleRegister = async () => {
+        setLoading(true);
+        const resp = await joinTeamWithSigner(
+            userId,
+            'https://spicy-rpc.chiliz.com/',
+            'Goggins'
+        );
+        if (resp?.hash) {
+            setRegisterHash(resp.hash);
+            setLoading(false);
+            const balance = await getBalance(address, chainId);
+            setBalance(balance);
+        }
+        console.log(resp);
+    };
     return (
         <div className="w-full mx-auto max-w-7xl  gap-x-10  flex  justify-center rounded-md p-4 ">
             <div className="flex  max-w-[60%] gap-y-4  flex-col ">
@@ -65,14 +91,47 @@ const page = () => {
                         <span className=" text-xl">
                             Want to compete in this Challenge ?
                         </span>
-                        <button className="group/button relative inline-flex items-center justify-center overflow-hidden rounded-md bg-[#B8FE22] px-4 py-1.5 text-xs font-normal text-white transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg hover:shadow-[#B8FE22]/30">
-                            <span className="text-sm font-bold text-[#063434] ">
-                                Register Now
-                            </span>
-                            <div className="absolute inset-0 flex h-full w-full justify-center [transform:skew(-13deg)_translateX(-100%)] group-hover/button:duration-1000 group-hover/button:[transform:skew(-13deg)_translateX(100%)]">
-                                <div className="relative h-full w-8 bg-white/20" />
-                            </div>
-                        </button>
+                        <div className="flex items-center gap-x-4">
+                            <button
+                                onClick={handleRegister}
+                                disabled={registerHash ? true : false}
+                                className="disabled:cursor-not-allowed disabled:opacity-60 group/button relative inline-flex items-center justify-center overflow-hidden rounded-md bg-[#B8FE22] px-4 py-1.5 text-xs font-normal text-white transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg hover:shadow-[#B8FE22]/30"
+                            >
+                                <span className="text-sm font-bold text-[#063434] ">
+                                    {registerHash
+                                        ? 'Registered'
+                                        : loading
+                                        ? 'Registering please wait...'
+                                        : 'Register Now'}
+                                </span>
+                                <div className="absolute inset-0 flex h-full w-full justify-center [transform:skew(-13deg)_translateX(-100%)] group-hover/button:duration-1000 group-hover/button:[transform:skew(-13deg)_translateX(100%)]">
+                                    <div className="relative h-full w-8 bg-white/20" />
+                                </div>
+                            </button>
+                            {registerHash && (
+                                <>
+                                    <a
+                                        className="cursor-pointer"
+                                        href={`https://testnet.chiliscan.com/tx/${registerHash}`}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                    >
+                                        <RiExternalLinkLine size={20} />
+                                    </a>
+                                    <button
+                                        onClick={() =>
+                                            toast(
+                                                'Winners not decided yet! Battle is going on ⚔️',
+                                                toastStyles
+                                            )
+                                        }
+                                        className="font-bold text-[#063434] group/button relative inline-flex items-center justify-center overflow-hidden rounded-md bg-[#B8FE22] px-4 py-1.5 text-xs transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg hover:shadow-[#B8FE22]/30"
+                                    >
+                                        Claim Prize
+                                    </button>
+                                </>
+                            )}
+                        </div>
                     </div>
                 </div>
                 <div className="border-b h-fit bg-white p-10 rounded-md">
@@ -123,4 +182,4 @@ const page = () => {
     );
 };
 
-export default page;
+export default Page;

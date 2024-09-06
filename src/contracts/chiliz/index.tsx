@@ -31,12 +31,9 @@ export async function recordWorkoutWithSigner(
         };
         console.log(`Workout Transaction Data: ${workoutTransaction.data}`);
 
-        // Initialize a provider and a signer using the private key
         const provider = new ethers.JsonRpcProvider(providerUrl);
         const wallet = new ethers.Wallet(signer, provider);
 
-        // Send the transaction using the wallet
-        console.log('Sending transaction through private key signer...');
         const transactionResponse = await wallet.sendTransaction(
             workoutTransaction
         );
@@ -47,7 +44,7 @@ export async function recordWorkoutWithSigner(
 
         return { hash: receipt?.hash };
     } catch (error) {
-        console.error('Error in recordWorkoutWithPrivateKey', error);
+        console.error('Error in', error);
     }
 }
 export async function joinTeamWithSigner(
@@ -72,14 +69,9 @@ export async function joinTeamWithSigner(
         };
         console.log(`Join Team Transaction Data: ${joinTeamTransaction.data}`);
 
-        // Initialize a provider and wallet using the private key
         const provider = new ethers.JsonRpcProvider(providerUrl);
         const wallet = new ethers.Wallet(signer, provider);
 
-        // Send the transaction using the wallet
-        console.log(
-            'Sending joinTeam transaction through private key signer...'
-        );
         const transactionResponse = await wallet.sendTransaction(
             joinTeamTransaction
         );
