@@ -1,7 +1,11 @@
 import { ethers } from 'ethers';
 import { M2E_FITNESS_ABI } from '@/abi/M2E_FITNESS_ABI';
-import { MOVE_TO_EARN_CONTRACT_ADDRESS_MORPH } from '@/config/addresses';
+import {
+    MOVE_TO_EARN_CONTRACT_ADDRESS_MORPH,
+    REWARD_TOKEN_MORPH_ADDRESS,
+} from '@/config/addresses';
 import { encodeFunctionData } from 'viem';
+import { FAN_TOKEN_ABI } from '@/abi/FAN_TOKEN_ABI';
 export async function recordWorkoutGaslessBundle(smartAccount: any) {
     console.log(smartAccount);
     console.log('Starting recordWorkoutGaslessBundle');
@@ -55,5 +59,27 @@ export async function recordWorkoutGaslessBundle(smartAccount: any) {
         return userOpReceipt.receipt;
     } catch (error) {
         console.error('Error in recordWorkoutGaslessBundle', error);
+    }
+}
+export async function getRewardTokenBalance(userAddress: string | null) {
+    console.log(`Getting reward token balance for user: ${userAddress}`);
+
+    try {
+        const provider = new ethers.JsonRpcProvider(
+            'https://rpc-quicknode-holesky.morphl2.io'
+        );
+
+        const fanTokenContract = new ethers.Contract(
+            REWARD_TOKEN_MORPH_ADDRESS,
+            FAN_TOKEN_ABI,
+            provider
+        );
+
+        const balance = await fanTokenContract.balanceOf(userAddress);
+        console.log(`FanToken Balance: ${balance.toString()}`);
+
+        return parseInt(balance);
+    } catch (error) {
+        console.error('Error in getFanTokenBalance', error);
     }
 }

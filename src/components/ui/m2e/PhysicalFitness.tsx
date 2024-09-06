@@ -3,7 +3,10 @@ import {
     getFanTokenBalance,
     recordWorkoutWithSigner,
 } from '@/contracts/chiliz';
-import { recordWorkoutGaslessBundle } from '@/contracts/morph';
+import {
+    getRewardTokenBalance,
+    recordWorkoutGaslessBundle,
+} from '@/contracts/morph';
 import useGlobalStore from '@/store';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
@@ -27,6 +30,7 @@ import {
 import toast from 'react-hot-toast';
 import { toastStyles } from '@/utils/utils';
 import { RiExternalLinkLine } from 'react-icons/ri';
+import { getBalance } from '@/contracts/galadriel';
 const workouts = [
     {
         id: 1,
@@ -135,7 +139,8 @@ const categories = [
 const PhysicalFitness = () => {
     const swiperRef = useRef(null);
     const chainId = useChainId();
-    const { smartAccount, userId, address } = useGlobalStore();
+    const { smartAccount, userId, address, setBalance, smartAddress } =
+        useGlobalStore();
     const [streak, setStreak] = useState([
         false,
         false,
@@ -197,6 +202,8 @@ const PhysicalFitness = () => {
                     workouts[
                         index
                     ].chilizTx = `https://testnet.chiliscan.com/tx/${result.hash}`;
+                    const balance = await getBalance(address, chainId);
+                    setBalance(balance);
                 }
             }
 
@@ -213,8 +220,13 @@ const PhysicalFitness = () => {
         }
     };
     const handleFetchBalance = async () => {
-        const fetchedBalance = await getFanTokenBalance(address);
-        setFanTokenBalance(fetchedBalance);
+        if (chainId === spicy.id) {
+            const fetchedBalance = await getFanTokenBalance(address);
+            setFanTokenBalance(fetchedBalance);
+        } else {
+            const fetchedBalance = await getRewardTokenBalance(smartAddress);
+            setFanTokenBalance(fetchedBalance);
+        }
     };
     useEffect(() => {
         if (streak[streak.length - 1]) {
@@ -231,36 +243,53 @@ const PhysicalFitness = () => {
                     GetFit members have over 4,000 workouts at their fingertips.
                     Try one now.
                 </p>
-                <div className="flex  items-center justify-center gap-x-2 mb-5">
-                    <span className=" font-bold uppercase  text-neutral-500 ">
-                        your streak
-                    </span>
-                    {streak.map((completed, index) => (
-                        <svg
-                            key={index}
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill={completed ? '#B8FE22' : 'none'}
-                            viewBox="0 0 24 24"
-                            strokeWidth={completed ? '.5' : '1'}
-                            stroke="currentColor"
-                            className="size-7"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z"
-                            />
-                        </svg>
-                    ))}
+                <div>
+                    <div className="flex  items-center justify-center gap-x-2">
+                        <span className=" font-bold uppercase  text-neutral-500 ">
+                            your streak
+                        </span>
+                        {streak.map((completed, index) => (
+                            <svg
+                                key={index}
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill={completed ? '#B8FE22' : 'none'}
+                                viewBox="0 0 24 24"
+                                strokeWidth={completed ? '.5' : '1'}
+                                stroke="currentColor"
+                                className="size-7"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z"
+                                />
+                            </svg>
+                        ))}
+                    </div>{' '}
                     {streak[streak.length - 1] && (
-                        <div className="flex items-center gap-x-2">
-                            <Image
-                                src={davidGogginsProfilePic}
-                                alt="goggins"
-                                className="w-12 h-12 shadow-xl  rounded-full "
-                            />
-                            <div className="font-medium">
-                                {fanTokenBalance} DGC
+                        <div className="flex items-center gap-x-4 my-3">
+                            <span className=" font-bold uppercase  text-neutral-500 ">
+                                Reward token:
+                            </span>
+                            <div className="flex items-center gap-x-2">
+                                <Image
+                                    src={davidGogginsProfilePic}
+                                    alt="goggins"
+                                    className="w-12 h-12 shadow-xl  rounded-full "
+                                />
+                                <a
+                                    href={
+                                        chainId === spicy.id
+                                            ? 'https://testnet.chiliscan.com/address/0x56EF69e24c3bCa5135C18574b403273F1eB2Bd74'
+                                            : 'https://explorer-holesky.morphl2.io/address/0x94c17DD37ED3Ca85764b35BfD4d1CCc543b1bE3E'
+                                    }
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="font-medium cursor-pointer underline"
+                                >
+                                    {fanTokenBalance}
+                                    {chainId === spicy.id ? ' DGC' : ' USDC'}
+                                </a>
                             </div>
                         </div>
                     )}

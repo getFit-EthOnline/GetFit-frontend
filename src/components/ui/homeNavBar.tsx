@@ -58,6 +58,7 @@ const HomeNav = () => {
                 if (tokens.trxhash) {
                     const balance = await getBalance(address, chainId);
                     setBalance(balance);
+                    toast.dismiss();
                     toast.success('Tokens sent successfully 🚀', toastStyles);
                 }
             }

@@ -39,7 +39,7 @@ export const WalletConnectButton = () => {
                 toast.success('Something went wrong', toastStyles);
             });
     };
-    const currency = chainId === galadriel_devnet.id ? 'ETH' : 'CHZ';
+    const currency = chainId === galadriel_devnet.id ? 'GAL' : 'CHZ';
     return (
         <div className="flex justify-center gap-x-4  items-center ">
             <motion.button
