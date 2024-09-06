@@ -78,6 +78,7 @@ function useWeb3Auth() {
         setProvider,
         setBalance,
         setUserName,
+        setUserEmail,
         setUserId,
     } = useGlobalStore();
     const chainId = useChainId();
@@ -161,6 +162,7 @@ function useWeb3Auth() {
     };
     const getUserInfo = async () => {
         const user = await web3auth.getUserInfo();
+        setUserEmail(user?.email);
         setUserName(user?.name);
     };
     return { login, loggedIn, logout, getUserInfo, getSignerValue };

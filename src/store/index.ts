@@ -16,6 +16,8 @@ interface GlobalStore {
     smartAccount: BiconomySmartAccountV2 | null;
     setSmartAccount: (smartAccount: BiconomySmartAccountV2) => void;
     userName: string | undefined;
+    userEmail: string | undefined;
+    setUserEmail: (email: string | undefined) => void;
     setUserName: (name: string | undefined) => void;
     balance: string | null;
     setBalance: (balance: string | null) => void;
@@ -41,6 +43,8 @@ const useGlobalStore = create<GlobalStore>()((set) => ({
     smartAccount: null,
     setSmartAccount: (smartAccount) => set({ smartAccount: smartAccount }),
     userName: '',
+    userEmail: '',
+    setUserEmail: (email) => set({ userEmail: email }),
     setUserName: (name) => set({ userName: name }),
     balance: null,
     setBalance: (balance) => set({ balance }),

@@ -2,14 +2,40 @@
 import Image from 'next/image';
 import React, { useState } from 'react';
 import { m2eImage1 } from '../../../../public';
+import useGlobalStore from '@/store';
 const Page = () => {
     const [isFollowing, setIsFollowing] = useState(false);
     const handleFollow = () => {
         setIsFollowing(!isFollowing);
         console.log(isFollowing ? 'Unfollowed' : 'Followed');
     };
+    const { smartAddress, userEmail } = useGlobalStore();
+    const handleSender = async () => {
+        try {
+            const response = await fetch('/api/subscription', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    smartAccountAddress: smartAddress,
+                    email: userEmail,
+                    gogginsWalletAddress: '0x232342',
+                }),
+            });
+
+            if (response.ok) {
+                console.log('Subscription saved successfully');
+            } else {
+                console.error('Error saving subscription');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
     return (
         <div className="flex max-w-7xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+            <div onClick={handleSender}>SEnder</div>
             {/* Left Section */}
             <div className="flex-1 p-4">
                 <header className="flex flex-col items-center">
