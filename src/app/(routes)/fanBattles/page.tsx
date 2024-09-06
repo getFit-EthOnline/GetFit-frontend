@@ -13,7 +13,7 @@ import {
 } from '../../../../public';
 import ProfileCard from '@/components/ui/tokenBattles/ProfileCard';
 import ChallengeCard from '@/components/ui/tokenBattles/ChallengeCard';
-import { joinTeamWithSigner } from '@/contracts/chiliz';
+import { getFanTokenBalance, joinTeamWithSigner } from '@/contracts/chiliz';
 import useGlobalStore from '@/store';
 import { RiExternalLinkLine } from 'react-icons/ri';
 import toast from 'react-hot-toast';
@@ -93,7 +93,18 @@ const Page = () => {
                         </span>
                         <div className="flex items-center gap-x-4">
                             <button
-                                onClick={handleRegister}
+                                onClick={async () => {
+                                    const fetchedBalance =
+                                        await getFanTokenBalance(address);
+                                    if (fetchedBalance && fetchedBalance < 1) {
+                                        toast.error(
+                                            'Insufficient balance to join the battle',
+                                            toastStyles
+                                        );
+                                        return;
+                                    }
+                                    handleRegister();
+                                }}
                                 disabled={registerHash ? true : false}
                                 className="disabled:cursor-not-allowed disabled:opacity-60 group/button relative inline-flex items-center justify-center overflow-hidden rounded-md bg-[#B8FE22] px-4 py-1.5 text-xs font-normal text-white transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg hover:shadow-[#B8FE22]/30"
                             >

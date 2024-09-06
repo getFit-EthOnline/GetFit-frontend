@@ -14,7 +14,7 @@
     "@biconomy/account": "^4.6.1",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
-    "@headlessui/react": "^2.1.3",
+    "@headlessui/react": "^2.1.5",
     "@mui/material": "^6.0.1",
     "@tabler/icons-react": "^3.14.0",
     "@web3auth/base": "^8.12.4",
