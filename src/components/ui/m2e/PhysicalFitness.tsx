@@ -30,6 +30,7 @@ import {
     m2eImage5,
     m2eImage6,
     m2eImage7,
+    UsdcIcon,
 } from '../../../../public';
 import ExcerciseModal from './modalForExercise';
 const workouts = [
@@ -282,10 +283,18 @@ const PhysicalFitness = () => {
                                     }
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="font-medium cursor-pointer underline"
+                                    className="font-medium cursor-pointer flex items-center gap-x-2"
                                 >
                                     {fanTokenBalance}
-                                    {chainId === spicy.id ? ' DGC' : ' USDC'}
+                                    {chainId === spicy.id ? (
+                                        ' DGC'
+                                    ) : (
+                                        <Image
+                                            src={UsdcIcon}
+                                            alt="usdc"
+                                            className=" w-5 rounded-full h-5"
+                                        />
+                                    )}
                                 </a>
                             </div>
                         </div>

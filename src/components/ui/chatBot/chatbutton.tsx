@@ -133,7 +133,7 @@ const ChatButton = ({
                 </div>
             </div>
             {open && (
-                <div className=" no-scrollbar overflow-x-hidden overflow-y-scroll transition-all ease-in-out duration-200  min-h-[calc(100vh-300px)]  max-h-[calc(100vh-300px)] bg-slate-100  mx-1 p-2">
+                <div className="no-scrollbar overflow-x-hidden overflow-y-scroll transition-all ease-in-out duration-200  min-h-[calc(100vh-200px)]  max-h-[calc(100vh-200px)] bg-slate-100  mx-1 p-2">
                     <ChatMessages
                         chatId={chatId}
                         messages={messages}

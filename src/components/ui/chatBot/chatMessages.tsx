@@ -371,10 +371,7 @@ const ChatMessages = ({
                 />
             )}
             <div className="flex flex-col no-scrollbar items-center ">
-                <div
-                    ref={chatContainerRef}
-                    className="w-full   h-[calc(100vh-4rem)]"
-                >
+                <div ref={chatContainerRef} className="w-full min-h-screen">
                     <TransitionGroup className="mb-5">
                         {messages.map((message, index) => (
                             <CSSTransition
@@ -383,7 +380,7 @@ const ChatMessages = ({
                                 classNames="fade"
                             >
                                 <div
-                                    className={`w-fit mt-2   ${
+                                    className={`w-fit my-4   ${
                                         message.type === 'bot'
                                             ? 'm-0'
                                             : 'ml-[80%]'
