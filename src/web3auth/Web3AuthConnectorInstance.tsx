@@ -34,7 +34,7 @@ export default function Web3AuthConnectorInstance(chains: Chain[]) {
       modalZIndex: "2147483647",
       logoLight: "https://web3auth.io/images/web3authlog.png",
       logoDark: "https://web3auth.io/images/web3authlogodark.png",
-      appUrl: "https://getfrontend.vercel.app/",
+      appUrl: "https://getfrontend.vercel.app",
       uxMode: "redirect",
       mode: "light",
     },
@@ -54,14 +54,7 @@ export default function Web3AuthConnectorInstance(chains: Chain[]) {
   const modalConfig = {
     [WALLET_ADAPTERS.OPENLOGIN]: {
       label: "openlogin",
-      loginMethods: {
-        facebook: {
-          // it will hide the facebook option from the Web3Auth modal.
-          name: "facebook login",
-          showOnModal: false,
-        },
-      },
-      // setting it to false will hide all social login methods from modal.
+      redirectUrl: "https://getfrontend.vercel.app/move-to-earn",
       showOnModal: true,
     },
   }
