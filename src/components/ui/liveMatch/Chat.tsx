@@ -4,6 +4,7 @@ import { useEthersProvider } from "@/hooks/useEthersProvider";
 import { useEthersSigner } from "@/hooks/useEthersSigner";
 import useGlobalStore from "@/store";
 import { PaymasterMode } from "@biconomy/account";
+import { useQueryClient } from "@tanstack/react-query";
 import { FramesClient } from "@xmtp/frames-client";
 import { Client, Conversation, DecodedMessage } from "@xmtp/xmtp-js";
 import { useEffect, useRef, useState } from "react";
@@ -22,7 +23,7 @@ interface ChatProps {
     conversation: Conversation;
 }
 
-const Chat: React.FC<ChatProps> = ({ client, messageHistory, conversation }) => {
+const Chat: React.FC<ChatProps> = ({ refetch, client, messageHistory, conversation }) => {
     const [inputValue, setInputValue] = useState("");
     const chatRef = useRef(null);
 
@@ -105,7 +106,8 @@ interface MessageItemProps {
 export const MessageItem: React.FC<MessageItemProps> = ({ msg, index, client, inputValue }) => {
     const { data: walletClient } = useWalletClient()
     const { smartAccount } = useGlobalStore()
-    const { chain, chainId } = useAccount()
+    const { chain, chainId, address } = useAccount()
+    const queryClient = useQueryClient()
 
     const [txHash, setTxHash] = useState('')
     const provider = useEthersProvider()
@@ -199,6 +201,7 @@ export const MessageItem: React.FC<MessageItemProps> = ({ msg, index, client, in
                             paymasterServiceData: { mode: PaymasterMode.SPONSORED },
                         });
                         const { transactionHash } = await bundleTransaction.waitForTxHash();
+                        queryClient.invalidateQueries({ queryKey: ["balanceOf", address] })
                         setTxHash(transactionHash)
                         const buttonPostUrl =
                             frameMetadata.extractedTags["fc:frame:button:1:post_url"];

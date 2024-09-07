@@ -1,9 +1,13 @@
 // @ts-nocheck
 "use client";
+import { getAddressesForChain } from "@/config/addresses";
 import { useEthersSigner } from "@/hooks/useEthersSigner";
+import useGlobalStore from "@/store";
 import { Client } from "@xmtp/xmtp-js";
 import { useEffect, useRef, useState } from "react";
-import { useAccount, useConnect } from "wagmi";
+import { erc20Abi, formatUnits } from "viem";
+import { morphHolesky } from "viem/chains";
+import { useAccount, useConnect, useReadContract } from "wagmi";
 import Chat from "./Chat";
 
 export const PEER_ADDRESS = "0x6250f33239D70BebA96cBd170E98bC0aD0e50285";
@@ -15,7 +19,16 @@ function LiveChat() {
     const signer = useEthersSigner();
     const { connect, connectors } = useConnect();
     const [isOnNetwork, setIsOnNetwork] = useState(false);
-    const { address, isConnected } = useAccount();
+    const { smartAddress } = useGlobalStore()
+    const { address, isConnected, chainId } = useAccount();
+    const { USDC_TOKEN_ADDRESS } = getAddressesForChain(morphHolesky.id)
+    const { data, error } = useReadContract({
+        abi: erc20Abi,
+        address: USDC_TOKEN_ADDRESS,
+        functionName: "balanceOf",
+        args: [smartAddress]
+    })
+
 
     const newConversation = async function (xmtp_client, addressTo) {
         if (await xmtp_client?.canMessage(addressTo)) {
@@ -50,9 +63,13 @@ function LiveChat() {
 
     return (
         <div className="flex flex-col h-full w-full  rounded-md bg-white p-4">
-            <h1 className=" text-slate-600 font-bold sticky top-0 py-4 bg-white ">
+            <div className="flex items-center justify-start space-x-3"><h1 className=" text-slate-600 font-bold sticky top-0 py-4 bg-white ">
                 Live Chats
             </h1>
+                <h1 className=" text-slate-600 font-bold sticky top-0 py-4 bg-white ">
+                    {data ? formatUnits(data, 6) + " " + "USDC" : 0}
+                </h1>
+            </div>
             {!isConnected && (
                 <div className="w-full h-full flex items-center min-h-[400px] justify-center">
                     <button
