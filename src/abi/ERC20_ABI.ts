@@ -1,4 +1,4 @@
-export const FAN_TOKEN_ABI = [
+export const ERC20_ABI = [
     {
         inputs: [
             {

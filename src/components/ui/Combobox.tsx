@@ -6,17 +6,20 @@ import {
     ComboboxOptions,
 } from '@headlessui/react';
 
+import { getUsdcBalance } from '@/contracts/chainlink';
+import useGlobalStore from '@/store';
 import clsx from 'clsx';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaAngleDown } from 'react-icons/fa6';
-import { useAccount, useSwitchChain } from 'wagmi';
-import { morphHolesky, spicy } from 'wagmi/chains';
-import { Chiliz, Galadriel, Morph } from '../../../public';
+import { useSwitchChain } from 'wagmi';
+import { base, morphHolesky, sepolia, spicy } from 'wagmi/chains';
+import { Base, Chiliz, Galadriel, Morph, Sepolia } from '../../../public';
 export default function ComboboxComponent() {
-    const { chain } = useAccount();
     const { chains, switchChainAsync } = useSwitchChain();
     const [selected, setSelected] = useState<any>(chains[0]);
+
+    const { smartAddress, setBalance } = useGlobalStore();
     const handleSwitchChain = async (chainId: any) => {
         await switchChainAsync({ chainId: chainId });
         // if (chainId === spicy.id) {
@@ -34,11 +37,22 @@ export default function ComboboxComponent() {
         //     }
         // }
     };
+    const smartBalanceFetch = async () => {
+        const balance: any = await getUsdcBalance(smartAddress);
+        const finalBalance = balance / 10 ** 6;
+        console.log(balance);
+        setBalance(finalBalance.toString());
+    };
+    useEffect(() => {
+        if (smartAddress) {
+            smartBalanceFetch();
+        }
+    }, []);
     return (
-        <div className="w-72">
+        <div className="w-[260px]">
             <Combobox value={selected} onChange={(value) => {
-                setSelected(value)
                 handleSwitchChain(value.id)
+                setSelected(value)
             }}>
                 <div className="relative">
                     <ComboboxInput
@@ -58,7 +72,11 @@ export default function ComboboxComponent() {
                                     ? Chiliz
                                     : selected.id === morphHolesky.id
                                         ? Morph
-                                        : Galadriel
+                                        : selected.id === sepolia.id
+                                            ? Sepolia
+                                            : selected.id === base.id
+                                                ? Base
+                                                : Galadriel
                             }
                             alt="icons"
                             className="size-5 rounded-full absolute right-8 bottom-2"
@@ -80,8 +98,18 @@ export default function ComboboxComponent() {
                             <ComboboxOption
                                 key={chain.id}
                                 value={chain}
-                                onChange={() => handleSwitchChain(chain.id)}
-                                onClick={() => handleSwitchChain(chain.id)}
+                                onClick={() => {
+                                    switchChainAsync({ chainId: chain.id });
+                                    if (
+                                        chain.id === sepolia.id ||
+                                        chain.id === base.id ||
+                                        chain.id === morphHolesky.id
+                                    ) {
+                                        smartBalanceFetch();
+                                    } else {
+                                        handleSwitchChain(chain.id);
+                                    }
+                                }}
                                 className="group flex cursor-default items-center gap-2 rounded-lg py-2 px-3 select-none data-[focus]:bg-white/10"
                             >
                                 <Image
@@ -90,7 +118,11 @@ export default function ComboboxComponent() {
                                             ? Chiliz
                                             : chain.id === morphHolesky.id
                                                 ? Morph
-                                                : Galadriel
+                                                : chain.id === sepolia.id
+                                                    ? Sepolia
+                                                    : chain.id === base.id
+                                                        ? Base
+                                                        : Galadriel
                                     }
                                     alt="icons"
                                     className="size-5 rounded-full"

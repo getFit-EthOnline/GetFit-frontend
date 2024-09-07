@@ -40,7 +40,7 @@ const SportsBets = ({
     setSelected: any;
 }) => {
     return (
-        <div className="mx-20">
+        <div className="px-20">
             <h1 className=" text-2xl capitalize ml-28 font-bold">
                 Sports Bets
             </h1>

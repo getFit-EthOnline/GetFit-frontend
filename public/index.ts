@@ -28,7 +28,10 @@ import armWrestlinglive3 from './sportsImages/armWrestlinglive3.jpg';
 import armWrestlinglive4 from './sportsImages/armWrestlinglive4.jpg';
 import weightLiftinglive1 from './sportsImages/weightLiftinglive1.jpeg';
 import weightLiftinglive2 from './sportsImages/weightLiftingLive2.jpg';
-
+import BackExercise from './M2E images/BackExercise.jpg';
+import chestExercise from './M2E images/chestExercise.jpg';
+import legsExercise from './M2E images/squartsExercise.jpg';
+import shoulderExercise from './M2E images/shoulderExercise.jpg';
 import weightLiftinglive3 from './sportsImages/weightLiftingLive3.jpg';
 import weightLiftinglive4 from './sportsImages/weightLiftinglive4.jpeg';
 import mmalive1 from './sportsImages/mmalive1.jpg';
@@ -65,6 +68,8 @@ import m2ementalFitness7 from './M2E images/m2ementalFitness7.jpg';
 import Chiliz from './icons/chiliz.png';
 import Galadriel from './icons/galadriel.png';
 import Morph from './icons/morphIcon.png';
+import Base from './icons/Base.png';
+import Sepolia from './icons/sepolia.jpg';
 import RibbleAvatar from './influencerProfilePics/rippleAvatar.png';
 import davidBanner from './membershipImages/davidBanner.png';
 import davidProfilePic from './membershipImages/davidProfilePic.png';
@@ -161,9 +166,15 @@ export {
     RibbleAvatar,
     lazarProfilePic,
     lazarPlan1,
+    BackExercise,
     lazarPlan2,
+    legsExercise,
+    shoulderExercise,
+    chestExercise,
     lazarPlan3,
     lazarPlan4,
+    Base,
+    Sepolia,
     anatolyBanner,
     anatolyProfilePic2,
     plan1,

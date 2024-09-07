@@ -39,9 +39,11 @@ const openloginAdapter = new OpenloginAdapter({
         redirectUrl: REDIRECT_URL,
         whiteLabel: {
             appName: 'Get Fit',
-            appUrl: 'https://web3auth.io',
-            logoLight: 'https://web3auth.io/images/web3auth-logo.svg',
-            logoDark: 'https://web3auth.io/images/web3auth-logo---Dark.svg',
+            appUrl: 'https://getfit-chatbot.vercel.app',
+            logoLight:
+                'https://avatars.githubusercontent.com/u/179255662?s=200&v=4',
+            logoDark:
+                'https://avatars.githubusercontent.com/u/179255662?s=200&v=4',
             defaultLanguage: 'en',
             mode: 'dark',
             theme: {
