@@ -11,7 +11,6 @@ import { OpenloginAdapter } from '@web3auth/openlogin-adapter';
 import { ethers } from 'ethers';
 import { useEffect, useState } from 'react';
 import { useChainId } from 'wagmi';
-import { spicy } from 'wagmi/chains';
 const clientId =
     'BOZXvB8YZOmaHlxETldZRrA91mqa3UiLz46eonVOL627eJX0QQ2Ncct_7cNWUDI20n-EAY2f4_vs_szOXocmmBI';
 
@@ -57,7 +56,7 @@ const openloginAdapter = new OpenloginAdapter({
                 verifier: 'google-getfit',
                 typeOfLogin: 'google',
                 clientId:
-                    '820609215104-m8issl84ttq2mmcjmntav0ev9pq0hso5.apps.googleusercontent.com',
+                    '68869815152-i4h1gs0ltq68ho1mdubuk4ah463mg2h2.apps.googleusercontent.com',
             },
             // Discord login
             discord: {
