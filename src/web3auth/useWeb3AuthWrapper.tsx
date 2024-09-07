@@ -18,7 +18,6 @@ function useWeb3AuthWrapper() {
   const signer = useEthersSigner()
   const { mutateAsync } = useSendTestFundsMutation({ chain: chain })
   const { setSmartAccount, setSmartAddress, smartAccount } = useGlobalStore()
-
   return useQuery({
     queryKey: [!!signer, chainId, !!smartAccount],
     enabled: isClient && !!signer || chainId !== galadriel_devnet.id,

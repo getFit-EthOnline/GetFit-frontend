@@ -62,7 +62,7 @@ const ButtonGroup = ({ buttons, handleClick, frameButtonUpdating }) => {
         key={`${button}-${index}`}
         onClick={handlePress}
         disabled={isDisabled}
-        className="bg-green-500 rounded-md mb-1 text-white disabled:cursor-not-allowed w-full py-3 border-0"
+        className="bg-green-500 rounded-md mb-1 text-white disabled:cursor-not-allowed w-[80%] mx-auto py-2 border-0"
       >
         {button.label}
         {button.action === "post_redirect" && (

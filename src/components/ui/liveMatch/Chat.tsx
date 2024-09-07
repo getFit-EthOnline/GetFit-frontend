@@ -7,6 +7,8 @@ import { FramesClient } from "@xmtp/frames-client";
 import { Client, Conversation, DecodedMessage } from "@xmtp/xmtp-js";
 import { useEffect, useRef, useState } from "react";
 import { useAccount, useWalletClient } from "wagmi";
+import Markdown from 'react-markdown';
+import { useWalletClient } from "wagmi";
 import { Frame } from "./Frames/Frame";
 import { getFrameTitle, getOrderedButtons, isValidFrame, isXmtpFrame } from "./Frames/FrameInfo";
 import { fetchFrameFromUrl, urlRegex } from "./Frames/utils";
@@ -105,6 +107,7 @@ export const MessageItem: React.FC<MessageItemProps> = ({ msg, index, client, in
     const { smartAccount } = useGlobalStore()
     const { chain } = useAccount()
 
+    const [txHash, setTxHash] = useState('')
     const provider = useEthersProvider()
     const signer = useEthersSigner()
     const [isLoading, setIsLoading] = useState(true);
@@ -187,6 +190,7 @@ export const MessageItem: React.FC<MessageItemProps> = ({ msg, index, client, in
                             paymasterServiceData: { mode: PaymasterMode.SPONSORED },
                         });
                         const { transactionHash } = await bundleTransaction.waitForTxHash();
+                        setTxHash(transactionHash)
                         const buttonPostUrl =
                             frameMetadata.extractedTags["fc:frame:button:1:post_url"];
                         const completeTransactionMetadata = await framesClient.proxy.post(
@@ -208,11 +212,17 @@ export const MessageItem: React.FC<MessageItemProps> = ({ msg, index, client, in
                 );
                 setFrameMetadata(updatedFrameMetadata);
             } else if (action === "post_redirect") {
-                const { redirectedTo } = await framesClient.proxy.postRedirect(
-                    postUrl,
-                    payload,
-                );
-                window.open(redirectedTo, "_blank");
+                if (chainId === spicy.id) {
+                    window.open('https://spicy.io/tx/' + txHash, "_blank");
+                }
+                if (chainId === morphHolesky.id) {
+                    window.open('https://explorer-holesky.morphl2.io/tx/' + txHash, "_blank");
+                }
+                // const { redirectedTo } = await framesClient.proxy.postRedirect(
+                //     postUrl,
+                //     payload,
+                // );
+                // window.open(redirectedTo, "_blank");
             } else if (action === "link" && button?.target) {
                 window.open(button.target, "_blank");
             }
@@ -229,7 +239,12 @@ export const MessageItem: React.FC<MessageItemProps> = ({ msg, index, client, in
     useEffect(() => {
         const fetchMetadata = async () => {
             setIsLoading(true);
-            const isUrl = !!msg.content.match(urlRegex)?.[0];
+            let isUrl = false;
+            try {
+                isUrl = !!msg.content.match(urlRegex)?.[0];
+            } catch (error) {
+                console.error("Error checking URL:", error);
+            }
             if (isUrl) {
                 const metadata = await fetchFrameFromUrl(msg);
                 setFrameMetadata(metadata);
@@ -263,10 +278,11 @@ export const MessageItem: React.FC<MessageItemProps> = ({ msg, index, client, in
                         onTextInputChange={() => {
                             console.log("onTextInputChange");
                         }}
+                        txHash={txHash}
                         frameUrl={frameMetadata?.url}
                     />
                 </>
-            ) : <div
+            ) : msg.content !== "" ? <div
                 key={msg.id || index}
                 className={`p-2 mb-2 rounded-md ${msg.senderAddress === PEER_ADDRESS
                     ? 'bg-blue-400 italic'
@@ -280,11 +296,11 @@ export const MessageItem: React.FC<MessageItemProps> = ({ msg, index, client, in
                 <div className="flex flex-col">
                     <div>
                         <span className="font-bold mr-2">{msg.senderAddress === client.address ? "You" : "Bot"}</span>
-                        <span className="ml-1">{msg.content}</span>
+                        <Markdown>{msg.content}</Markdown>
                     </div>
                     <span className="text-gray-500 text-xs mt-1">{msg.sent.toLocaleTimeString()}</span>
                 </div>
-            </div>}
+            </div> : null}
         </>
     )
 }
