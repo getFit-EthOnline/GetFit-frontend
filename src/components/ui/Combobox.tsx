@@ -28,14 +28,14 @@ export default function ComboboxComponent() {
             const balance = await getBalance(address, chainId);
             setBalance(balance);
             if (parseFloat(balance) < 1) {
-                toast.loading('Sending test tokens 💸', toastStyles);
-                const tokens = await sendTestTokensChiliz(address);
-                if (tokens.trxhash) {
-                    const balance = await getBalance(address, chainId);
-                    setBalance(balance);
-                    toast.dismiss();
-                    toast.success('Tokens sent successfully 🚀', toastStyles);
-                }
+                // toast.loading('Sending test tokens 💸', toastStyles);
+                // const tokens = await sendTestTokensChiliz(address);
+                // if (tokens.trxhash) {
+                //     const balance = await getBalance(address, chainId);
+                //     setBalance(balance);
+                //     toast.dismiss();
+                //     toast.success('Tokens sent successfully 🚀', toastStyles);
+                // }
             }
         }
     };
@@ -59,8 +59,8 @@ export default function ComboboxComponent() {
                                 selected.id === spicy.id
                                     ? Chiliz
                                     : selected.id === morphHolesky.id
-                                    ? Morph
-                                    : Galadriel
+                                        ? Morph
+                                        : Galadriel
                             }
                             alt="icons"
                             className="size-5 rounded-full absolute right-8 bottom-2"
@@ -90,8 +90,8 @@ export default function ComboboxComponent() {
                                         chain.id === spicy.id
                                             ? Chiliz
                                             : chain.id === morphHolesky.id
-                                            ? Morph
-                                            : Galadriel
+                                                ? Morph
+                                                : Galadriel
                                     }
                                     alt="icons"
                                     className="size-5 rounded-full"

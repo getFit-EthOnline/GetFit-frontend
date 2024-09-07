@@ -141,14 +141,14 @@ function useWeb3Auth() {
         if (chainId === galadriel_devnet.id) {
             const balance = await getBalance(address);
             setBalance(balance);
-            if (parseFloat(balance) < 0.01) {
-                const tokens = await sendTestTokens(address);
-                if (tokens.trxhash) {
-                    const balance = await getBalance(address);
-                    setBalance(balance);
-                }
-                console.log(tokens);
-            }
+            // if (parseFloat(balance) < 0.01) {
+            //     const tokens = await sendTestTokens(address);
+            //     if (tokens.trxhash) {
+            //         const balance = await getBalance(address);
+            //         setBalance(balance);
+            //     }
+            //     console.log(tokens);
+            // }
         }
 
         return address;

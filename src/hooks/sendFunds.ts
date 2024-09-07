@@ -31,6 +31,7 @@ export const sendTestFunds = async ({
   smartAddress?: Address;
   address?: Address;
 }) => {
+  debugger;
   const client = createWalletClient({
     account: account,
     chain: chain,
@@ -70,7 +71,7 @@ export const sendTestFunds = async ({
     let tx;
     try {
       tx = await client.sendTransaction({
-        to: account.address,
+        to: args,
         value: BigInt(1e18),
         account: account,
         chain: chain,
@@ -83,6 +84,7 @@ export const sendTestFunds = async ({
       hash: tx,
     });
   }
+  if (balance > BigInt(0)) return;
   const tx = await client.writeContract({
     chain: chain,
     address: USDC_TOKEN_ADDRESS,
