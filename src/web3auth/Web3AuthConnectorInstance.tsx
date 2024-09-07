@@ -24,7 +24,7 @@ export default function Web3AuthConnectorInstance(chains: Chain[]) {
   const privateKeyProvider = new EthereumPrivateKeyProvider({ config: { chainConfig } });
 
   const web3AuthInstance = new Web3Auth({
-    clientId: 'BOZXvB8YZOmaHlxETldZRrA91mqa3UiLz46eonVOL627eJX0QQ2Ncct_7cNWUDI20n-EAY2f4_vs_szOXocmmBI',
+    clientId: 'BFW3wcM203ReRzwb2nnd4bu4vUTtwPOZ7zsjkd62YkniA5DOtjJAXzchQGT_lvcJswnlp18k__tWqAPs76mGNAI',
     chainConfig,
     privateKeyProvider,
     uiConfig: {
@@ -34,10 +34,10 @@ export default function Web3AuthConnectorInstance(chains: Chain[]) {
       modalZIndex: "2147483647",
       logoLight: "https://web3auth.io/images/web3authlog.png",
       logoDark: "https://web3auth.io/images/web3authlogodark.png",
+      appUrl: "https://getfrontend.vercel.app/",
       uxMode: "redirect",
       mode: "light",
     },
-
     web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
     enableLogging: true,
   });
