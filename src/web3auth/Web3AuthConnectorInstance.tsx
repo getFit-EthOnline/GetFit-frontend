@@ -37,8 +37,11 @@ export default function Web3AuthConnectorInstance(chains: Chain[]) {
             loginMethodsOrder: ['google'],
             defaultLanguage: 'en',
             modalZIndex: '2147483647',
-            logoLight: 'https://web3auth.io/images/web3authlog.png',
-            logoDark: 'https://web3auth.io/images/web3authlogodark.png',
+            appUrl: 'https://getfit-chatbot.vercel.app',
+            logoLight:
+                'https://avatars.githubusercontent.com/u/179255662?s=200&v=4',
+            logoDark:
+                'https://avatars.githubusercontent.com/u/179255662?s=200&v=4',
             uxMode: 'redirect',
             mode: 'light',
         },
