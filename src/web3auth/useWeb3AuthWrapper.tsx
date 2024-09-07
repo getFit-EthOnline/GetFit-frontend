@@ -26,16 +26,12 @@ function useWeb3AuthWrapper() {
     queryFn: async () => {
       if (!chain) return
       if (signer && chainId) {
-        if (chainId === galadriel_devnet.id || chainId === spicy.id ||
-          !process.env.NEXT_PUBLIC_SMART_ACCOUNT_ENABLED ||
-          smartAccount) {
-          if (chainId === spicy.id) {
-            await sendTestFunds({
-              chain,
-              address: address,
-              publicClient: publicClient,
-            })
-          }
+        if (chainId === spicy.id) {
+          await sendTestFunds({
+            chain,
+            address: address,
+            publicClient: publicClient,
+          })
           return;
         }
         const biconomy_config = BICONOMY_CONFIG[chainId as keyof typeof BICONOMY_CONFIG];

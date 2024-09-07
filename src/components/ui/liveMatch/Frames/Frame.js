@@ -100,7 +100,13 @@ const ImageFrame = ({ frameUrl, title }) => {
   const urlParams = new URLSearchParams(new URL(frameUrl).search);
   const name = urlParams.get("player");
 
-  const imageSrc = name.toLowerCase() === "conor" ? "/conor.png" : "/floyd.png";
+  const imageSrc = name
+    ? name.toLowerCase() === "conor"
+      ? "/conor.png"
+      : "/floyd.png"
+    : chainId === spicy.id
+    ? "https://www.chiliz.com/wp-content/uploads/2023/02/chiliz-logo-v3.svg"
+    : "https://pbs.twimg.com/profile_images/1787467144914931712/3uIItkW0_400x400.jpg";
 
   console.log(chainId, "chainId");
   console.log(imageSrc, "imageSrc", name);

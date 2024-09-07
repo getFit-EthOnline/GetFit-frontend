@@ -8,6 +8,7 @@ import { FramesClient } from "@xmtp/frames-client";
 import { Client, Conversation, DecodedMessage } from "@xmtp/xmtp-js";
 import { useEffect, useRef, useState } from "react";
 import Markdown from 'react-markdown';
+import { morphHolesky } from "viem/chains";
 import { useAccount, useWalletClient } from "wagmi";
 import { Frame } from "./Frames/Frame";
 import { getFrameTitle, getOrderedButtons, isValidFrame, isXmtpFrame } from "./Frames/FrameInfo";
@@ -104,7 +105,7 @@ interface MessageItemProps {
 export const MessageItem: React.FC<MessageItemProps> = ({ msg, index, client, inputValue }) => {
     const { data: walletClient } = useWalletClient()
     const { smartAccount } = useGlobalStore()
-    const { chain } = useAccount()
+    const { chain, chainId } = useAccount()
 
     const [txHash, setTxHash] = useState('')
     const provider = useEthersProvider()
@@ -115,6 +116,15 @@ export const MessageItem: React.FC<MessageItemProps> = ({ msg, index, client, in
 
     const handleFrameButtonClick = async (buttonIndex, action = "post") => {
         try {
+            if (action === "post_redirect") {
+                if (chainId === spicy.id) {
+                    window.open('https://spicy.io/tx/' + txHash, "_blank");
+                }
+                if (chainId === morphHolesky.id) {
+                    window.open('https://explorer-holesky.morphl2.io/tx/' + txHash, "_blank");
+                }
+                return
+            }
             const metadata = await fetchFrameFromUrl(msg);
             const frameMetadata = metadata
             const urlParams = new URLSearchParams(new URL(frameMetadata.url).search);
