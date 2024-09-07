@@ -3,21 +3,23 @@ import { useQuery } from "@tanstack/react-query";
 
 import BICONOMY_CONFIG from "@/config/biconomy";
 import { galadriel_devnet, spicy } from "@/config/chains";
+import { sendTestFunds } from "@/hooks/sendFunds";
 import { useEthersSigner } from "@/hooks/useEthersSigner";
-import useSendTestFundsMutation from "@/hooks/useSendTestFunds";
 import useGlobalStore from "@/store";
 import { useEffect, useState } from "react";
-import { useAccount } from "wagmi";
+import { useAccount, usePublicClient } from "wagmi";
 
 function useWeb3AuthWrapper() {
   const [isClient, setIsClient] = useState(false);
   useEffect(() => {
     setIsClient(true);
   }, []);
-  const { chainId, chain } = useAccount()
+  const { chainId, chain, address } = useAccount()
+  const publicClient = usePublicClient()
   const signer = useEthersSigner()
-  const { mutateAsync } = useSendTestFundsMutation({ chain: chain })
   const { setSmartAccount, setSmartAddress, smartAccount } = useGlobalStore()
+
+
   return useQuery({
     queryKey: [!!signer, chainId, !!smartAccount],
     enabled: isClient && !!signer || chainId !== galadriel_devnet.id,
@@ -27,7 +29,11 @@ function useWeb3AuthWrapper() {
         if (chainId === galadriel_devnet.id || chainId === spicy.id ||
           !process.env.NEXT_PUBLIC_SMART_ACCOUNT_ENABLED ||
           smartAccount) {
-          await mutateAsync()
+          await sendTestFunds({
+            chain,
+            address: address,
+            publicClient: publicClient,
+          })
           return;
         }
         const biconomy_config = BICONOMY_CONFIG[chainId as keyof typeof BICONOMY_CONFIG];
@@ -38,9 +44,15 @@ function useWeb3AuthWrapper() {
           biconomyPaymasterApiKey: biconomy_config.paymasterApiKey
         });
         setSmartAccount(smartAccountCreationg)
-        const address = await smartAccountCreationg.getAccountAddress();
-        setSmartAddress(address)
-        await mutateAsync()
+        const smartAddress = await smartAccountCreationg.getAccountAddress();
+        setSmartAddress(smartAddress)
+        await sendTestFunds({
+          chain,
+          smartAccount: smartAccountCreationg,
+          smartAddress: smartAddress,
+          address: smartAddress,
+          publicClient: publicClient
+        })
       }
     }
   })

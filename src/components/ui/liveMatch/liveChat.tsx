@@ -1,7 +1,6 @@
 // @ts-nocheck
 "use client";
 import { useEthersSigner } from "@/hooks/useEthersSigner";
-import useWeb3AuthWrapper from "@/web3auth/useWeb3AuthWrapper";
 import { Client } from "@xmtp/xmtp-js";
 import { useEffect, useRef, useState } from "react";
 import { useAccount, useConnect } from "wagmi";
@@ -10,7 +9,6 @@ import Chat from "./Chat";
 export const PEER_ADDRESS = "0x6250f33239D70BebA96cBd170E98bC0aD0e50285";
 
 function LiveChat() {
-    useWeb3AuthWrapper()
     const [messages, setMessages] = useState(null);
     const convRef = useRef(null);
     const clientRef = useRef(null);

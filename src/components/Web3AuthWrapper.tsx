@@ -1,3 +1,4 @@
+"use client"
 import useWeb3AuthWrapper from '@/web3auth/useWeb3AuthWrapper';
 import { ComponentProps } from 'react';
 

@@ -1,8 +1,8 @@
+import Web3AuthWrapper from '@/components/Web3AuthWrapper';
 import Providers from '@/web3auth/Providers';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -19,7 +19,9 @@ export default function RootLayout({
         <html lang="en">
             <body className={inter.className}>
                 <Providers>
-                    {children}
+                    <Web3AuthWrapper>
+                        {children}
+                    </Web3AuthWrapper>
                 </Providers>
             </body>
         </html>

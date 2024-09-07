@@ -1,4 +1,4 @@
-import { spicy } from "@/web3auth/Providers";
+import { spicy } from "@/config/chains";
 import Image from "next/image";
 import { morphHolesky } from "viem/chains";
 import { useAccount } from "wagmi";
