@@ -1,5 +1,6 @@
 'use client';
-import React from 'react';
+import Image from 'next/image';
+import { useState } from 'react';
 import {
     anatolyBanner,
     anatolyProfilePic2,
@@ -16,8 +17,7 @@ import {
     lazarPlan4,
     lazarProfilePic,
 } from '../../../../public';
-import Image from 'next/image';
-import useGlobalStore from '@/store';
+import SubscribeModal from './subscribeModal';
 const influencerProfile = [
     {
         id: 1,
@@ -136,110 +136,113 @@ const influencerProfile = [
 ];
 
 const InfluencerProfile = () => {
-    const { smartAddress, userEmail } = useGlobalStore();
-    const handleSender = async () => {
-        try {
-            const response = await fetch('/api/subscription', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    smartAccountAddress: smartAddress,
-                    email: userEmail,
-                    gogginsWalletAddress: '0x232342',
-                }),
-            });
+    const [open, setOpen] = useState(false);
+    // const handleSender = async () => {
+    //     try {
+    //         const response = await fetch('/api/subscription', {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify({
+    //                 smartAccountAddress: smartAddress,
+    //                 email: userEmail,
+    //                 gogginsWalletAddress: '0x232342',
+    //             }),
+    //         });
 
-            if (response.ok) {
-                console.log('Subscription saved successfully');
-            } else {
-                console.error('Error saving subscription');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    };
+    //         if (response.ok) {
+    //             console.log('Subscription saved successfully');
+    //         } else {
+    //             console.error('Error saving subscription');
+    //         }
+    //     } catch (error) {
+    //         console.error('Error:', error);
+    //     }
+    // };
     return (
-        <div className=" flex flex-col gap-y-10  ">
-            {influencerProfile.map((profile) => (
-                <div
-                    key={profile.id}
-                    className="bg-white shadow-lg p-6 rounded-lg max-w-3xl mx-auto"
-                >
-                    {/* Banner Section */}
-                    <div className="relative">
-                        <Image
-                            src={profile.bannerImage}
-                            alt="banner"
-                            width={400}
-                            height={150}
-                            className="w-full  object-cover rounded-t-lg"
-                        />
-                        {/* Profile Image */}
-                        <Image
-                            src={profile.profilePic}
-                            alt="Profile"
-                            width={80}
-                            height={80}
-                            className="w-20 h-20   absolute left-0 -bottom-10"
-                        />
-                    </div>
-
-                    {/* Profile Details */}
-                    <div className="mt-10">
-                        <h2 className="text-2xl font-semibold">
-                            {profile.name}
-                        </h2>
-                        <p className="text-gray-500">{profile.category}</p>
-                        <p className="text-gray-700 mt-2">
-                            <span className=" font-semibold">
-                                {profile.name}{' '}
-                            </span>
-                            {profile.about}
-                        </p>
-                    </div>
-
-                    {/* Plan Cards */}
-                    <div className="grid grid-cols-4 gap-4 mt-6">
-                        {profile.plans.map((plan) => (
-                            <div
-                                key={plan.id}
-                                className="bg-gray-100 relative rounded-md group   text-center"
-                            >
-                                <Image
-                                    src={plan.image}
-                                    alt={plan.title}
-                                    className="mx-auto rounded-md"
-                                />
-
-                                <h3 className=" group-hover:opacity-0 w-full max-h-12  min-h-12 absolute bottom-0 rounded-b-md bg-slate-300 bg-opacity-[80%]  font-medium mt-2">
-                                    {plan.title}
-                                </h3>
-                                <div className="absolute  flex-col inset-0 bg-[#DCE0D9] bg-opacity-[80%] text-black p-2 flex items-center justify-center gap-y-2  opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-300 rounded-lg">
-                                    <span className="text-xl leading-4 font-bold">
-                                        {' '}
-                                        {plan.title}{' '}
-                                    </span>
-                                    <span className=" text-xs font-semibold">
-                                        {' '}
-                                        {plan.description}
-                                    </span>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* Subscribe Button */}
-                    <button
-                        className="mt-6 w-full bg-lime-400 hover:bg-lime-500 text-white font-bold py-2 rounded-lg"
-                        onClick={handleSender}
+        <>
+            {open && <SubscribeModal open={open} setOpen={setOpen} />}
+            <div className=" flex flex-col gap-y-10  ">
+                {influencerProfile.map((profile) => (
+                    <div
+                        key={profile.id}
+                        className="bg-white shadow-lg p-6 rounded-lg max-w-3xl mx-auto"
                     >
-                        Subscribe to access
-                    </button>
-                </div>
-            ))}
-        </div>
+                        {/* Banner Section */}
+                        <div className="relative">
+                            <Image
+                                src={profile.bannerImage}
+                                alt="banner"
+                                width={400}
+                                height={150}
+                                className="w-full  object-cover rounded-t-lg"
+                            />
+                            {/* Profile Image */}
+                            <Image
+                                src={profile.profilePic}
+                                alt="Profile"
+                                width={80}
+                                height={80}
+                                className="w-20 h-20   absolute left-0 -bottom-10"
+                            />
+                        </div>
+
+                        {/* Profile Details */}
+                        <div className="mt-10">
+                            <h2 className="text-2xl font-semibold">
+                                {profile.name}
+                            </h2>
+                            <p className="text-gray-500">{profile.category}</p>
+                            <p className="text-gray-700 mt-2">
+                                <span className=" font-semibold">
+                                    {profile.name}{' '}
+                                </span>
+                                {profile.about}
+                            </p>
+                        </div>
+
+                        {/* Plan Cards */}
+                        <div className="grid grid-cols-4 gap-4 mt-6">
+                            {profile.plans.map((plan) => (
+                                <div
+                                    key={plan.id}
+                                    className="bg-gray-100 relative rounded-md group   text-center"
+                                >
+                                    <Image
+                                        src={plan.image}
+                                        alt={plan.title}
+                                        className="mx-auto rounded-md"
+                                    />
+
+                                    <h3 className=" group-hover:opacity-0 w-full max-h-12  min-h-12 absolute bottom-0 rounded-b-md bg-slate-300 bg-opacity-[80%]  font-medium mt-2">
+                                        {plan.title}
+                                    </h3>
+                                    <div className="absolute  flex-col inset-0 bg-[#DCE0D9] bg-opacity-[80%] text-black p-2 flex items-center justify-center gap-y-2  opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-300 rounded-lg">
+                                        <span className="text-xl leading-4 font-bold">
+                                            {' '}
+                                            {plan.title}{' '}
+                                        </span>
+                                        <span className=" text-xs font-semibold">
+                                            {' '}
+                                            {plan.description}
+                                        </span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Subscribe Button */}
+                        <button
+                            className="mt-6 w-full bg-lime-400 hover:bg-lime-500 text-white font-bold py-2 rounded-lg"
+                            onClick={() => setOpen(true)}
+                        >
+                            Subscribe to access
+                        </button>
+                    </div>
+                ))}
+            </div>
+        </>
     );
 };
 

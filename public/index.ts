@@ -68,6 +68,8 @@ import m2ementalFitness7 from './M2E images/m2ementalFitness7.jpg';
 import Chiliz from './icons/chiliz.png';
 import Galadriel from './icons/galadriel.png';
 import Morph from './icons/morphIcon.png';
+import Base from './icons/Base.png';
+import Sepolia from './icons/sepolia.jpg';
 import RibbleAvatar from './influencerProfilePics/rippleAvatar.png';
 import davidBanner from './membershipImages/davidBanner.png';
 import davidProfilePic from './membershipImages/davidProfilePic.png';
@@ -171,6 +173,8 @@ export {
     chestExercise,
     lazarPlan3,
     lazarPlan4,
+    Base,
+    Sepolia,
     anatolyBanner,
     anatolyProfilePic2,
     plan1,

@@ -10,7 +10,7 @@ import toast from 'react-hot-toast';
 import { ImSpinner2 } from 'react-icons/im';
 import { useChainId } from 'wagmi';
 import { galadriel_devnet } from '@/config/chains';
-import { morphHolesky } from 'wagmi/chains';
+import { base, morphHolesky, sepolia, spicy } from 'wagmi/chains';
 
 const NavBar = () => {
     return (
@@ -40,16 +40,25 @@ export const WalletConnectButton = () => {
                 toast.success('Something went wrong', toastStyles);
             });
     };
-    const currency = chainId === galadriel_devnet.id ? 'GAL' : 'CHZ';
-    const userAddress = chainId === morphHolesky.id ? smartAddress : address;
-    const userBalance =
-        chainId !== morphHolesky.id
-            ? parseFloat(balance || '0').toFixed(3) + ' ' + currency
+    const currency =
+        chainId === galadriel_devnet.id
+            ? 'GAL'
+            : chainId === spicy.id
+            ? 'CHZ'
+            : sepolia.id || base.id || morphHolesky.id
+            ? 'USDC'
             : '';
+    const userAddress =
+        chainId === morphHolesky.id ||
+        chainId === sepolia.id ||
+        chainId === base.id
+            ? smartAddress
+            : address;
+    const userBalance = parseFloat(balance || '0').toFixed(3) + ' ' + currency;
     return (
         <div className="flex justify-center gap-x-4  items-center ">
             <motion.button
-                className="w-[195px] inline-flex overflow-hidden rounded-lg bg-[linear-gradient(120deg,#063434_calc(var(--shimmer-button-x)-25%),#063434_var(--shimmer-button-x),#063434_calc(var(--shimmer-button-x)+25%))] [--shimmer-button-x:0%] "
+                className="w-[220px] inline-flex overflow-hidden rounded-lg bg-[linear-gradient(120deg,#063434_calc(var(--shimmer-button-x)-25%),#063434_var(--shimmer-button-x),#063434_calc(var(--shimmer-button-x)+25%))] [--shimmer-button-x:0%] "
                 initial={
                     {
                         scale: 1,
