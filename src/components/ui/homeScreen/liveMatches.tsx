@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import React from 'react';
 import {
     armWrestlinglive1,
     armWrestlinglive2,
@@ -22,7 +23,7 @@ type eventsProps = {
         id: number;
         image: StaticImageData;
     }[];
-}
+};
 
 const events: eventsProps = {
     armWrestling: [
@@ -82,15 +83,15 @@ const events: eventsProps = {
             image: mmalive4,
         },
     ],
-
-}
-
+};
 
 const LiveMatches = ({ selected }: { selected: string }) => {
     const selectedEvents = events[selected] || [];
     return (
-        <div className='mx-20'>
-            <h1 className=" text-2xl capitalize ml-28 font-bold">Live Matches</h1>
+        <div className="mx-20">
+            <h1 className=" text-2xl capitalize ml-28 font-bold">
+                Live Matches
+            </h1>
             <div>
                 <div className=" flex flex-wrap items-center justify-center">
                     {selectedEvents.map((event: any) => (
@@ -107,14 +108,12 @@ const LiveMatches = ({ selected }: { selected: string }) => {
                                     />
                                 </div>
                             </Link>
-
                         </div>
-
                     ))}
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default LiveMatches
+export default LiveMatches;

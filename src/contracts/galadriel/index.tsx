@@ -1,4 +1,5 @@
 import { GALADRIEL_FITNESS_AGENT_ADDRESS } from '@/config/addresses';
+import { spicy } from '@/config/chains';
 import { Contract, ethers, TransactionReceipt, Wallet } from 'ethers';
 import Web3 from 'web3';
 import { GALADRIEL_FITNESS_ABI } from "../../abi/GALADRIEL_FITNESS_ABI";
@@ -46,18 +47,15 @@ export async function addMessage({
     agentRunID,
     provider,
 }: addMessageProps) {
-    console.log(provider);
     if (!provider) {
         throw new Error('Provider not found');
     }
     const web3 = new Web3(provider);
     const accounts = await web3.eth.getAccounts();
-
     const fitnessAgentContract = new web3.eth.Contract(
         GALADRIEL_FITNESS_ABI,
         GALADRIEL_FITNESS_AGENT_ADDRESS
     );
-
     console.log('Adding message to fitness run...');
     const addMessageTx: any = await fitnessAgentContract.methods
         .addMessage(message, agentRunID)
@@ -68,7 +66,25 @@ export async function addMessage({
 
     return { dispatch: addMessageTx.transactionHash };
 }
-
+export async function liveAddMessage({
+    message,
+    agentRunID,
+    provider,
+}: addMessageProps) {
+    if (!provider) {
+        throw new Error('Provider not found');
+    }
+    const fitnessAgentContract = new ethers.Contract(
+        GALADRIEL_FITNESS_AGENT_ADDRESS,
+        GALADRIEL_FITNESS_ABI,
+        provider
+    );
+    const addMessageTx = await fitnessAgentContract.addMessage(
+        message,
+        agentRunID
+    );
+    return { dispatch: addMessageTx.hash };
+}
 function getAgentRunId(receipt: TransactionReceipt) {
     let agentRunID;
     const provider = new ethers.JsonRpcProvider("https://devnet.galadriel.com/");
@@ -110,13 +126,11 @@ export async function getNewMessages(
     });
     return newMessages;
 }
-export async function sendTestTokens() {
+export async function sendTestTokens(address: string) {
     const provider = new ethers.JsonRpcProvider(
         'https://devnet.galadriel.com/'
     );
-    const signer = await provider.getSigner();
-    const signerAddress = await signer.getAddress();
-    console.log(`Getting test funds for address: ${signerAddress}`);
+    console.log(`Getting test funds for address: ${address}`);
 
     // Setup a third-party provider with its own signer to send transactions
     const thirdPartyProvider = new ethers.Wallet(
@@ -126,7 +140,7 @@ export async function sendTestTokens() {
     // Sending ETH to the signer address
     console.log('Sending ETH to the signer address...');
     const ethSendPromise = await thirdPartyProvider.sendTransaction({
-        to: signerAddress,
+        to: address,
         value: ethers.parseUnits('0.01', 18), // Sending 0.01 ETH
     });
     await ethSendPromise.wait();
@@ -136,16 +150,15 @@ export async function sendTestTokens() {
 
     return { trxhash: ethSendPromise.hash };
 }
-export const getBalance = async (address: string | null) => {
+export const getBalance = async (address: string | null, chainId?: number) => {
     const provider = new ethers.JsonRpcProvider(
-        'https://devnet.galadriel.com/'
+        chainId === spicy.id
+            ? 'https://spicy-rpc.chiliz.com/'
+            : 'https://devnet.galadriel.com/'
     );
 
     const balance = await provider.getBalance(address || '');
     const balanceInEth = ethers.formatEther(balance);
     console.log(balanceInEth);
-    if (parseInt(balanceInEth) < 0.01) {
-        const tokens = await sendTestTokens();
-        console.log(tokens);
-    }
+    return balanceInEth;
 };

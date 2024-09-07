@@ -1,5 +1,4 @@
 import { BiconomySmartAccountV2 } from "@biconomy/account";
-import { IProvider } from "@web3auth/base";
 import { StaticImageData } from "next/image";
 import { create } from "zustand";
 export interface userAgentProps {
@@ -8,29 +7,57 @@ export interface userAgentProps {
   profilePic: StaticImageData;
 }
 interface GlobalStore {
-  userAgent: userAgentProps | null;
-  provider: IProvider | null;
-  setProvider: (provider: IProvider) => void;
-  setUserAgnet: (agent: userAgentProps | null) => void;
-  agentFirstMessage: string | null;
-  smartAccount: BiconomySmartAccountV2 | null;
-  setSmartAccount: (smartAccount: BiconomySmartAccountV2) => void;
-  smartAddress: string | null;
-  setSmartAddress: (smartAccount: string | null) => void;
-  setAgentFirstMessage: (message: string | null) => void;
+    streak: boolean[];
+    setStreak: (streak: boolean[]) => void;
+    smartAddress: string | null;
+    setSmartAddress: (smartAccount: string | null) => void;
+    userId: string;
+    setUserId: (userId: string) => void;
+    smartAccount: BiconomySmartAccountV2 | null;
+    setSmartAccount: (smartAccount: BiconomySmartAccountV2) => void;
+    userName: string | undefined;
+    userEmail: string | undefined;
+    setUserEmail: (email: string | undefined) => void;
+    setUserName: (name: string | undefined) => void;
+    balance: string | null;
+    setBalance: (balance: string | null) => void;
+    fitnessRunTrx: string | null;
+    setFitnessRunTrx: (trx: string | null) => void;
+    address: string | null;
+    setAddress: (address: string | null) => void;
+    provider: any;
+    setProvider: (provider: any) => void;
+    userAgent: userAgentProps | null;
+    setUserAgnet: (agent: userAgentProps | null) => void;
+    agentFirstMessage: string | null;
+    setAgentFirstMessage: (message: string | null) => void;
 }
 
 const useGlobalStore = create<GlobalStore>()((set) => ({
-  provider: null,
-  setProvider: (provider) => set({ provider }),
-  userAgent: null,
-  setUserAgnet: (agent) => set({ userAgent: agent }),
-  agentFirstMessage: null,
-  smartAccount: null,
-  setSmartAccount: (smartAccount) => set({ smartAccount: smartAccount }),
-  smartAddress: null,
-  setSmartAddress: (smartAddress) => set({ smartAddress: smartAddress }),
-  setAgentFirstMessage: (message) => set({ agentFirstMessage: message }),
+    streak: [false, false, false, false, false, false, false],
+    setStreak: (streak) => set({ streak: streak }),
+    smartAddress: null,
+    setSmartAddress: (smartAddress) => set({ smartAddress: smartAddress }),
+    userId: '',
+    setUserId: (userId) => set({ userId: userId }),
+    smartAccount: null,
+    setSmartAccount: (smartAccount) => set({ smartAccount: smartAccount }),
+    userName: '',
+    userEmail: '',
+    setUserEmail: (email) => set({ userEmail: email }),
+    setUserName: (name) => set({ userName: name }),
+    balance: null,
+    setBalance: (balance) => set({ balance }),
+    fitnessRunTrx: null,
+    setFitnessRunTrx: (trx) => set({ fitnessRunTrx: trx }),
+    address: '',
+    setAddress: (address) => set({ address }),
+    provider: null,
+    setProvider: (provider) => set({ provider }),
+    userAgent: null,
+    setUserAgnet: (agent) => set({ userAgent: agent }),
+    agentFirstMessage: null,
+    setAgentFirstMessage: (message) => set({ agentFirstMessage: message }),
 }));
 
 export default useGlobalStore;

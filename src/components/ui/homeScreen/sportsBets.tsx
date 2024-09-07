@@ -1,7 +1,4 @@
 'use client';
-import ChatButton from '@/components/ui/chatBot/chatbutton';
-import InfluencerModal from '@/components/ui/fitnessInfluncerModal';
-import useGlobalStore from '@/store';
 import Image from 'next/image';
 import { useState } from 'react';
 import { useAccount } from 'wagmi';
@@ -42,9 +39,6 @@ const SportsBets = ({
     selected: string;
     setSelected: any;
 }) => {
-    const { address } = useAccount();
-    const [chatId, setChatId] = useState(0);
-    const { userAgent } = useGlobalStore();
     return (
         <div className="mx-20">
             <h1 className=" text-2xl capitalize ml-28 font-bold">
@@ -76,9 +70,7 @@ const SportsBets = ({
                         </div>
                     ))}
                 </div>
-                {userAgent && <ChatButton chatId={chatId} />}
             </div>
-            {address && <InfluencerModal setChatId={setChatId} />}
         </div>
     );
 };

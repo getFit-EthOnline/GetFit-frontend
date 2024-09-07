@@ -1,54 +1,53 @@
 'use client';
+import useWeb3AuthWrapper from '@/web3auth/useWeb3AuthWrapper';
 import Image from 'next/image';
-import { useAccount, useConnect, useSwitchChain } from 'wagmi';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { logoWhite } from '../../../public/index';
+import ComboboxComponent from './Combobox';
 import { WalletConnectButton } from './navBar';
 
 const navContents = [
     {
         id: 1,
         title: 'Market Prediction',
+        link: '/prediction',
     },
+
     {
         id: 2,
-        title: 'Fantasy Fitness Leagues',
+        title: 'Move To Earn',
+        link: '/move-to-earn',
     },
     {
         id: 3,
-        title: 'Move To Earn',
+        title: 'Tickets',
+        link: '/tickets',
     },
     {
         id: 4,
-        title: 'Tickets',
+        title: 'Membership',
+        link: '/membership',
     },
     {
         id: 5,
-        title: 'Membership',
-    },
-    {
-        id: 6,
-        title: 'Token Battles',
-    },
-    {
-        id: 7,
-        title: 'Marketplaces',
+        title: 'Fan Battles',
+        link: '/fanBattles',
     },
 ];
 
 const HomeNav = () => {
-    const { chain } = useAccount()
-    const { address, connector, isConnected, } = useAccount();
-    const { chains, switchChain, error } = useSwitchChain()
-    const { connect, connectors } = useConnect();
+    useWeb3AuthWrapper();
+    const url = usePathname();
 
     return (
         <>
             <div className=" flex shadow-lg  justify-between bg-[#1E1E1E] items-center py-2 px-10 ">
-                <div className=" flex  items-center w-1/2">
+                <Link href="/" className=" flex  items-center w-1/2">
                     <Image src={logoWhite} alt="GetFit" className="w-32 " />
-                </div>
+                </Link>
 
-                <div className=" items-center flex justify-end gap-x-5  w-1/2">
+                <div className=" items-center flex justify-end gap-x-5  w-full">
                     <div className=" relative ">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -69,46 +68,36 @@ const HomeNav = () => {
                             className=" rounded-md bg-[#313131] py-1 text-center "
                             placeholder=" Search here"
                         />
-                        <span className='text-pink-500'>{chain?.name}</span>
-                        {
-                            chains.map((chain) => (
-                                <button
-                                    key={chain.id}
-                                    onClick={() => switchChain({ chainId: chain.id })}
-                                    className='text-white mx-3'
-                                >
-                                    {chain.name}
-                                </button>
-                            ))
-                        }
-                    </div>
+                    </div>{' '}
+                    <ComboboxComponent />
                     <WalletConnectButton />
                 </div>
-                <div></div>
             </div>
             <div className=" py-3 text-white  flex bg-[#313131] w-full  items-center  justify-center gap-x-16">
                 {navContents.map((item) => {
                     return (
-                        <div
-                            key={item.id}
-                            className=" flex items-center gap-x-1 justify-center "
-                        >
-                            <p className="capitalize">{item.title}</p>
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth={1.5}
-                                stroke="currentColor"
-                                className="size-4"
+                        <Link href={item.link} key={item.id}>
+                            <div
+                                className={` ${url === item.link ? 'text-[#80E142]' : ''
+                                    }  flex items-center gap-x-1 justify-center `}
                             >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                                />
-                            </svg>
-                        </div>
+                                <p className="capitalize">{item.title}</p>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={1.5}
+                                    stroke="currentColor"
+                                    className="size-4"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                                    />
+                                </svg>
+                            </div>
+                        </Link>
                     );
                 })}
             </div>
