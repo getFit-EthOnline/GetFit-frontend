@@ -299,7 +299,7 @@ export const MessageItem: React.FC<MessageItemProps> = ({ msg, index, client, in
                 className={`p-2 mb-2 rounded-md ${msg.senderAddress === PEER_ADDRESS
                     ? 'bg-blue-400 italic'
                     : msg.senderAddress === client.address
-                        ? 'bg-red-400 font-bold'
+                        ? 'bg-gray-100 font-bold'
                         : msg.user === 'You'
                             ? 'bg-gray-100 text-right'
                             : 'bg-gray-100'
