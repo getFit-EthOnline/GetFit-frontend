@@ -301,7 +301,7 @@ export const MessageItem: React.FC<MessageItemProps> = ({ msg, index, client, in
                     : msg.senderAddress === client.address
                         ? 'bg-red-400 font-bold'
                         : msg.user === 'You'
-                            ? 'bg-green-600 text-right'
+                            ? 'bg-gray-100 text-right'
                             : 'bg-gray-100'
                     }`}
             >
