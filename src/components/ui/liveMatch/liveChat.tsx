@@ -1,6 +1,7 @@
 // @ts-nocheck
 "use client";
 import { getAddressesForChain } from "@/config/addresses";
+import { spicy } from "@/config/chains";
 import { useEthersSigner } from "@/hooks/useEthersSigner";
 import useGlobalStore from "@/store";
 import { Client } from "@xmtp/xmtp-js";
@@ -21,7 +22,7 @@ function LiveChat() {
     const [isOnNetwork, setIsOnNetwork] = useState(false);
     const { smartAddress } = useGlobalStore()
     const { address, isConnected, chainId } = useAccount();
-    const { USDC_TOKEN_ADDRESS } = getAddressesForChain(morphHolesky.id)
+    const { USDC_TOKEN_ADDRESS } = getAddressesForChain(chainId === spicy.id ? spicy.id : morphHolesky.id)
     const { data, error } = useReadContract({
         abi: erc20Abi,
         address: USDC_TOKEN_ADDRESS,
