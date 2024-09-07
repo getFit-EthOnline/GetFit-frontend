@@ -19,11 +19,9 @@ export interface Message {
     component?: React.ReactNode;
 }
 const ChatButton = ({
-    chatId,
     open,
     setOpen,
 }: {
-    chatId: number;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
@@ -135,7 +133,6 @@ const ChatButton = ({
             {open && (
                 <div className=" no-scrollbar overflow-x-hidden overflow-y-scroll transition-all ease-in-out duration-200  min-h-[calc(100vh-300px)]  max-h-[calc(100vh-300px)] bg-slate-100  mx-1 p-2">
                     <ChatMessages
-                        chatId={chatId}
                         messages={messages}
                         setMessages={setMessages}
                     />

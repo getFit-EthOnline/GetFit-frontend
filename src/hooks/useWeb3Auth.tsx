@@ -1,7 +1,6 @@
 'use client';
 import { REDIRECT_URL } from '@/config';
 import { galadriel_devnet } from '@/config/chains';
-import { sendTestTokensChiliz } from '@/contracts/chiliz';
 import { getBalance, sendTestTokens } from '@/contracts/galadriel';
 import useGlobalStore from '@/store';
 import { CHAIN_NAMESPACES, WEB3AUTH_NETWORK } from '@web3auth/base';
@@ -11,7 +10,6 @@ import { OpenloginAdapter } from '@web3auth/openlogin-adapter';
 import { ethers } from 'ethers';
 import { useEffect, useState } from 'react';
 import { useChainId } from 'wagmi';
-import { spicy } from 'wagmi/chains';
 const clientId =
     'BOZXvB8YZOmaHlxETldZRrA91mqa3UiLz46eonVOL627eJX0QQ2Ncct_7cNWUDI20n-EAY2f4_vs_szOXocmmBI';
 

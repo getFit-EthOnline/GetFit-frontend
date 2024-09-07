@@ -33,10 +33,8 @@ const InfluencerDetails = [
 ];
 
 const InfluencerModal = ({
-    setChatId,
     setChatOpen,
 }: {
-    setChatId: React.Dispatch<React.SetStateAction<number>>;
     setChatOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
     const [isOpen, setIsOpen] = useState(true);
@@ -49,6 +47,7 @@ const InfluencerModal = ({
         address,
         setFitnessRunTrx,
         setBalance,
+        setChatId,
     } = useGlobalStore();
     const [loading, setLoading] = useState(false);
     useEffect(() => {
@@ -60,7 +59,10 @@ const InfluencerModal = ({
     const fetchMessages = async (resp: number) => {
         setTimeout(async () => {
             const messages = await getNewMessages(resp, 0);
-            setAgentFirstMessage(messages[1].content);
+            if (messages?.length > 1) {
+                setAgentFirstMessage(messages[1].content);
+            }
+
             localStorage.setItem('hasModalBeenShown', 'true');
             localStorage.setItem(
                 'creatorName',

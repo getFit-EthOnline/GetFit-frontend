@@ -6,6 +6,8 @@ import { usePathname } from 'next/navigation';
 import { logoWhite } from '../../../public/index';
 import ComboboxComponent from './Combobox';
 import { WalletConnectButton } from './navBar';
+import useWeb3Auth from '@/hooks/useWeb3Auth';
+import useGlobalStore from '@/store';
 
 const navContents = [
     {
@@ -38,6 +40,7 @@ const navContents = [
 
 const HomeNav = () => {
     useWeb3AuthWrapper();
+    const { address } = useGlobalStore();
     const url = usePathname();
 
     return (
@@ -69,7 +72,7 @@ const HomeNav = () => {
                             placeholder=" Search here"
                         />
                     </div>{' '}
-                    <ComboboxComponent />
+                    {address && <ComboboxComponent />}
                     <WalletConnectButton />
                 </div>
             </div>

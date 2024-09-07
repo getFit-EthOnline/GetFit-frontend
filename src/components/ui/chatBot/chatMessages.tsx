@@ -2,21 +2,18 @@
 
 import { addMessage, getBalance, getNewMessages } from '@/contracts/galadriel';
 import useGlobalStore from '@/store';
-import React, { useEffect, useRef, useState } from 'react';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import '@/styles/chat.css';
-import axios from 'axios';
-import { Message } from './chatbutton';
+import React, { useEffect, useRef, useState } from 'react';
 import { RiExternalLinkLine } from 'react-icons/ri';
-import WorkoutModal from './WorkoutModal';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { Message } from './chatbutton';
 import DietModal from './DietModal';
+import WorkoutModal from './WorkoutModal';
 
 const ChatMessages = ({
-    chatId,
     messages,
     setMessages,
 }: {
-    chatId: number;
     messages: Message[];
     setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
 }) => {
@@ -28,23 +25,14 @@ const ChatMessages = ({
     const chatContainerRef = useRef<HTMLDivElement>(null); // Ref for chat container
     const inputRef = useRef<HTMLInputElement>(null); // Ref for input
 
-    const [userProfile, setUserProfile] = useState<{
-        age: string;
-        gender: string;
-        height: string;
-        weight: string;
-        goal: string;
-        dietRequired: string;
-    }>({
-        age: '',
-        gender: '',
-        height: '',
-        weight: '',
-        goal: '',
-        dietRequired: '',
-    });
-
-    const { provider, setBalance, address } = useGlobalStore();
+    const {
+        chatId,
+        provider,
+        setBalance,
+        address,
+        userProfile,
+        setUserProfile,
+    } = useGlobalStore();
     const [isOpenWorkout, setIsOpenWorkout] = useState(false);
     const [isDietWorkout, setIsDietWorkout] = useState(false);
     useEffect(() => {
@@ -352,7 +340,6 @@ const ChatMessages = ({
     const handleOptionClick = (option: string) => {
         handleUserResponse(option);
     };
-
     return (
         <>
             {isOpenWorkout && (

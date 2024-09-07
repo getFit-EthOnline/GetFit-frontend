@@ -91,7 +91,7 @@ const events: eventsProps = {
 const LiveMatches = ({ selected }: { selected: string }) => {
     const selectedEvents = events[selected] || [];
     return (
-        <div className="mx-20">
+        <div className="px-20">
             <h1 className=" text-2xl capitalize ml-28 font-bold">
                 Live Matches
             </h1>

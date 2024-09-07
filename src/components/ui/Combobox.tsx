@@ -18,15 +18,16 @@ import { getBalance } from '@/contracts/galadriel';
 import toast from 'react-hot-toast';
 import { toastStyles } from '@/utils/utils';
 import { sendTestTokensChiliz } from '@/contracts/chiliz';
+import { galadriel_devnet } from '@/config/chains';
 export default function ComboboxComponent() {
     const { chains, switchChain } = useSwitchChain();
     const [selected, setSelected] = useState<any>(chains[0]);
     const { address, setBalance } = useGlobalStore();
     const handleSwitchChain = async (chainId: any) => {
         switchChain({ chainId: chainId });
+        const balance = await getBalance(address, chainId);
+        setBalance(balance);
         if (chainId === spicy.id) {
-            const balance = await getBalance(address, chainId);
-            setBalance(balance);
             if (parseFloat(balance) < 1) {
                 toast.loading('Sending test tokens 💸', toastStyles);
                 const tokens = await sendTestTokensChiliz(address);
@@ -40,7 +41,7 @@ export default function ComboboxComponent() {
         }
     };
     return (
-        <div className="w-72">
+        <div className="w-[260px]">
             <Combobox value={selected} onChange={(value) => setSelected(value)}>
                 <div className="relative">
                     <ComboboxInput

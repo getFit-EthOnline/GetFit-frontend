@@ -47,6 +47,7 @@ export async function addMessage({
     agentRunID,
     provider,
 }: addMessageProps) {
+    console.log(message, agentRunID, provider);
     if (!provider) {
         throw new Error('Provider not found');
     }

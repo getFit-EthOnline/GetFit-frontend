@@ -6,11 +6,23 @@ export interface userAgentProps {
     name: string;
     profilePic: StaticImageData;
 }
+type userProfileType = {
+    age: string;
+    gender: string;
+    height: string;
+    weight: string;
+    goal: string;
+    dietRequired: string;
+};
 interface GlobalStore {
     streak: boolean[];
     setStreak: (streak: boolean[]) => void;
     smartAddress: string | null;
     setSmartAddress: (smartAccount: string | null) => void;
+    userProfile: userProfileType;
+    setUserProfile: (profile: userProfileType) => void;
+    chatId: number;
+    setChatId: (chatId: number) => void;
     userId: string;
     setUserId: (userId: string) => void;
     smartAccount: BiconomySmartAccountV2 | null;
@@ -38,6 +50,17 @@ const useGlobalStore = create<GlobalStore>()((set) => ({
     setStreak: (streak) => set({ streak: streak }),
     smartAddress: null,
     setSmartAddress: (smartAddress) => set({ smartAddress: smartAddress }),
+    userProfile: {
+        age: '',
+        gender: '',
+        height: '',
+        weight: '',
+        goal: '',
+        dietRequired: '',
+    },
+    setUserProfile: (profile) => set({ userProfile: profile }),
+    chatId: 0,
+    setChatId: (chatId) => set({ chatId: chatId }),
     userId: '',
     setUserId: (userId) => set({ userId: userId }),
     smartAccount: null,

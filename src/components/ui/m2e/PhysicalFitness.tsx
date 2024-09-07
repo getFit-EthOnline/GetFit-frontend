@@ -31,6 +31,7 @@ import toast from 'react-hot-toast';
 import { toastStyles } from '@/utils/utils';
 import { RiExternalLinkLine } from 'react-icons/ri';
 import { getBalance } from '@/contracts/galadriel';
+import Link from 'next/link';
 const workouts = [
     {
         id: 1,
@@ -234,6 +235,7 @@ const PhysicalFitness = () => {
             <h2 className="text-2xl font-bold mb-4">
                 Training that will make you sweat.
             </h2>
+            <Link href="/profile">here</Link>
             <div className=" flex justify-between items-center ">
                 <p className="text-gray-600 mb-4">
                     GetFit members have over 4,000 workouts at their fingertips.
