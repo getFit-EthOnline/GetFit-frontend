@@ -19,11 +19,12 @@ import { FaAngleDown } from 'react-icons/fa6';
 import { useSwitchChain } from 'wagmi';
 import { base, morphHolesky, sepolia, spicy } from 'wagmi/chains';
 import { Base, Chiliz, Galadriel, Morph, Sepolia } from '../../../public';
+import { galadriel_devnet } from '@/config/chains';
 export default function ComboboxComponent() {
     const { chains, switchChain } = useSwitchChain();
     const [selected, setSelected] = useState<any>(chains[0]);
     const { address, setBalance, smartAddress, balance } = useGlobalStore();
-    const handleSwitchChain = async (chainId: any) => {
+    const handleSendBalance = async (chainId: any) => {
         const balance = await getBalance(address, chainId);
         setBalance(balance);
         if (chainId === spicy.id) {
@@ -40,16 +41,17 @@ export default function ComboboxComponent() {
         }
     };
     const smartBalanceFetch = async () => {
-        const balance: any = await getUsdcBalance(smartAddress);
-        const finalBalance = balance / 10 ** 6;
-        console.log(balance);
+        const balance: bigint = await getUsdcBalance(smartAddress);
+        const finalBalance = balance / BigInt(10 ** 6);
         setBalance(finalBalance.toString());
     };
+
     useEffect(() => {
         if (smartAddress) {
             smartBalanceFetch();
         }
-    }, []);
+    }, [smartAddress]);
+
     return (
         <div className="w-[260px]">
             <Combobox value={selected} onChange={(value) => setSelected(value)}>
@@ -100,13 +102,15 @@ export default function ComboboxComponent() {
                                 onClick={() => {
                                     switchChain({ chainId: chain.id });
                                     if (
+                                        chain.id === galadriel_devnet.id ||
+                                        chain.id === spicy.id
+                                    ) {
+                                        handleSendBalance(chain.id);
+                                    } else if (
                                         chain.id === sepolia.id ||
-                                        chain.id === base.id ||
-                                        chain.id === morphHolesky.id
+                                        chain.id === base.id
                                     ) {
                                         smartBalanceFetch();
-                                    } else {
-                                        handleSwitchChain(chain.id);
                                     }
                                 }}
                                 className="group flex cursor-default items-center gap-2 rounded-lg py-2 px-3 select-none data-[focus]:bg-white/10"

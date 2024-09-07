@@ -55,6 +55,7 @@ export const WalletConnectButton = () => {
             ? smartAddress
             : address;
     const userBalance = parseFloat(balance || '0').toFixed(3) + ' ' + currency;
+
     return (
         <div className="flex justify-center gap-x-4  items-center ">
             <motion.button
@@ -105,10 +106,11 @@ export const WalletConnectButton = () => {
             </motion.button>
             {userAddress && (
                 <svg
-                    onClick={() => {
+                    onClick={async () => {
+                        await logout();
                         localStorage.removeItem('hasModalBeenShown');
                         localStorage.removeItem('creatorName');
-                        logout();
+                        window.location.reload();
                     }}
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -128,7 +130,7 @@ export const WalletConnectButton = () => {
     );
 };
 
-const getButtonCTA = ({
+export const getButtonCTA = ({
     isLoading,
     text,
 }: {

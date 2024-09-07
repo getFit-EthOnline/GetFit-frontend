@@ -117,7 +117,7 @@ export async function getUsdcBalance(userAddress: string | null) {
         const balance = await usdcTokenContract.balanceOf(userAddress);
         console.log(`Usdc Balance: ${balance.toString()}`);
 
-        return parseInt(balance);
+        return balance;
     } catch (error) {
         console.error('Error in getBalance', error);
     }
