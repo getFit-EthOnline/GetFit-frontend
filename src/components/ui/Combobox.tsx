@@ -24,9 +24,9 @@ export default function ComboboxComponent() {
     const { address, setBalance } = useGlobalStore();
     const handleSwitchChain = async (chainId: any) => {
         switchChain({ chainId: chainId });
+        const balance = await getBalance(address, chainId);
+        setBalance(balance);
         if (chainId === spicy.id) {
-            const balance = await getBalance(address, chainId);
-            setBalance(balance);
             if (parseFloat(balance) < 1) {
                 toast.loading('Sending test tokens 💸', toastStyles);
                 const tokens = await sendTestTokensChiliz(address);
@@ -40,7 +40,7 @@ export default function ComboboxComponent() {
         }
     };
     return (
-        <div className="w-72">
+        <div className="w-[260px]">
             <Combobox value={selected} onChange={(value) => setSelected(value)}>
                 <div className="relative">
                     <ComboboxInput

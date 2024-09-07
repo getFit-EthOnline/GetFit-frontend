@@ -10,6 +10,7 @@ import toast from 'react-hot-toast';
 import { ImSpinner2 } from 'react-icons/im';
 import { useChainId } from 'wagmi';
 import { galadriel_devnet } from '@/config/chains';
+import { morphHolesky } from 'wagmi/chains';
 
 const NavBar = () => {
     return (
@@ -27,7 +28,7 @@ const NavBar = () => {
 export default NavBar;
 export const WalletConnectButton = () => {
     const { login, logout } = useWeb3Auth();
-    const { address, balance } = useGlobalStore();
+    const { address, balance, smartAddress } = useGlobalStore();
     const chainId = useChainId();
     const handleCopy = (address: string) => {
         navigator.clipboard
@@ -40,17 +41,24 @@ export const WalletConnectButton = () => {
             });
     };
     const currency = chainId === galadriel_devnet.id ? 'GAL' : 'CHZ';
+    const userAddress = chainId === morphHolesky.id ? smartAddress : address;
+    const userBalance =
+        chainId !== morphHolesky.id
+            ? parseFloat(balance || '0').toFixed(3) + ' ' + currency
+            : '';
     return (
         <div className="flex justify-center gap-x-4  items-center ">
             <motion.button
-                className="inline-flex overflow-hidden rounded-lg bg-[linear-gradient(120deg,#063434_calc(var(--shimmer-button-x)-25%),#063434_var(--shimmer-button-x),#063434_calc(var(--shimmer-button-x)+25%))] [--shimmer-button-x:0%] "
+                className="w-[192px] inline-flex overflow-hidden rounded-lg bg-[linear-gradient(120deg,#063434_calc(var(--shimmer-button-x)-25%),#063434_var(--shimmer-button-x),#063434_calc(var(--shimmer-button-x)+25%))] [--shimmer-button-x:0%] "
                 initial={
                     {
                         scale: 1,
                         '--shimmer-button-x': '-100%',
                     } as any
                 }
-                onClick={() => (address ? handleCopy(address || '') : login())}
+                onClick={() =>
+                    userAddress ? handleCopy(userAddress || '') : login()
+                }
                 animate={
                     {
                         '--shimmer-button-x': '200%',
@@ -73,23 +81,20 @@ export const WalletConnectButton = () => {
                     scale: 1.05,
                 }}
             >
-                <span className=" bg-[#B8FE22] px-2 py-1">
+                <span className=" bg-[#B8FE22] px-2 py-1 w-full">
                     {getButtonCTA({
                         isLoading: false,
-                        text: address
-                            ? // ? address.slice(0, 4) + '...' + address.slice(4, 7)
-                              address.slice(0, 4) +
+                        text: userAddress
+                            ? userAddress.slice(0, 4) +
                               '...' +
-                              address.slice(-4) +
+                              userAddress.slice(-4) +
                               ' ' +
-                              parseFloat(balance || '0').toFixed(3) +
-                              ' ' +
-                              currency
+                              userBalance
                             : 'Connect wallet',
                     })}
                 </span>
             </motion.button>
-            {address && (
+            {userAddress && (
                 <svg
                     onClick={() => {
                         localStorage.removeItem('hasModalBeenShown');

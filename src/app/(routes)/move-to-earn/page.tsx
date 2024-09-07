@@ -13,7 +13,7 @@ const Page = () => {
     const { address } = useGlobalStore();
     const [open, setOpen] = useState(false);
     return (
-        <div className="mx-20">
+        <div className="px-20">
             <PhysicalFitness />
             <MentalFitness />
             {address && (

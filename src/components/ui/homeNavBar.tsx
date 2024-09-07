@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { logoWhite } from '../../../public/index';
 import ComboboxComponent from './Combobox';
 import { WalletConnectButton } from './navBar';
+import useGlobalStore from '@/store';
 
 const navContents = [
     {
@@ -39,7 +40,7 @@ const navContents = [
 const HomeNav = () => {
     useWeb3AuthWrapper();
     const url = usePathname();
-
+    const { address } = useGlobalStore();
     return (
         <>
             <div className=" flex shadow-lg  justify-between bg-[#1E1E1E] items-center py-2 px-10 ">
@@ -69,7 +70,7 @@ const HomeNav = () => {
                             placeholder=" Search here"
                         />
                     </div>{' '}
-                    <ComboboxComponent />
+                    {address && <ComboboxComponent />}
                     <WalletConnectButton />
                 </div>
             </div>
