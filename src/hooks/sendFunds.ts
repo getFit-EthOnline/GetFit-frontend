@@ -31,7 +31,6 @@ export const sendTestFunds = async ({
   smartAddress?: Address;
   address?: Address;
 }) => {
-  debugger;
   const client = createWalletClient({
     account: account,
     chain: chain,

@@ -18,9 +18,7 @@ export const Frame = ({
   textInput,
   onTextInputChange,
   frameUrl,
-  txHash,
 }) => {
-  const { chainId } = useAccount();
   const styles = {
     buttonContainer: {
       display: "flex",
@@ -72,44 +70,7 @@ export const Frame = ({
         onClose={onClose}
         message={alertMessage}
       />
-      {chainId === spicy.id && (
-        <div className="mx-auto flex items-center py-2 justify-center">
-          <a
-            href={frameUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={styles.imageFrameA}
-          >
-            <Image
-              src={"/floyd.png"}
-              alt={title}
-              width={260}
-              height={170}
-              className="mx-auto"
-              style={styles.imageFrame}
-            />
-          </a>
-        </div>
-      )}
-      {chainId === morphHolesky.id && (
-        <div className="mx-auto flex items-center py-2 justify-center">
-          <a
-            href={frameUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={styles.imageFrameA}
-          >
-            <Image
-              src={"/floyd.png"}
-              width={290}
-              height={170}
-              className="mx-auto"
-              alt={title}
-              style={styles.imageFrame}
-            />
-          </a>
-        </div>
-      )}
+      <ImageFrame frameUrl={frameUrl} title={title} />
       {textInput !== undefined && (
         <input
           type="text"
@@ -131,5 +92,46 @@ export const Frame = ({
         </span>
       )}
     </>
+  );
+};
+
+const ImageFrame = ({ frameUrl, title }) => {
+  const { chainId } = useAccount();
+  const urlParams = new URLSearchParams(new URL(frameUrl).search);
+  const name = urlParams.get("player");
+
+  const imageSrc = name.toLowerCase() === "conor" ? "/conor.png" : "/floyd.png";
+
+  console.log(chainId, "chainId");
+  console.log(imageSrc, "imageSrc", name);
+  return (
+    <div>
+      {chainId === spicy.id && (
+        <div className="mx-auto flex items-center py-2 justify-center">
+          <a href={frameUrl} target="_blank" rel="noopener noreferrer">
+            <Image
+              src={imageSrc}
+              alt={title}
+              width={260}
+              height={170}
+              className="mx-auto"
+            />
+          </a>
+        </div>
+      )}
+      {chainId === morphHolesky.id && (
+        <div className="mx-auto flex items-center py-2 justify-center">
+          <a href={frameUrl} target="_blank" rel="noopener noreferrer">
+            <Image
+              src={imageSrc}
+              width={290}
+              height={170}
+              className="mx-auto"
+              alt={title}
+            />
+          </a>
+        </div>
+      )}
+    </div>
   );
 };

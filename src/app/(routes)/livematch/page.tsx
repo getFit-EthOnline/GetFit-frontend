@@ -22,7 +22,6 @@ const Page = () => {
     const fetchMessages = async (resp: number) => {
         setTimeout(async () => {
             const messages = await getNewMessages(resp, 0);
-            console.log(messages);
             const msgs = messages[57].content;
             setStats(msgs);
             setPredictionEnabled(true);

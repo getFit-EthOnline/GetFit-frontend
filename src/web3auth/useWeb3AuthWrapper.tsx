@@ -25,7 +25,6 @@ function useWeb3AuthWrapper() {
     enabled: isClient && !!signer || chainId !== galadriel_devnet.id,
     queryFn: async () => {
       if (!chain) return
-      debugger
       if (signer && chainId) {
         if (chainId === galadriel_devnet.id || chainId === spicy.id ||
           !process.env.NEXT_PUBLIC_SMART_ACCOUNT_ENABLED ||

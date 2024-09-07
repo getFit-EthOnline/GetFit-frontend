@@ -7,41 +7,39 @@ import {
 } from '@headlessui/react';
 
 import clsx from 'clsx';
+import Image from 'next/image';
 import { useState } from 'react';
 import { FaAngleDown } from 'react-icons/fa6';
-import { useSwitchChain } from 'wagmi';
-import { Chiliz, Galadriel, Morph } from '../../../public';
-import Image from 'next/image';
+import { useAccount, useSwitchChain } from 'wagmi';
 import { morphHolesky, spicy } from 'wagmi/chains';
-import useGlobalStore from '@/store';
-import { getBalance } from '@/contracts/galadriel';
-import toast from 'react-hot-toast';
-import { toastStyles } from '@/utils/utils';
-import { sendTestTokensChiliz } from '@/contracts/chiliz';
+import { Chiliz, Galadriel, Morph } from '../../../public';
 export default function ComboboxComponent() {
-    const { chains, switchChain } = useSwitchChain();
+    const { chain } = useAccount();
+    const { chains, switchChainAsync } = useSwitchChain();
     const [selected, setSelected] = useState<any>(chains[0]);
-    const { address, setBalance } = useGlobalStore();
     const handleSwitchChain = async (chainId: any) => {
-        switchChain({ chainId: chainId });
-        if (chainId === spicy.id) {
-            const balance = await getBalance(address, chainId);
-            setBalance(balance);
-            if (parseFloat(balance) < 1) {
-                // toast.loading('Sending test tokens 💸', toastStyles);
-                // const tokens = await sendTestTokensChiliz(address);
-                // if (tokens.trxhash) {
-                //     const balance = await getBalance(address, chainId);
-                //     setBalance(balance);
-                //     toast.dismiss();
-                //     toast.success('Tokens sent successfully 🚀', toastStyles);
-                // }
-            }
-        }
+        await switchChainAsync({ chainId: chainId });
+        // if (chainId === spicy.id) {
+        //     const balance = await getBalance(address, chainId);
+        //     setBalance(balance);
+        //     if (parseFloat(balance) < 1) {
+        //         // toast.loading('Sending test tokens 💸', toastStyles);
+        //         // const tokens = await sendTestTokensChiliz(address);
+        //         // if (tokens.trxhash) {
+        //         //     const balance = await getBalance(address, chainId);
+        //         //     setBalance(balance);
+        //         //     toast.dismiss();
+        //         //     toast.success('Tokens sent successfully 🚀', toastStyles);
+        //         // }
+        //     }
+        // }
     };
     return (
         <div className="w-72">
-            <Combobox value={selected} onChange={(value) => setSelected(value)}>
+            <Combobox value={selected} onChange={(value) => {
+                setSelected(value)
+                handleSwitchChain(value.id)
+            }}>
                 <div className="relative">
                     <ComboboxInput
                         className={clsx(
@@ -82,6 +80,7 @@ export default function ComboboxComponent() {
                             <ComboboxOption
                                 key={chain.id}
                                 value={chain}
+                                onChange={() => handleSwitchChain(chain.id)}
                                 onClick={() => handleSwitchChain(chain.id)}
                                 className="group flex cursor-default items-center gap-2 rounded-lg py-2 px-3 select-none data-[focus]:bg-white/10"
                             >
