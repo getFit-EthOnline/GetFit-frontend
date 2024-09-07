@@ -56,6 +56,19 @@ export default function Web3AuthConnectorInstance(chains: Chain[]) {
       label: "openlogin",
       redirectUrl: "https://getfrontend.vercel.app/move-to-earn",
       showOnModal: true,
+      // Google login
+      google: {
+        verifier: 'google-getfit',
+        typeOfLogin: 'google',
+        clientId:
+          '68869815152-i4h1gs0ltq68ho1mdubuk4ah463mg2h2.apps.googleusercontent.com',
+      },
+      // Discord login
+      discord: {
+        verifier: 'discord-getfit',
+        typeOfLogin: 'discord',
+        clientId: '1276989969352888381',
+      },
     },
   }
 

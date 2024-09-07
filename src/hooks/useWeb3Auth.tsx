@@ -50,12 +50,11 @@ const openloginAdapter = new OpenloginAdapter({
             useLogoLoader: true,
         },
         loginConfig: {
-            // Google login
             google: {
                 verifier: 'google-getfit',
                 typeOfLogin: 'google',
                 clientId:
-                    '820609215104-m8issl84ttq2mmcjmntav0ev9pq0hso5.apps.googleusercontent.com',
+                    '68869815152-i4h1gs0ltq68ho1mdubuk4ah463mg2h2.apps.googleusercontent.com',
             },
             // Discord login
             discord: {
