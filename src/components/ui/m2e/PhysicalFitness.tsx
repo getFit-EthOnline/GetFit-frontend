@@ -3,22 +3,26 @@ import {
     getFanTokenBalance,
     recordWorkoutWithSigner,
 } from '@/contracts/chiliz';
+import { getBalance } from '@/contracts/galadriel';
 import {
     getRewardTokenBalance,
     recordWorkoutGaslessBundle,
 } from '@/contracts/morph';
 import useGlobalStore from '@/store';
+import { toastStyles } from '@/utils/utils';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
+import toast from 'react-hot-toast';
+import { RiExternalLinkLine } from 'react-icons/ri';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import { davidGogginsProfilePic } from '../../../../public';
 import { Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { useChainId } from 'wagmi';
 import { morphHolesky, spicy } from 'wagmi/chains';
 import {
+    davidGogginsProfilePic,
     m2eImage1,
     m2eImage2,
     m2eImage3,
@@ -27,10 +31,7 @@ import {
     m2eImage6,
     m2eImage7,
 } from '../../../../public';
-import toast from 'react-hot-toast';
-import { toastStyles } from '@/utils/utils';
-import { RiExternalLinkLine } from 'react-icons/ri';
-import { getBalance } from '@/contracts/galadriel';
+import ExcerciseModal from './modalForExercise';
 const workouts = [
     {
         id: 1,
@@ -404,14 +405,18 @@ const PhysicalFitness = () => {
                                 </span>
                             ))}
                         </div>
+
                         <div className="absolute bottom-2 m-2 right-8">
-                            <button
-                                onClick={() => startWorkout(idx)}
-                                className="group/button relative w-full  overflow-hidden rounded-md border border-black bg-black px-4 py-1 text-xs font-medium text-white transition-all duration-150 hover:border-[#B8FE22] active:scale-95"
-                            >
+                            <button className="group/button relative w-full overflow-hidden rounded-md border border-black bg-black px-4 py-1 text-xs font-medium text-white transition-all duration-150 hover:border-[#B8FE22] active:scale-95">
                                 <span className="absolute bottom-0 left-0 z-0 h-0 w-full bg-gradient-to-t from-[#B8FE22] to-[#a8f10a] transition-all duration-500 group-hover/button:h-full" />
                                 <span className="relative z-10 transition-all duration-500 group-hover/button:text-white">
-                                    {loadingStates[idx]}
+                                    <ExcerciseModal
+                                        title={workout.title}
+                                        description={workout.description}
+                                        startWorkout={startWorkout}
+                                        idx={idx}
+                                        state={loadingStates[idx]}
+                                    />
                                 </span>
                             </button>
                         </div>

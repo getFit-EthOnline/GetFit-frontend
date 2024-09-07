@@ -49,7 +49,7 @@ export const WalletConnectButton = () => {
     return (
         <div className="flex justify-center gap-x-4  items-center ">
             <motion.button
-                className="w-[192px] inline-flex overflow-hidden rounded-lg bg-[linear-gradient(120deg,#063434_calc(var(--shimmer-button-x)-25%),#063434_var(--shimmer-button-x),#063434_calc(var(--shimmer-button-x)+25%))] [--shimmer-button-x:0%] "
+                className="w-[195px] inline-flex overflow-hidden rounded-lg bg-[linear-gradient(120deg,#063434_calc(var(--shimmer-button-x)-25%),#063434_var(--shimmer-button-x),#063434_calc(var(--shimmer-button-x)+25%))] [--shimmer-button-x:0%] "
                 initial={
                     {
                         scale: 1,
