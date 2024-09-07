@@ -10,7 +10,7 @@ import toast from 'react-hot-toast';
 import { ImSpinner2 } from 'react-icons/im';
 import { useChainId } from 'wagmi';
 import { galadriel_devnet } from '@/config/chains';
-import { base, morphHolesky, sepolia, spicy } from 'wagmi/chains';
+import { baseSepolia, morphHolesky, sepolia, spicy } from 'wagmi/chains';
 
 const NavBar = () => {
     return (
@@ -45,13 +45,13 @@ export const WalletConnectButton = () => {
             ? 'GAL'
             : chainId === spicy.id
             ? 'CHZ'
-            : sepolia.id || base.id || morphHolesky.id
+            : sepolia.id || baseSepolia.id || morphHolesky.id
             ? 'USDC'
             : '';
     const userAddress =
         chainId === morphHolesky.id ||
         chainId === sepolia.id ||
-        chainId === base.id
+        chainId === baseSepolia.id
             ? smartAddress
             : address;
     const userBalance = parseFloat(balance || '0').toFixed(3) + ' ' + currency;

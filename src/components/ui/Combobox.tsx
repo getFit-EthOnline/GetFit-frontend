@@ -6,6 +6,7 @@ import {
     ComboboxOptions,
 } from '@headlessui/react';
 
+import { galadriel_devnet } from '@/config/chains';
 import { getUsdcBalance } from '@/contracts/chainlink';
 import { sendTestTokensChiliz } from '@/contracts/chiliz';
 import { getBalance } from '@/contracts/galadriel';
@@ -16,15 +17,15 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { FaAngleDown } from 'react-icons/fa6';
-import { useSwitchChain } from 'wagmi';
-import { base, morphHolesky, sepolia, spicy } from 'wagmi/chains';
+import { useChainId, useSwitchChain } from 'wagmi';
+import { baseSepolia, morphHolesky, sepolia, spicy } from 'wagmi/chains';
 import { Base, Chiliz, Galadriel, Morph, Sepolia } from '../../../public';
-import { galadriel_devnet } from '@/config/chains';
 export default function ComboboxComponent() {
     const { chains, switchChain } = useSwitchChain();
     const [selected, setSelected] = useState<any>(chains[0]);
-    const { address, setBalance, smartAddress, balance } = useGlobalStore();
-    const handleSendBalance = async (chainId: any) => {
+    const { address, setBalance, smartAddress } = useGlobalStore();
+    const chainId = useChainId();
+    const handleSendBalance = async (chainId: number) => {
         const balance = await getBalance(address, chainId);
         setBalance(balance);
         if (chainId === spicy.id) {
@@ -41,15 +42,12 @@ export default function ComboboxComponent() {
         }
     };
     const smartBalanceFetch = async () => {
-        const balance: bigint = await getUsdcBalance(smartAddress);
+        const balance: bigint = await getUsdcBalance(smartAddress, chainId);
         const finalBalance = balance / BigInt(10 ** 6);
         setBalance(finalBalance.toString());
     };
-
     useEffect(() => {
-        if (smartAddress) {
-            smartBalanceFetch();
-        }
+        smartBalanceFetch();
     }, [smartAddress]);
 
     return (
@@ -75,7 +73,7 @@ export default function ComboboxComponent() {
                                     ? Morph
                                     : selected.id === sepolia.id
                                     ? Sepolia
-                                    : selected.id === base.id
+                                    : selected.id === baseSepolia.id
                                     ? Base
                                     : Galadriel
                             }
@@ -108,7 +106,7 @@ export default function ComboboxComponent() {
                                         handleSendBalance(chain.id);
                                     } else if (
                                         chain.id === sepolia.id ||
-                                        chain.id === base.id
+                                        chain.id === baseSepolia.id
                                     ) {
                                         smartBalanceFetch();
                                     }
@@ -123,7 +121,7 @@ export default function ComboboxComponent() {
                                             ? Morph
                                             : chain.id === sepolia.id
                                             ? Sepolia
-                                            : chain.id === base.id
+                                            : chain.id === baseSepolia.id
                                             ? Base
                                             : Galadriel
                                     }

@@ -1,5 +1,5 @@
 import { Bundler } from '@biconomy/account';
-import { morphHolesky, spicy, sepolia, base } from 'viem/chains';
+import { morphHolesky, spicy, sepolia, baseSepolia } from 'viem/chains';
 
 const BUNDLER_ENTRYPOINT_ADDRESS = '0x00000061FEfce24A79343c27127435286BB7A4E1';
 
@@ -18,8 +18,8 @@ export const sepoliaBundler = new Bundler({
     chainId: sepolia.id,
 });
 export const baseBundler = new Bundler({
-    bundlerUrl: `https://bundler.biconomy.io/api/v2/${base.id}/nJPK7B3ru.dd7f7861-190d-41bd-af80-6877f74b8f44`,
-    chainId: base.id,
+    bundlerUrl: `https://bundler.biconomy.io/api/v2/${baseSepolia.id}/nJPK7B3ru.dd7f7861-190d-41bd-af80-6877f74b8f44`,
+    chainId: baseSepolia.id,
 });
 
 const BICONOMY_CONFIG = {
@@ -41,8 +41,8 @@ const BICONOMY_CONFIG = {
             'https://paymaster.biconomy.io/api/v1/11155111/WugWhiuuo.c712de20-661a-4f9f-9ac1-9e37826eb0bb',
         paymasterApiKey: 'WugWhiuuo.c712de20-661a-4f9f-9ac1-9e37826eb0bb',
     },
-    [base.id]: {
-        bundler: sepoliaBundler,
+    [baseSepolia.id]: {
+        bundler: baseBundler,
         paymasterUrl:
             'https://paymaster.biconomy.io/api/v1/84532/chmQxV0UK.535ba9a7-bd76-438c-ae3b-f21bfb14ed0b',
         paymasterApiKey: 'chmQxV0UK.535ba9a7-bd76-438c-ae3b-f21bfb14ed0b',

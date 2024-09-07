@@ -1,8 +1,10 @@
 import { ethers } from 'ethers';
 import { AUTOPAY_ABI } from '@/abi/AUTOPAY_ABI';
 import {
+    AUTOPAY_CONTRACT_ADDRESS_BASE,
     AUTOPAY_CONTRACT_ADDRESS_SEPOLIA,
-    USDC_TOKEN_ADDRESS,
+    USDC_TOKEN_ADDRESS_BASE,
+    USDC_TOKEN_ADDRESS_SEPOLIA,
 } from '@/config/addresses';
 import { ERC20_ABI } from '@/abi/ERC20_ABI';
 
@@ -15,16 +17,29 @@ export async function sendUsdcCrossChainSubscription(
     smartAccount: any,
     destinationChainSelector: string,
     receiverAddress: string,
-    duration: number
+    duration: number,
+    chainId: number
 ) {
     console.log('Starting sendUsdcCrossChainSubscription for Sepolia');
     try {
-        const provider = new ethers.JsonRpcProvider('https://1rpc.io/sepolia');
+        const providerUrl =
+            chainId === 11155111
+                ? 'https://1rpc.io/sepolia'
+                : 'https://sepolia.base.org';
+        const provider = new ethers.JsonRpcProvider(providerUrl);
+        const CONTRACT_ADDRESS =
+            chainId === 11155111
+                ? AUTOPAY_CONTRACT_ADDRESS_SEPOLIA
+                : AUTOPAY_CONTRACT_ADDRESS_BASE;
+        const USDC_TOKEN_ADDRESS =
+            chainId === 11155111
+                ? USDC_TOKEN_ADDRESS_SEPOLIA
+                : USDC_TOKEN_ADDRESS_BASE;
         console.log('Provider initialized for Sepolia', provider);
 
         // Set up the contract instance for autopay
         const autopayInstance = new ethers.Contract(
-            AUTOPAY_CONTRACT_ADDRESS_SEPOLIA,
+            CONTRACT_ADDRESS,
             AUTOPAY_ABI,
             provider
         );
@@ -41,7 +56,7 @@ export async function sendUsdcCrossChainSubscription(
         // Approve USDC for transfer to the autopay contract
         const approveUsdcTx = usdcContract.interface.encodeFunctionData(
             'approve',
-            [AUTOPAY_CONTRACT_ADDRESS_SEPOLIA, cost * duration]
+            [CONTRACT_ADDRESS, cost * duration]
         );
         console.log(`Encoded USDC approval data: ${approveUsdcTx}`);
 
@@ -67,7 +82,7 @@ export async function sendUsdcCrossChainSubscription(
         console.log(`Encoded subscription data: ${subscriptionData}`);
 
         const subscriptionTransaction = {
-            to: AUTOPAY_CONTRACT_ADDRESS_SEPOLIA,
+            to: CONTRACT_ADDRESS,
             data: subscriptionData,
         };
         console.log(
@@ -102,11 +117,22 @@ export async function sendUsdcCrossChainSubscription(
         console.error('Error in sendUsdcCrossChainSubscription', error);
     }
 }
-export async function getUsdcBalance(userAddress: string | null) {
-    console.log(`Getting Usdc balance for user: ${userAddress}`);
 
+export async function getUsdcBalance(
+    userAddress: string | null,
+    chainId: number
+) {
+    console.log(`Getting Usdc balance for user: ${userAddress}`);
+    const providerUrl =
+        chainId === 11155111
+            ? 'https://1rpc.io/sepolia'
+            : 'https://sepolia.base.org';
+    const USDC_TOKEN_ADDRESS =
+        chainId === 11155111
+            ? USDC_TOKEN_ADDRESS_SEPOLIA
+            : USDC_TOKEN_ADDRESS_BASE;
     try {
-        const provider = new ethers.JsonRpcProvider('https://1rpc.io/sepolia');
+        const provider = new ethers.JsonRpcProvider(providerUrl);
 
         const usdcTokenContract = new ethers.Contract(
             USDC_TOKEN_ADDRESS,

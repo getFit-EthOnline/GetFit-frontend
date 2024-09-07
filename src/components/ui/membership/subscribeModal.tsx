@@ -11,6 +11,7 @@ import { getButtonCTA } from '../navBar';
 import TextRevealButton from './textRevealButton';
 import { ImSpinner2 } from 'react-icons/im';
 import { RiExternalLinkLine } from 'react-icons/ri';
+import { useChainId } from 'wagmi';
 const chainShownData = [
     {
         id: 1,
@@ -67,6 +68,7 @@ const SubscribeModal = ({
     const [selectedInterval, setSelectedInterval] = useState(1);
     const [state, setState] = useState('Subscribe to access');
     const [loader, setLoader] = useState('Autopay');
+    const chainID = useChainId();
     const handleSender = async () => {
         try {
             const response = await fetch('/api/subscription', {
@@ -90,8 +92,14 @@ const SubscribeModal = ({
             console.error('Error:', error);
         }
     };
+    const smartBalance = async () => {
+        const balance = await getUsdcBalance(smartAddress, chainID);
+        const finalBalance = balance / BigInt(10 ** 6);
+        setBalance(finalBalance.toString());
+    };
     const handleAutoPay = async () => {
         setLoader('Purchasing subscription...');
+
         const res = await sendUsdcCrossChainSubscription(
             smartAddress,
             '0x0F284B92d59C8b59E11409495bE0c5e7dBe0dAf9',
@@ -99,20 +107,28 @@ const SubscribeModal = ({
             5,
             1,
             smartAccount,
-            '10344971235874465080',
-            '0x7899070557CF9758b8be4E0BE9dfF5a200D5ef6d',
-            duration
+            chainID === 11155111
+                ? '10344971235874465080'
+                : '16015286601757825753',
+            chainID === 11155111
+                ? '0x7899070557CF9758b8be4E0BE9dfF5a200D5ef6d'
+                : '0x36A0C6ad26868FFA23D512AD8E0ee9E090122161',
+            duration,
+            chainID
         );
         if (res?.transactionHash) {
             setPaymentLink(res.transactionHash);
             setState('Membership Subscribed');
             setLoader('Autopay success');
-            const balance = await getUsdcBalance(smartAddress);
-            const finalBalance = balance / BigInt(10 ** 6);
-            setBalance(finalBalance.toString());
+            smartBalance();
             handleSender();
         }
     };
+    React.useEffect(() => {
+        if (isOpen) {
+            smartBalance();
+        }
+    }, [isOpen]);
     return (
         <>
             <Button
@@ -189,9 +205,12 @@ const SubscribeModal = ({
                                             </span>
                                         </div>
                                     </div>
-                                </div>
-
-                                <div>
+                                </div>{' '}
+                                <div className="flex items-center gap-x-2">
+                                    <div className="text-sm text-gray-200">
+                                        {' '}
+                                        Your chains:
+                                    </div>
                                     {chainShownData.map((data) => {
                                         return (
                                             <TextRevealButton
@@ -236,7 +255,7 @@ const SubscribeModal = ({
                                         >
                                             <a
                                                 className="cursor-pointer flex items-center gap-x-2"
-                                                href={`https://ccip.chain.link/msg/${paymentLink}`}
+                                                href={`https://ccip.chain.link/tx/${paymentLink}`}
                                                 target="_blank"
                                                 rel="noreferrer"
                                             >
@@ -266,6 +285,7 @@ const SubscribeModal = ({
                                                             'https://faucet.circle.com',
                                                             '_blank'
                                                         );
+                                                        close();
                                                     }
                                                 }}
                                                 className="flex items-center justify-center gap-2 rounded-md bg-gray-700 p-1 text-sm/6 font-semibold text-white shadow-inner shadow-white/10  w-full
