@@ -4,7 +4,7 @@ import PlayerAnalysis from '@/components/ui/liveMatch/playerAnalysis';
 import {
     getBalance,
     getNewMessages,
-    liveAddMessage,
+    liveMessageRun,
 } from '@/contracts/galadriel';
 import useGlobalStore from '@/store';
 import { ethers } from 'ethers';
@@ -18,7 +18,7 @@ const Page = () => {
     const [btnState, setBtnState] = React.useState('Get your prediction');
     const [stas, setStats] = React.useState('');
 
-    const { address, setBalance } = useGlobalStore();
+    const { address, setBalance, provider } = useGlobalStore();
     const fetchMessages = async (resp: number) => {
         setTimeout(async () => {
             const messages = await getNewMessages(resp, 0);
@@ -27,23 +27,15 @@ const Page = () => {
             setStats(msgs);
             setPredictionEnabled(true);
             setBtnState('Predictions available');
-        }, 20000);
+        }, 2000);
     };
     const handlePrediction = async () => {
         setBtnState('Getting predictions please wait...');
-        const provider = new ethers.JsonRpcProvider(
-            'https://devnet.galadriel.com/'
-        );
-        const wallet = new ethers.Wallet(
-            process.env.NEXT_PUBLIC_PUB_KEY || '',
-            provider
-        );
 
-        const response = await liveAddMessage({
+        const response = await liveMessageRun({
             message:
                 'Please share all the stats and winning percentage of Floyd Mayweather vs Conor McGregor',
-            agentRunID: 92,
-            provider: wallet,
+            provider,
         });
         if (response.dispatch) {
             setPaymentLink(response.dispatch);

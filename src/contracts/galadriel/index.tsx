@@ -65,24 +65,29 @@ export async function addMessage({
 
     return { dispatch: addMessageTx.transactionHash };
 }
-export async function liveAddMessage({
+export async function liveMessageRun({
     message,
-    agentRunID,
     provider,
-}: addMessageProps) {
+}: startFitnessRunProps) {
     if (!provider) {
         throw new Error('Provider not found');
     }
-    const fitnessAgentContract = new ethers.Contract(
-        FITNESS_AGENT_ADDRESS,
+    const web3 = new Web3(provider);
+    const accounts = await web3.eth.getAccounts();
+    const fitnessAgentContract = new web3.eth.Contract(
         FITNESS_ABI,
-        provider
+        FITNESS_AGENT_ADDRESS
     );
-    const addMessageTx = await fitnessAgentContract.addMessage(
-        message,
-        agentRunID
-    );
-    return { dispatch: addMessageTx.hash };
+
+    const startFitnessRunTx: any = await fitnessAgentContract.methods
+        .startFitnessRun(message)
+        .send({ from: accounts[0] });
+
+    // Extract runId from the transaction receipt
+    const runId = getAgentRunId(startFitnessRunTx);
+    console.log(`Generating prediction`);
+
+    return { dispatch: startFitnessRunTx.transactionHash, runId };
 }
 function getAgentRunId(receipt: TransactionReceipt) {
     let agentRunID;
