@@ -17,6 +17,7 @@
     "@emotion/styled": "^11.13.0",
     "@headlessui/react": "^2.1.5",
     "@mui/material": "^6.0.1",
+    "@redis/client": "^1.6.0",
     "@tabler/icons-react": "^3.14.0",
     "@tanstack/react-query": "^5.52.2",
     "@web3auth/base": "^8.12.4",

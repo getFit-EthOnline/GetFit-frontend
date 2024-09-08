@@ -2,7 +2,7 @@
 import { galadriel_devnet } from '@/config/chains';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ComponentProps } from 'react';
-import { morphHolesky, spicy, sepolia, base } from 'viem/chains';
+import { base, morphHolesky, sepolia, spicy } from 'viem/chains';
 import { WagmiProvider, createConfig, http } from 'wagmi';
 import Web3AuthConnectorInstance from './Web3AuthConnectorInstance';
 
