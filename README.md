@@ -81,11 +81,12 @@ Seamlessly secure your account with **Web3Auth**. We offer:
     - [Code Reference](https://github.com/getFit-EthOnline/GetFit-frontend/blob/5454af55288b8fb14adefa168a443dcc91747778/src/web3auth/useWeb3AuthWrapper.tsx#L25)
 4. **Custom React Hooks** for handling authentication flow effortlessly within the React ecosystem.
     - [Code Reference](https://github.com/getFit-EthOnline/GetFit-frontend/blob/99458f312490dd75bb6acef74213a5bae99bd0d6/src/components/ui/navBar.tsx#L62)
-    - [Code Reference](https://github.com/getFit-EthOnline/GetFit-frontend/blob/d10b84dd3189e786a153b69061276106aa57a76d/src/app/page.tsx#L20)](#)
+    - [Code Reference](https://github.com/getFit-EthOnline/GetFit-frontend/blob/d10b84dd3189e786a153b69061276106aa57a76d/src/app/page.tsx#L20)]
 5. **Wallet UI** to let users manage their wallets securely and with ease.
     - [Code Reference](https://github.com/getFit-EthOnline/GetFit-frontend/blob/d10b84dd3189e786a153b69061276106aa57a76d/src/app/hooks/web3AuthProviderProps.ts#L85)
 6. **Fiat On-Ramp** solutions to allow users to buy tokens directly with credit/debit cards.
-7. **MPC Core-Kit** for event sponsors and organizers to manage their transactions seamlessly.
+    - [Code Reference](https://github.com/getFit-EthOnline/GetFit-frontend/blob/d10b84dd3189e786a153b69061276106aa57a76d/src/app/hooks/web3AuthProviderProps.ts#L85)
+8. **MPC Core-Kit** for event sponsors and organizers to manage their transactions seamlessly.
     - [Code Reference](https://github.com/getFit-EthOnline/GetFit-frontend/blob/d10b84dd3189e786a153b69061276106aa57a76d/src/app/hooks/useWeb3AuthCore.tsx#L59)
 
 ---
