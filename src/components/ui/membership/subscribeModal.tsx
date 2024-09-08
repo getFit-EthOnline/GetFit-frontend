@@ -12,6 +12,7 @@ import TextRevealButton from './textRevealButton';
 import { ImSpinner2 } from 'react-icons/im';
 import { RiExternalLinkLine } from 'react-icons/ri';
 import { useChainId } from 'wagmi';
+import useSubscribe from '@/hooks/useSubscribe';
 const chainShownData = [
     {
         id: 1,
@@ -68,6 +69,7 @@ const SubscribeModal = ({
     const [selectedInterval, setSelectedInterval] = useState(1);
     const [state, setState] = useState('Subscribe to access');
     const [loader, setLoader] = useState('Autopay');
+    const { handleSubscribe } = useSubscribe();
     const chainID = useChainId();
     const handleSender = async () => {
         try {
@@ -99,10 +101,9 @@ const SubscribeModal = ({
     };
     const handleAutoPay = async () => {
         setLoader('Purchasing subscription...');
-
         const res = await sendUsdcCrossChainSubscription(
             smartAddress,
-            '0x0F284B92d59C8b59E11409495bE0c5e7dBe0dAf9',
+            '0xEaDC2299b2d0D398989D1E3Ea4C8052816c7b51a',
             Math.floor(Date.now() / 1000),
             5,
             1,
@@ -122,6 +123,7 @@ const SubscribeModal = ({
             setLoader('Autopay success');
             smartBalance();
             handleSender();
+            handleSubscribe();
         }
     };
     React.useEffect(() => {
