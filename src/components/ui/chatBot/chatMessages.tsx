@@ -12,11 +12,9 @@ import WorkoutModal from './WorkoutModal';
 import DietModal from './DietModal';
 
 const ChatMessages = ({
-    chatId,
     messages,
     setMessages,
 }: {
-    chatId: number;
     messages: Message[];
     setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
 }) => {
@@ -28,23 +26,14 @@ const ChatMessages = ({
     const chatContainerRef = useRef<HTMLDivElement>(null); // Ref for chat container
     const inputRef = useRef<HTMLInputElement>(null); // Ref for input
 
-    const [userProfile, setUserProfile] = useState<{
-        age: string;
-        gender: string;
-        height: string;
-        weight: string;
-        goal: string;
-        dietRequired: string;
-    }>({
-        age: '',
-        gender: '',
-        height: '',
-        weight: '',
-        goal: '',
-        dietRequired: '',
-    });
-
-    const { provider, setBalance, address } = useGlobalStore();
+    const {
+        chatId,
+        provider,
+        setBalance,
+        address,
+        userProfile,
+        setUserProfile,
+    } = useGlobalStore();
     const [isOpenWorkout, setIsOpenWorkout] = useState(false);
     const [isDietWorkout, setIsDietWorkout] = useState(false);
     useEffect(() => {
@@ -92,7 +81,6 @@ const ChatMessages = ({
         retries = 2
     ) => {
         setTimeout(async () => {
-            console.log('calling');
             const newMessages = await getNewMessages(chatId, 0);
             console.log(newMessages);
             const resp = newMessages[newMessages.length - 1];

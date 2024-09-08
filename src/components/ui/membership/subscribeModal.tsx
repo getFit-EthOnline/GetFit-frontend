@@ -3,21 +3,16 @@ import {
     sendUsdcCrossChainSubscription,
 } from '@/contracts/chainlink';
 import useGlobalStore from '@/store';
-import { toastStyles } from '@/utils/utils';
 import { Button, Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
-import { useQuery } from '@tanstack/react-query';
-import { Client } from '@xmtp/xmtp-js';
-import axios from 'axios';
-import { Wallet } from 'ethers';
 import Image, { StaticImageData } from 'next/image';
-import React, { useState } from 'react';
-import toast from 'react-hot-toast';
-import { ImSpinner2 } from 'react-icons/im';
-import { RiExternalLinkLine } from 'react-icons/ri';
-import { useAccount, useChainId } from 'wagmi';
+import React, { useEffect, useState } from 'react';
 import { Base, Sepolia, UsdcIcon } from '../../../../public';
 import { getButtonCTA } from '../navBar';
 import TextRevealButton from './textRevealButton';
+import { ImSpinner2 } from 'react-icons/im';
+import { RiExternalLinkLine } from 'react-icons/ri';
+import { useChainId } from 'wagmi';
+import useSubscribe from '@/hooks/useSubscribe';
 const chainShownData = [
     {
         id: 1,
@@ -30,7 +25,7 @@ const chainShownData = [
         icon: Sepolia,
     },
 ];
-const userAddress = '0x0F284B92d59C8b59E11409495bE0c5e7dBe0dAf9';
+const userAddress = '0xEaDC2299b2d0D398989D1E3Ea4C8052816c7b51a';
 const INTERVAL = [
     {
         id: 1,
@@ -74,10 +69,11 @@ const SubscribeModal = ({
     const [selectedInterval, setSelectedInterval] = useState(1);
     const [state, setState] = useState('Subscribe to access');
     const [loader, setLoader] = useState('Autopay');
+    const { handleSubscribe } = useSubscribe();
     const chainID = useChainId();
     const handleSender = async () => {
         try {
-            const response = await fetch('/api/subscription-details', {
+            const response = await fetch('/api/subscription', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -99,66 +95,14 @@ const SubscribeModal = ({
     };
     const smartBalance = async () => {
         const balance = await getUsdcBalance(smartAddress, chainID);
-        if (balance) {
-            const finalBalance = balance / BigInt(10 ** 6);
-            setBalance(finalBalance.toString());
-        }
+        const finalBalance = balance / BigInt(10 ** 6);
+        setBalance(finalBalance.toString());
     };
-
-    const { address } = useAccount()
-
-    const { data } = useQuery({
-        queryKey: ['creator-subscription', address, name],
-        enabled: !!address,
-        queryFn: async () => await axios.get<{ found: boolean }>('/api/creator-subscription', {
-            params: {
-                address,
-                creator: name
-            }
-        })
-    })
-
-    const newConversation = async function (xmtp_client: Client, addressTo: string) {
-        if (await xmtp_client?.canMessage(addressTo)) {
-            const conversation = await xmtp_client.conversations.newConversation(
-                addressTo
-            );
-            await conversation.send("Thanks for subscribing to my plan, we will send you daily updates on your email everyday");
-        } else {
-            console.log("cant message because is not on the network.");
-        }
-    };
-
-    const handleSubscribe = async () => {
-        if (!address || !userEmail || data?.data.found) {
-            return;
-        }
-        toast.loading("Subscribing...", toastStyles);
-        try {
-            const signer = new Wallet('0x780f70a93655617c793a5758455f01014391666b87810908afabb121d7b097d5');
-            const xmtp = await Client.create(signer, { env: "production" });
-            await newConversation(xmtp, address);
-
-            await axios.post('/api/creator-subscription', {
-                address,
-                email: userEmail,
-                creator: name
-            });
-
-            toast.success("Subscription successful", toastStyles);
-        } catch (error) {
-            console.error("Subscription failed:", error);
-            toast.error("Subscription failed", toastStyles);
-        } finally {
-            toast.remove();
-        }
-    };
-
     const handleAutoPay = async () => {
         setLoader('Purchasing subscription...');
         const res = await sendUsdcCrossChainSubscription(
             smartAddress,
-            '0x0F284B92d59C8b59E11409495bE0c5e7dBe0dAf9',
+            '0xEaDC2299b2d0D398989D1E3Ea4C8052816c7b51a',
             Math.floor(Date.now() / 1000),
             5,
             1,
@@ -172,17 +116,14 @@ const SubscribeModal = ({
             duration,
             chainID
         );
-        debugger
         if (res?.transactionHash) {
             setPaymentLink(res.transactionHash);
             setState('Membership Subscribed');
             setLoader('Autopay success');
             smartBalance();
             handleSender();
-            handleSubscribe()
-            setLoader('Subscription successful');
+            handleSubscribe();
         }
-
     };
     React.useEffect(() => {
         if (isOpen) {
@@ -289,8 +230,8 @@ const SubscribeModal = ({
                                         return (
                                             <div
                                                 className={`active:scale-95 hover:scale-105 transition ease-in-out shadow-sm  p-1 mt-3 rounded-lg cursor-pointer ${selectedInterval === item.id
-                                                    ? 'bg-lime-400'
-                                                    : 'bg-slate-300'
+                                                        ? 'bg-lime-400'
+                                                        : 'bg-slate-300'
                                                     } `}
                                                 key={index}
                                                 onClick={() => {

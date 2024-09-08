@@ -12,6 +12,10 @@ const nextConfig = {
         hostname: "www.chiliz.com",
         port: "",
       },
+      {
+        protocol: 'https',
+        hostname: 'docs.chiliz.com',
+    },
     ],
   },
 };

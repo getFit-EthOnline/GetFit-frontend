@@ -20,7 +20,8 @@ import toast from 'react-hot-toast';
 import { toastStyles } from '@/utils/utils';
 import { getBalance } from '@/contracts/galadriel';
 import { useChainId } from 'wagmi';
-
+import ChilizBanner from '../../../../public/icons/chilizBanner.jpeg';
+import Image from 'next/image';
 const challangeList = [
     {
         id: 1,
@@ -178,11 +179,19 @@ const Page = () => {
             </div>
 
             <div className="flex flex-col max-w-[40%]  ">
+                <Image
+                    src={
+                        'https://docs.chiliz.com/~gitbook/image?url=https%3A%2F%2F3400301555-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252F4L7rBH2rmyoBTn93MSdx%252Fuploads%252Fft9rTTVhyWvCRmjjkXZ2%252FWhite%25402x.png%3Falt%3Dmedia%26token%3D4998ab69-fc28-4dbf-894b-de263a277bb6&width=768&dpr=2&quality=100&sign=3d90ba46&sv=1'
+                    }
+                    height={400}
+                    width={400}
+                    alt="Chiliz"
+                />
                 {challangeList.map((item) => {
                     return (
                         <div
                             key={item.id}
-                            className="bg-white rounded-md p-4 shadow-md mb-4"
+                            className="bg-white rounded-md mt-5 p-4 shadow-md mb-4"
                         >
                             <ChallengeCard item={item} />
                         </div>

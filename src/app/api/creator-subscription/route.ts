@@ -54,7 +54,9 @@ export async function GET(req: NextRequest): Promise<Response> {
     );
 
     return NextResponse.json(
-      { found: creator?.toLowerCase() === parsedRes.creator.toLowerCase() },
+      {
+        found: creator?.toLowerCase() === parsedRes.creator.toLowerCase(),
+      },
       { status: 200 }
     );
   } catch (error) {

@@ -8,7 +8,7 @@ import ComboboxComponent from './Combobox';
 import { WalletConnectButton } from './navBar';
 import useGlobalStore from '@/store';
 
-const navContents = [
+export const navContents = [
     {
         id: 1,
         title: 'Market Prediction',
@@ -20,20 +20,21 @@ const navContents = [
         title: 'Move To Earn',
         link: '/move-to-earn',
     },
+
     {
         id: 3,
-        title: 'Tickets',
-        link: '/tickets',
-    },
-    {
-        id: 4,
         title: 'Membership',
         link: '/membership',
     },
     {
-        id: 5,
+        id: 4,
         title: 'Fan Battles',
         link: '/fanBattles',
+    },
+    {
+        id: 5,
+        title: 'Profile',
+        link: '/profile',
     },
 ];
 
@@ -79,8 +80,9 @@ const HomeNav = () => {
                     return (
                         <Link href={item.link} key={item.id}>
                             <div
-                                className={` ${url === item.link ? 'text-[#80E142]' : ''
-                                    }  flex items-center gap-x-1 justify-center `}
+                                className={` ${
+                                    url === item.link ? 'text-[#80E142]' : ''
+                                }  flex items-center gap-x-1 justify-center `}
                             >
                                 <p className="capitalize">{item.title}</p>
                                 <svg

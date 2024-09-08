@@ -1,4 +1,3 @@
-// @ts-nocheck
 'use client';
 import {
     getBalance,
@@ -34,10 +33,8 @@ const InfluencerDetails = [
 ];
 
 const InfluencerModal = ({
-    setChatId,
     setChatOpen,
 }: {
-    setChatId: React.Dispatch<React.SetStateAction<number>>;
     setChatOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
     const [isOpen, setIsOpen] = useState(true);
@@ -50,6 +47,7 @@ const InfluencerModal = ({
         address,
         setFitnessRunTrx,
         setBalance,
+        setChatId,
     } = useGlobalStore();
     const [loading, setLoading] = useState(false);
     useEffect(() => {
@@ -95,7 +93,7 @@ const InfluencerModal = ({
                 open={isOpen}
                 as="div"
                 className="relative z-10 focus:outline-none"
-                onClose={() => { }}
+                onClose={() => {}}
             >
                 <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
                     <div className="flex min-h-full items-center justify-center p-4">
@@ -122,11 +120,12 @@ const InfluencerModal = ({
                                             className="flex flex-col items-center  mt-4"
                                         >
                                             <div
-                                                className={` rounded-full ${selectedInfluencer?.name ===
+                                                className={` rounded-full ${
+                                                    selectedInfluencer?.name ===
                                                     influencer.name
-                                                    ? 'bg-[#B8FE22]'
-                                                    : ''
-                                                    } `}
+                                                        ? 'bg-[#B8FE22]'
+                                                        : ''
+                                                } `}
                                             >
                                                 <Image
                                                     src={influencer.profilePic}

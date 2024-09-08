@@ -1,7 +1,9 @@
 'use client';
+
 import { REDIRECT_URL } from '@/config';
 import { galadriel_devnet } from '@/config/chains';
-import { getBalance } from '@/contracts/galadriel';
+import { sendTestTokensChiliz } from '@/contracts/chiliz';
+import { getBalance, sendTestTokens } from '@/contracts/galadriel';
 import useGlobalStore from '@/store';
 import { CHAIN_NAMESPACES, WEB3AUTH_NETWORK } from '@web3auth/base';
 import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider';
@@ -39,7 +41,7 @@ const openloginAdapter = new OpenloginAdapter({
         redirectUrl: REDIRECT_URL,
         whiteLabel: {
             appName: 'Get Fit',
-            appUrl: 'https://getfit-chatbot.vercel.app',
+            appUrl: 'https://getfit-ethonline.vercel.app',
             logoLight:
                 'https://avatars.githubusercontent.com/u/179255662?s=200&v=4',
             logoDark:
@@ -52,6 +54,7 @@ const openloginAdapter = new OpenloginAdapter({
             useLogoLoader: true,
         },
         loginConfig: {
+            // Google login
             google: {
                 verifier: 'google-getfit',
                 typeOfLogin: 'google',
@@ -130,7 +133,6 @@ function useWeb3Auth() {
         if (!provider) {
             return;
         }
-
         const ethersProvider = new ethers.BrowserProvider(provider);
         const signer = await ethersProvider.getSigner();
         const addr = signer.getAddress();
@@ -140,14 +142,14 @@ function useWeb3Auth() {
         if (chainId === galadriel_devnet.id) {
             const balance = await getBalance(address);
             setBalance(balance);
-            // if (parseFloat(balance) < 0.01) {
-            //     const tokens = await sendTestTokens(address);
-            //     if (tokens.trxhash) {
-            //         const balance = await getBalance(address);
-            //         setBalance(balance);
-            //     }
-            //     console.log(tokens);
-            // }
+            if (parseFloat(balance) < 0.01) {
+                const tokens = await sendTestTokens(address);
+                if (tokens.trxhash) {
+                    const balance = await getBalance(address);
+                    setBalance(balance);
+                }
+                console.log(tokens);
+            }
         }
 
         return address;

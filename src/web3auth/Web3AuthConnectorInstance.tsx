@@ -1,19 +1,19 @@
 // Web3Auth Libraries
-import { CHAIN_NAMESPACES, WALLET_ADAPTERS, WEB3AUTH_NETWORK } from "@web3auth/base";
-import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
-import { Web3Auth } from "@web3auth/modal";
-import { WalletServicesPlugin } from "@web3auth/wallet-services-plugin";
-import { Web3AuthConnector } from "@web3auth/web3auth-wagmi-connector";
-import { Chain } from "wagmi/chains";
-import pkg from "../../package.json";
-
+import {
+  CHAIN_NAMESPACES,
+  WALLET_ADAPTERS,
+  WEB3AUTH_NETWORK,
+} from '@web3auth/base';
+import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider';
+import { Web3Auth } from '@web3auth/modal';
+import { WalletServicesPlugin } from '@web3auth/wallet-services-plugin';
+import { Web3AuthConnector } from '@web3auth/web3auth-wagmi-connector';
+import { Chain } from 'wagmi/chains';
 
 export default function Web3AuthConnectorInstance(chains: Chain[]) {
-  const name = pkg.name;
-
   const chainConfig = {
     chainNamespace: CHAIN_NAMESPACES.EIP155,
-    chainId: "0x" + chains[0].id.toString(16),
+    chainId: '0x' + chains[0].id.toString(16),
     rpcTarget: chains[0].rpcUrls.default.http[0],
     displayName: chains[0].name,
     tickerName: chains[0].nativeCurrency?.name,
@@ -21,23 +21,31 @@ export default function Web3AuthConnectorInstance(chains: Chain[]) {
     blockExplorerUrl: chains[0].blockExplorers?.default.url[0] as string,
   };
 
-  const privateKeyProvider = new EthereumPrivateKeyProvider({ config: { chainConfig } });
+  console.log(chainConfig, 'chainConfig');
+
+  const privateKeyProvider = new EthereumPrivateKeyProvider({
+    config: { chainConfig },
+  });
 
   const web3AuthInstance = new Web3Auth({
-    clientId: 'BFW3wcM203ReRzwb2nnd4bu4vUTtwPOZ7zsjkd62YkniA5DOtjJAXzchQGT_lvcJswnlp18k__tWqAPs76mGNAI',
+    clientId:
+      'BOZXvB8YZOmaHlxETldZRrA91mqa3UiLz46eonVOL627eJX0QQ2Ncct_7cNWUDI20n-EAY2f4_vs_szOXocmmBI',
     chainConfig,
     privateKeyProvider,
     uiConfig: {
-      appName: name,
-      loginMethodsOrder: ["google"],
-      defaultLanguage: "en",
-      modalZIndex: "2147483647",
-      logoLight: "https://web3auth.io/images/web3authlog.png",
-      logoDark: "https://web3auth.io/images/web3authlogodark.png",
-      appUrl: "https://getfrontend.vercel.app",
-      uxMode: "redirect",
-      mode: "light",
+      appName: 'Get Fit',
+      loginMethodsOrder: ['google'],
+      defaultLanguage: 'en',
+      modalZIndex: '2147483647',
+      appUrl: 'https://getfit-ethonline.vercel.app',
+      logoLight:
+        'https://avatars.githubusercontent.com/u/179255662?s=200&v=4',
+      logoDark:
+        'https://avatars.githubusercontent.com/u/179255662?s=200&v=4',
+      uxMode: 'redirect',
+      mode: 'light',
     },
+
     web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
     enableLogging: true,
   });
@@ -46,31 +54,25 @@ export default function Web3AuthConnectorInstance(chains: Chain[]) {
     walletInitOptions: {
       whiteLabel: {
         showWidgetButton: true,
-      }
-    }
+      },
+    },
   });
   web3AuthInstance.addPlugin(walletServicesPlugin);
 
   const modalConfig = {
     [WALLET_ADAPTERS.OPENLOGIN]: {
-      label: "openlogin",
-      redirectUrl: "https://getfrontend.vercel.app/move-to-earn",
+      label: 'openlogin',
+      loginMethods: {
+        facebook: {
+          // it will hide the facebook option from the Web3Auth modal.
+          name: 'facebook login',
+          showOnModal: false,
+        },
+      },
+      // setting it to false will hide all social login methods from modal.
       showOnModal: true,
-      // Google login
-      google: {
-        verifier: 'google-getfit',
-        typeOfLogin: 'google',
-        clientId:
-          '68869815152-i4h1gs0ltq68ho1mdubuk4ah463mg2h2.apps.googleusercontent.com',
-      },
-      // Discord login
-      discord: {
-        verifier: 'discord-getfit',
-        typeOfLogin: 'discord',
-        clientId: '1276989969352888381',
-      },
     },
-  }
+  };
 
   return Web3AuthConnector({
     web3AuthInstance,
