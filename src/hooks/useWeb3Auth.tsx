@@ -41,7 +41,7 @@ const openloginAdapter = new OpenloginAdapter({
         redirectUrl: REDIRECT_URL,
         whiteLabel: {
             appName: 'Get Fit',
-            appUrl: 'https://getfit-chatbot.vercel.app',
+            appUrl: 'https://getfit-ethonline.vercel.app',
             logoLight:
                 'https://avatars.githubusercontent.com/u/179255662?s=200&v=4',
             logoDark:
