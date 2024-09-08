@@ -113,16 +113,33 @@ Galadriel elevates the user experience by offering:
 ---
 
 ## 💬 XMTP Integration
+
 getFit utilizes **XMTP** for seamless messaging and betting:
 
 1. **XMTP Client** for fitness conversations and updates within the app.
-    - [Implementation Link](#)
+    - [View Source Code](https://github.com/getFit-EthOnline/GetFit-frontend/blob/f62ecf542a28b5d04bcb598ac09609112a548a1b/src/hooks/useSubscribe.tsx#L31)
 2. **Message-Kit Bot AI** that enables spot betting and transaction framing for real-time wagers.
-    - [Implementation Link](#)
+    - [View Source Code](https://github.com/getFit-EthOnline/GetFit-frontend/blob/fix/xtmp-prod/src/components/ui/liveMatch/liveChat.tsx#L36)
 3. **Smart Accounts with Bundling and Gasless Transactions**, ensuring smooth and cost-effective P2P interactions.
-    - [Implementation Link](#)
+    - [View Source Code](https://github.com/getFit-EthOnline/GetFit-frontend/blob/fix/xtmp-prod/src/web3auth/useWeb3AuthWrapper.tsx#L39)
 4. **XMTP Subscribe and Broadcast** feature to notify users of new membership purchases and subscription details.
     - [Code Reference](https://github.com/getFit-EthOnline/GetFit-frontend/blob/40cd02553a049c8f7504b6284325d20a567436fa/src/hooks/useSubscribe.tsx#L10)
+
+### Video Walkthrough
+
+https://www.loom.com/share/8a6ec21a905c4defb637d681abd1db10?sid=a64541cd-94af-4335-8a72-b373b4f93478
+
+
+### Testing Guide
+
+To test **live P2P betting** with XMTP, visit the following link and make sure the selected chain is **Morph** to test smart accounts with Web3Auth + XMTP:
+
+- [Live Match Testing](https://getfrontend.vercel.app/livematch)
+
+For **broadcast and subscription** notifications, visit the production link below. Ensure you are on a Chainlink CCIP-supported chain like **Base** or **Sepolia**:
+
+- [Membership Subscription Testing](https://getfit-ethonline.vercel.app/membership)
+
 
 ---
 
