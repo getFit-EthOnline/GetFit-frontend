@@ -30,6 +30,8 @@ Chiliz powers the fan tokens that fuel the competitive spirit on the getFit plat
 - **Chiliz P2P-Betting Contract**: [Chiliz P2P Betting Contract](https://testnet.chiliscan.com/address/0x9d24c52916A14afc31D86B5Aa046b252383ee444/contract/88882/code)
     - This contract powers peer-to-peer betting on fitness challenges, where users can place bets on each other’s performance in real-time.
 
+- **Chiliz Frontend Integration**: [Code Reference](https://github.com/getFit-EthOnline/GetFit-frontend/blob/40cd02553a049c8f7504b6284325d20a567436fa/src/contracts/chiliz/index.tsx#L13)
+[Code Reference](https://github.com/getFit-EthOnline/GetFit-frontend/blob/40cd02553a049c8f7504b6284325d20a567436fa/src/contracts/chiliz/index.tsx#L50)
 ---
 
 ## 🔰 Morph Integration
@@ -43,6 +45,8 @@ Morph blockchain integration allows for gasless transactions within the M2E syst
 
 - **Morph P2P-Betting Contract**: [Morph P2P Betting Contract](https://explorer-holesky.morphl2.io/address/0xfD80F72afAeFB921DB1CccE92e02Bd485ca48764)
     - this contracts enables peer-to-peer betting on the Morph blockchain, allowing users to bet on fitness competitions.
+
+- **Morph Frontend Integration**: [Code Reference](https://github.com/getFit-EthOnline/GetFit-frontend/blob/40cd02553a049c8f7504b6284325d20a567436fa/src/contracts/morph/index.tsx#L9)
 
 ---
 
@@ -59,25 +63,28 @@ getFit utilizes **Chainlink Functions**, **Chainlink Automation**, and **Chainli
 - **Chainlink Membership Automation Contract (Base)**: [Base Contract](https://sepolia.basescan.org/address/0x7899070557CF9758b8be4E0BE9dfF5a200D5ef6d)
     - The same functionality as the Sepolia contract, but deployed on the Base network for cross-chain support.
 
+- **Chainlink Frontend Integration**: [Code Reference](https://github.com/getFit-EthOnline/GetFit-frontend/blob/40cd02553a049c8f7504b6284325d20a567436fa/src/contracts/chainlink/index.tsx#L11)
+
 ---
 
 ## 🔒 Web3Auth Integration
 Seamlessly secure your account with **Web3Auth**. We offer:
 
-1. **Custom React Hooks** for handling authentication flow effortlessly within the React ecosystem.
+
+1. **Custom Login Verifiers** that allow multiple identity providers like Google, Facebook, and GitHub for flexibility.
+    - [Code Reference](https://github.com/getFit-EthOnline/GetFit-frontend/blob/40cd02553a049c8f7504b6284325d20a567436fa/src/hooks/useWeb3Auth.tsx#L38)
+2. **Multichain Support**, including **switch-chain** functionality for seamless cross-chain interaction.
+    - [Code Reference](https://github.com/getFit-EthOnline/GetFit-frontend/blob/40cd02553a049c8f7504b6284325d20a567436fa/src/components/ui/Combobox.tsx#L101)
+3. **Smart Accounts** integrated with **Biconomy** for gasless transactions and enhanced UI/UX.
+    - [Code Reference](https://github.com/getFit-EthOnline/GetFit-frontend/blob/5454af55288b8fb14adefa168a443dcc91747778/src/web3auth/useWeb3AuthWrapper.tsx#L25)
+4. **Fiat On-Ramp** solutions to allow users to buy tokens directly with credit/debit cards.
+5. **Custom React Hooks** for handling authentication flow effortlessly within the React ecosystem.
     - [Implementation Link](#)
-2. **Custom Login Verifiers** that allow multiple identity providers like Google, Facebook, and GitHub for flexibility.
-    - [Implementation Link](#)
-3. **Multichain Support**, including **switch-chain** functionality for seamless cross-chain interaction.
-    - [Implementation Link](#)
-4. **Smart Accounts** integrated with **Biconomy** for gasless transactions and enhanced UI/UX.
-    - [Implementation Link](#)
-5. **Fiat On-Ramp** solutions to allow users to buy tokens directly with credit/debit cards.
-    - [Implementation Link](#)
+    - [Code Reference](https://github.com/getFit-EthOnline/GetFit-frontend/blob/d10b84dd3189e786a153b69061276106aa57a76d/src/app/page.tsx#L20)](#)
 6. **Wallet UI** to let users manage their wallets securely and with ease.
     - [Implementation Link](#)
 7. **MPC Core-Kit** for event sponsors and organizers to manage their transactions seamlessly.
-    - [Implementation Link](#)
+    - [Code Reference](https://github.com/getFit-EthOnline/GetFit-frontend/blob/d10b84dd3189e786a153b69061276106aa57a76d/src/app/hooks/useWeb3AuthCore.tsx#L59)
 
 ---
 
@@ -85,13 +92,13 @@ Seamlessly secure your account with **Web3Auth**. We offer:
 Galadriel elevates the user experience by offering:
 
 1. **Fitness Companion**: A personalized AI agent that gives tips, tracks progress, and challenges users based on their individual fitness goals.
-    - [Implementation Link](#)
+    - [Code Reference](https://github.com/getFit-EthOnline/GetFit-frontend/blob/40cd02553a049c8f7504b6284325d20a567436fa/src/contracts/galadriel/index.tsx#L14)
 2. **Prediction Agent**: Analyze fitness trends and predict outcomes of various competitions, making workouts even more engaging.
-    - [Implementation Link](#)
+    - [Code Reference](https://github.com/getFit-EthOnline/GetFit-frontend/blob/40cd02553a049c8f7504b6284325d20a567436fa/src/contracts/galadriel/index.tsx#L68)
 3. **Profile Creation**: Custom AI-generated fitness profiles for users that evolve over time based on performance.
-    - [Implementation Link](#)
+    - [Code Reference](https://github.com/getFit-EthOnline/GetFit-frontend/blob/40cd02553a049c8f7504b6284325d20a567436fa/src/app/(routes)/profile/page.tsx#L68)
 4. **Fan Battle AI Agents**: Engage in fan battles between AI agents who motivate and challenge each other in fitness duels.
-    - [Implementation Link](#)
+    - [Code Reference](#)
 
 ---
 
@@ -105,7 +112,7 @@ getFit utilizes **XMTP** for seamless messaging and betting:
 3. **Smart Accounts with Bundling and Gasless Transactions**, ensuring smooth and cost-effective P2P interactions.
     - [Implementation Link](#)
 4. **XMTP Subscribe and Broadcast** feature to notify users of new membership purchases and subscription details.
-    - [Implementation Link](#)
+    - [Code Reference](https://github.com/getFit-EthOnline/GetFit-frontend/blob/40cd02553a049c8f7504b6284325d20a567436fa/src/hooks/useSubscribe.tsx#L10)
 
 ---
 
