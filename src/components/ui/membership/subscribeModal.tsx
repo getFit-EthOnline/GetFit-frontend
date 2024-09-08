@@ -25,7 +25,7 @@ const chainShownData = [
         icon: Sepolia,
     },
 ];
-const userAddress = '0x0F284B92d59C8b59E11409495bE0c5e7dBe0dAf9';
+const userAddress = '0xEaDC2299b2d0D398989D1E3Ea4C8052816c7b51a';
 const INTERVAL = [
     {
         id: 1,
