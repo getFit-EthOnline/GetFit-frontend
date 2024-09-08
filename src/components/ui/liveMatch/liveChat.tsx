@@ -95,7 +95,7 @@ function LiveChat() {
                         }}
                         className="ml-2 p-2 rounded bg-blue-500 text-white hover:bg-blue-600"
                     >
-                        Connect to XMTP
+                        Join Live Chat
                     </button>
                 </div>
             )}
