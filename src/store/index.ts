@@ -46,7 +46,7 @@ interface GlobalStore {
 }
 
 const useGlobalStore = create<GlobalStore>()((set) => ({
-    streak: [false, false, false, false, false, false, false],
+    streak: [false, false],
     setStreak: (streak) => set({ streak: streak }),
     smartAddress: null,
     setSmartAddress: (smartAddress) => set({ smartAddress: smartAddress }),
