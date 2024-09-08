@@ -33,10 +33,8 @@ const InfluencerDetails = [
 ];
 
 const InfluencerModal = ({
-    setChatId,
     setChatOpen,
 }: {
-    setChatId: React.Dispatch<React.SetStateAction<number>>;
     setChatOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
     const [isOpen, setIsOpen] = useState(true);
@@ -49,6 +47,7 @@ const InfluencerModal = ({
         address,
         setFitnessRunTrx,
         setBalance,
+        setChatId,
     } = useGlobalStore();
     const [loading, setLoading] = useState(false);
     useEffect(() => {

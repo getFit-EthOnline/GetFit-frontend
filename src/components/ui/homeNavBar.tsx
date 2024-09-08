@@ -20,20 +20,21 @@ export const navContents = [
         title: 'Move To Earn',
         link: '/move-to-earn',
     },
+
     {
         id: 3,
-        title: 'Tickets',
-        link: '/tickets',
-    },
-    {
-        id: 4,
         title: 'Membership',
         link: '/membership',
     },
     {
-        id: 5,
+        id: 4,
         title: 'Fan Battles',
         link: '/fanBattles',
+    },
+    {
+        id: 5,
+        title: 'Profile',
+        link: '/profile',
     },
 ];
 

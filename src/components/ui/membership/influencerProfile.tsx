@@ -17,9 +17,6 @@ import {
     lazarProfilePic,
 } from '../../../../public';
 import SubscribeModal from './subscribeModal';
-import { getUsdcBalance } from '@/contracts/chainlink';
-import useGlobalStore from '@/store';
-import { useEffect } from 'react';
 
 const influencerProfile = [
     {
