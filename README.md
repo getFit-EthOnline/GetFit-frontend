@@ -54,7 +54,7 @@ Morph blockchain integration allows for gasless transactions within the M2E syst
 
 - **Morph Frontend Integration**: [Code Reference](https://github.com/getFit-EthOnline/GetFit-frontend/blob/40cd02553a049c8f7504b6284325d20a567436fa/src/contracts/morph/index.tsx#L9)
 
-  ### Video Walkthrough
+  ### Video Walkthrough P2P Betting
 
 
 https://github.com/user-attachments/assets/c69b6f18-9446-4a60-8d7f-6651d339e9c5
