@@ -1,21 +1,28 @@
 'use client';
-import { CHAIN_NAMESPACES, IProvider, WEB3AUTH_NETWORK } from '@web3auth/base';
+
+import { REDIRECT_URL } from '@/config';
+import { galadriel_devnet } from '@/config/chains';
+import { sendTestTokensChiliz } from '@/contracts/chiliz';
+import { getBalance, sendTestTokens } from '@/contracts/galadriel';
+import useGlobalStore from '@/store';
+import { CHAIN_NAMESPACES, WEB3AUTH_NETWORK } from '@web3auth/base';
 import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider';
 import { Web3Auth } from '@web3auth/modal';
 import { OpenloginAdapter } from '@web3auth/openlogin-adapter';
-import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
+import { useEffect, useState } from 'react';
+import { useChainId } from 'wagmi';
 const clientId =
     'BOZXvB8YZOmaHlxETldZRrA91mqa3UiLz46eonVOL627eJX0QQ2Ncct_7cNWUDI20n-EAY2f4_vs_szOXocmmBI';
 
 const chainConfig = {
     chainNamespace: CHAIN_NAMESPACES.EIP155,
-    chainId: '0xaa36a7',
-    rpcTarget: 'https://rpc.ankr.com/eth_sepolia',
-    displayName: 'Ethereum Sepolia Testnet',
-    blockExplorerUrl: 'https://sepolia.etherscan.io',
-    ticker: 'ETH',
-    tickerName: 'Ethereum',
+    chainId: '0xaa289',
+    rpcTarget: 'https://devnet.galadriel.com',
+    displayName: 'Galadriel Devnet',
+    blockExplorerUrl: 'https://explorer.galadriel.com',
+    ticker: 'GAL',
+    tickerName: 'Galadriel',
     logo: 'https://cryptologos.cc/logos/ethereum-eth-logo.png',
 };
 const privateKeyProvider = new EthereumPrivateKeyProvider({
@@ -30,12 +37,15 @@ const web3auth = new Web3Auth({
 
 const openloginAdapter = new OpenloginAdapter({
     adapterSettings: {
-        uxMode: 'popup',
+        uxMode: 'redirect',
+        redirectUrl: REDIRECT_URL,
         whiteLabel: {
             appName: 'Get Fit',
-            appUrl: 'https://web3auth.io',
-            logoLight: 'https://web3auth.io/images/web3auth-logo.svg',
-            logoDark: 'https://web3auth.io/images/web3auth-logo---Dark.svg',
+            appUrl: 'https://getfit-chatbot.vercel.app',
+            logoLight:
+                'https://avatars.githubusercontent.com/u/179255662?s=200&v=4',
+            logoDark:
+                'https://avatars.githubusercontent.com/u/179255662?s=200&v=4',
             defaultLanguage: 'en',
             mode: 'dark',
             theme: {
@@ -49,7 +59,7 @@ const openloginAdapter = new OpenloginAdapter({
                 verifier: 'google-getfit',
                 typeOfLogin: 'google',
                 clientId:
-                    '820609215104-m8issl84ttq2mmcjmntav0ev9pq0hso5.apps.googleusercontent.com',
+                    '68869815152-i4h1gs0ltq68ho1mdubuk4ah463mg2h2.apps.googleusercontent.com',
             },
             // Discord login
             discord: {
@@ -63,8 +73,23 @@ const openloginAdapter = new OpenloginAdapter({
 });
 web3auth.configureAdapter(openloginAdapter);
 function useWeb3Auth() {
-    const [provider, setProvider] = useState<IProvider | null>(null);
     const [loggedIn, setLoggedIn] = useState(false);
+    const {
+        provider,
+        setAddress,
+        setProvider,
+        setBalance,
+        setUserName,
+        setUserEmail,
+        setUserId,
+    } = useGlobalStore();
+    const chainId = useChainId();
+    useEffect(() => {
+        if (loggedIn) {
+            getAccounts();
+            getUserInfo();
+        }
+    }, [loggedIn]);
     useEffect(() => {
         const init = async () => {
             try {
@@ -91,6 +116,8 @@ function useWeb3Auth() {
         if (web3auth.connected) {
             setLoggedIn(true);
         }
+        const addr = await getAccounts();
+        return addr;
     };
 
     const logout = async () => {
@@ -99,6 +126,7 @@ function useWeb3Auth() {
         // IMP END - Logout
         setProvider(null);
         setLoggedIn(false);
+        setAddress('');
     };
 
     const getAccounts = async () => {
@@ -109,12 +137,35 @@ function useWeb3Auth() {
         const signer = await ethersProvider.getSigner();
         const addr = signer.getAddress();
         const address = await addr;
-        console.log(address);
+        setAddress(address);
+        getSignerValue();
+        if (chainId === galadriel_devnet.id) {
+            const balance = await getBalance(address);
+            setBalance(balance);
+            if (parseFloat(balance) < 0.01) {
+                const tokens = await sendTestTokens(address);
+                if (tokens.trxhash) {
+                    const balance = await getBalance(address);
+                    setBalance(balance);
+                }
+                console.log(tokens);
+            }
+        }
+
+        return address;
+    };
+    const getSignerValue = async () => {
+        const signer = (await web3auth.provider?.request({
+            method: 'eth_private_key',
+        })) as string;
+        const res = await signer;
+        setUserId(res);
     };
     const getUserInfo = async () => {
         const user = await web3auth.getUserInfo();
-        console.log(user);
+        setUserEmail(user?.email);
+        setUserName(user?.name);
     };
-    return { login, loggedIn, logout, getAccounts, getUserInfo };
+    return { login, loggedIn, logout, getUserInfo, getSignerValue };
 }
 export default useWeb3Auth;
