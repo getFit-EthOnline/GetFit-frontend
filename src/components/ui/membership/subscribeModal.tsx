@@ -3,15 +3,21 @@ import {
     sendUsdcCrossChainSubscription,
 } from '@/contracts/chainlink';
 import useGlobalStore from '@/store';
+import { toastStyles } from '@/utils/utils';
 import { Button, Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
+import { useQuery } from '@tanstack/react-query';
+import { Client } from '@xmtp/xmtp-js';
+import axios from 'axios';
+import { Wallet } from 'ethers';
 import Image, { StaticImageData } from 'next/image';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import toast from 'react-hot-toast';
+import { ImSpinner2 } from 'react-icons/im';
+import { RiExternalLinkLine } from 'react-icons/ri';
+import { useAccount, useChainId } from 'wagmi';
 import { Base, Sepolia, UsdcIcon } from '../../../../public';
 import { getButtonCTA } from '../navBar';
 import TextRevealButton from './textRevealButton';
-import { ImSpinner2 } from 'react-icons/im';
-import { RiExternalLinkLine } from 'react-icons/ri';
-import { useChainId } from 'wagmi';
 const chainShownData = [
     {
         id: 1,
@@ -71,7 +77,7 @@ const SubscribeModal = ({
     const chainID = useChainId();
     const handleSender = async () => {
         try {
-            const response = await fetch('/api/subscription', {
+            const response = await fetch('/api/subscription-details', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -82,7 +88,6 @@ const SubscribeModal = ({
                     gogginsWalletAddress: '0x232342',
                 }),
             });
-
             if (response.ok) {
                 console.log('Subscription saved successfully');
             } else {
@@ -94,12 +99,63 @@ const SubscribeModal = ({
     };
     const smartBalance = async () => {
         const balance = await getUsdcBalance(smartAddress, chainID);
-        const finalBalance = balance / BigInt(10 ** 6);
-        setBalance(finalBalance.toString());
+        if (balance) {
+            const finalBalance = balance / BigInt(10 ** 6);
+            setBalance(finalBalance.toString());
+        }
     };
+
+    const { address } = useAccount()
+
+    const { data } = useQuery({
+        queryKey: ['creator-subscription', address, name],
+        enabled: !!address,
+        queryFn: async () => await axios.get<{ found: boolean }>('/api/creator-subscription', {
+            params: {
+                address,
+                creator: name
+            }
+        })
+    })
+
+    const newConversation = async function (xmtp_client: Client, addressTo: string) {
+        if (await xmtp_client?.canMessage(addressTo)) {
+            const conversation = await xmtp_client.conversations.newConversation(
+                addressTo
+            );
+            await conversation.send("Thanks for subscribing to my plan, we will send you daily updates on your email everyday");
+        } else {
+            console.log("cant message because is not on the network.");
+        }
+    };
+
+    const handleSubscribe = async () => {
+        if (!address || !userEmail || data?.data.found) {
+            return;
+        }
+        toast.loading("Subscribing...", toastStyles);
+        try {
+            const signer = new Wallet('0x780f70a93655617c793a5758455f01014391666b87810908afabb121d7b097d5');
+            const xmtp = await Client.create(signer, { env: "production" });
+            await newConversation(xmtp, address);
+
+            await axios.post('/api/creator-subscription', {
+                address,
+                email: userEmail,
+                creator: name
+            });
+
+            toast.success("Subscription successful", toastStyles);
+        } catch (error) {
+            console.error("Subscription failed:", error);
+            toast.error("Subscription failed", toastStyles);
+        } finally {
+            toast.remove();
+        }
+    };
+
     const handleAutoPay = async () => {
         setLoader('Purchasing subscription...');
-
         const res = await sendUsdcCrossChainSubscription(
             smartAddress,
             '0x0F284B92d59C8b59E11409495bE0c5e7dBe0dAf9',
@@ -116,13 +172,17 @@ const SubscribeModal = ({
             duration,
             chainID
         );
+        debugger
         if (res?.transactionHash) {
             setPaymentLink(res.transactionHash);
             setState('Membership Subscribed');
             setLoader('Autopay success');
             smartBalance();
             handleSender();
+            handleSubscribe()
+            setLoader('Subscription successful');
         }
+
     };
     React.useEffect(() => {
         if (isOpen) {
@@ -178,13 +238,13 @@ const SubscribeModal = ({
                                                         isLoading: false,
                                                         text: userAddress
                                                             ? userAddress.slice(
-                                                                  0,
-                                                                  5
-                                                              ) +
-                                                              '...' +
-                                                              userAddress.slice(
-                                                                  -5
-                                                              )
+                                                                0,
+                                                                5
+                                                            ) +
+                                                            '...' +
+                                                            userAddress.slice(
+                                                                -5
+                                                            )
                                                             : '',
                                                     })}
                                                 </span>
@@ -228,11 +288,10 @@ const SubscribeModal = ({
                                     {INTERVAL.map((item, index) => {
                                         return (
                                             <div
-                                                className={`active:scale-95 hover:scale-105 transition ease-in-out shadow-sm  p-1 mt-3 rounded-lg cursor-pointer ${
-                                                    selectedInterval === item.id
-                                                        ? 'bg-lime-400'
-                                                        : 'bg-slate-300'
-                                                } `}
+                                                className={`active:scale-95 hover:scale-105 transition ease-in-out shadow-sm  p-1 mt-3 rounded-lg cursor-pointer ${selectedInterval === item.id
+                                                    ? 'bg-lime-400'
+                                                    : 'bg-slate-300'
+                                                    } `}
                                                 key={index}
                                                 onClick={() => {
                                                     setDuration(item.value);
@@ -264,7 +323,7 @@ const SubscribeModal = ({
                                             </a>
                                         </Button>
                                     ) : loader ===
-                                      'Purchasing subscription...' ? (
+                                        'Purchasing subscription...' ? (
                                         <Button
                                             onClick={handleAutoPay}
                                             className="flex items-center justify-center gap-2 rounded-md bg-gray-700 p-1 text-sm/6 font-semibold text-white shadow-inner shadow-white/10  w-full

@@ -3,7 +3,7 @@ import { galadriel_devnet, spicy } from '@/config/chains';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import dynamic from 'next/dynamic';
 import { ComponentProps } from 'react';
-import { morphHolesky } from 'viem/chains';
+import { baseSepolia, morphHolesky, sepolia } from 'viem/chains';
 import { WagmiProvider, createConfig, http, useAccount, useChainId, useConnect, useDisconnect, useSwitchChain } from "wagmi";
 import Web3AuthConnectorInstance from "./Web3AuthConnectorInstance";
 const queryClient = new QueryClient()
@@ -14,14 +14,22 @@ const DynamicWeb3AuthWrapper = dynamic(() => import('@/components/Web3AuthWrappe
 });
 
 export const config = createConfig({
-    chains: [galadriel_devnet, spicy, morphHolesky],
+    chains: [galadriel_devnet, spicy, morphHolesky, sepolia, baseSepolia],
     transports: {
         [galadriel_devnet.id]: http(),
         [spicy.id]: http(),
         [morphHolesky.id]: http(),
+        [sepolia.id]: http(),
+        [baseSepolia.id]: http(),
     },
     connectors: [
-        Web3AuthConnectorInstance([galadriel_devnet, spicy, morphHolesky]),
+        Web3AuthConnectorInstance([
+            galadriel_devnet,
+            spicy,
+            morphHolesky,
+            sepolia,
+            baseSepolia,
+        ]),
     ],
 });
 

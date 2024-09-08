@@ -24,6 +24,7 @@ import {
     lazarPlan4,
     lazarProfilePic,
 } from '../../../../public';
+import SubscribeModal from './subscribeModal';
 
 type Plan = {
     id: number;
@@ -177,30 +178,8 @@ export default InfluencerProfile
 
 const ProfileCard = ({ profile }: { profile: InfluencerProfile }) => {
 
-    const { address } = useAccount()
-    const { userEmail } = useGlobalStore()
 
-    const { data } = useQuery({
-        queryKey: ['creator-subscription', address, profile.name],
-        enabled: !!address,
-        queryFn: async () => await axios.get<{ found: boolean }>('/api/creator-subscription', {
-            params: {
-                address,
-                creator: profile.name
-            }
-        })
-    })
 
-    const newConversation = async function (xmtp_client: Client, addressTo: string) {
-        if (await xmtp_client?.canMessage(addressTo)) {
-            const conversation = await xmtp_client.conversations.newConversation(
-                addressTo
-            );
-            await conversation.send("Thanks for subscribing to my plan, we will send you daily updates on your email everyday");
-        } else {
-            console.log("cant message because is not on the network.");
-        }
-    };
 
     return (
         <div
@@ -271,29 +250,22 @@ const ProfileCard = ({ profile }: { profile: InfluencerProfile }) => {
             </div>
 
             {/* Subscribe Button */}
-            <button
+
+            <button className="mt-6 w-full bg-lime-400 hover:bg-lime-500 text-white font-bold py-2 rounded-lg">
+                <SubscribeModal
+                    name={profile.name}
+                    description={profile.category}
+                    profilePic={profile.profilePic}
+                    fees={profile.fees}
+                />
+            </button>
+            {/* <button
                 disabled={data?.data.found}
                 className="mt-6 w-full bg-lime-400 hover:bg-lime-500 text-white font-bold py-2 rounded-lg"
-                onClick={async () => {
-                    if (!address || !userEmail || data?.data.found) {
-                        return;
-                    }
-                    toast.loading("Subscribing...", toastStyles)
-                    debugger
-                    const signer = new Wallet('0x780f70a93655617c793a5758455f01014391666b87810908afabb121d7b097d5')
-                    const xmtp = await Client.create(signer, { env: "production" });
-                    await newConversation(xmtp, address);
-                    await axios.post('/api/creator-subscription', {
-                        address,
-                        email: userEmail,
-                        creator: profile.name
-                    })
-                    toast.remove()
-                    toast.success("Subscription successful", toastStyles)
-                }}
+                onClick={handleSubscribe}
             >
                 {data?.data.found ? "Already Subscribed" : "Subscribe to access"}
-            </button>
+            </button> */}
         </div>
     )
 }

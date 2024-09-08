@@ -26,6 +26,8 @@ export default function ComboboxComponent() {
     const [selected, setSelected] = useState<any>(chains[0]);
     const { address, setBalance, smartAddress } = useGlobalStore();
 
+    console.log(chains, "chains");
+
     const handleSwitchChain = async (chainId: any) => {
         await switchChainAsync({ chainId: chainId });
         // if (chainId === spicy.id) {
@@ -62,8 +64,10 @@ export default function ComboboxComponent() {
     const smartBalanceFetch = async () => {
         if (!chainId) return;
         const balance: bigint = await getUsdcBalance(smartAddress, chainId);
-        const finalBalance = balance / BigInt(10 ** 6);
-        setBalance(finalBalance.toString());
+        if (balance) {
+            const finalBalance = BigInt(balance) / BigInt(10 ** 6);
+            setBalance(finalBalance.toString());
+        }
     };
 
     useEffect(() => {
@@ -72,10 +76,23 @@ export default function ComboboxComponent() {
 
     return (
         <div className="w-[260px]">
-            <Combobox value={selected} onChange={(value) => {
-                handleSwitchChain(value.id)
-                setSelected(value)
-            }}>
+            <Combobox value={selected}
+                onChange={(chain) => {
+                    setSelected(chain)
+                    handleSwitchChain(chain.id)
+                    switchChainAsync({ chainId: chain.id });
+                    if (
+                        chain.id === galadriel_devnet.id ||
+                        chain.id === spicy.id
+                    ) {
+                        handleSendBalance(chain.id);
+                    } else if (
+                        chain.id === sepolia.id ||
+                        chain.id === baseSepolia.id
+                    ) {
+                        smartBalanceFetch();
+                    }
+                }}>
                 <div className="relative">
                     <ComboboxInput
                         className={clsx(
@@ -120,20 +137,7 @@ export default function ComboboxComponent() {
                             <ComboboxOption
                                 key={chain.id}
                                 value={chain}
-                                onClick={() => {
-                                    switchChainAsync({ chainId: chain.id });
-                                    if (
-                                        chain.id === galadriel_devnet.id ||
-                                        chain.id === spicy.id
-                                    ) {
-                                        handleSendBalance(chain.id);
-                                    } else if (
-                                        chain.id === sepolia.id ||
-                                        chain.id === baseSepolia.id
-                                    ) {
-                                        smartBalanceFetch();
-                                    }
-                                }}
+
                                 className="group flex cursor-default items-center gap-2 rounded-lg py-2 px-3 select-none data-[focus]:bg-white/10"
                             >
                                 <Image

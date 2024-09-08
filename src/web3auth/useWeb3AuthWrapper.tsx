@@ -34,6 +34,7 @@ function useWeb3AuthWrapper() {
           })
           return;
         }
+        if (smartAccount) return
         const biconomy_config = BICONOMY_CONFIG[chainId as keyof typeof BICONOMY_CONFIG];
         const smartAccountCreationg = await createSmartAccountClient({
           signer: signer,
