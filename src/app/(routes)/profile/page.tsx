@@ -26,27 +26,9 @@ const ProfileScreen = () => {
         address,
         setBalance,
     } = useGlobalStore();
-    const creatorName = localStorage.getItem('creatorName');
-    const parsedCreatorName = creatorName ? JSON.parse(creatorName) : null;
     const [isOpenWorkout, setIsOpenWorkout] = useState(false);
     const [trx, setTrx] = useState('');
     const [state, setState] = useState('Create New Workout Plan');
-    const profiles =
-        parsedCreatorName === 'david goggins'
-            ? davidGogginsProfilePic
-            : parsedCreatorName === 'anatoly'
-            ? anatolyProfilePic
-            : parsedCreatorName === 'larry Wheels'
-            ? larryWheelsProfilePic
-            : RibbleAvatar;
-    const creators =
-        parsedCreatorName === 'david goggins'
-            ? 'david goggins'
-            : parsedCreatorName === 'anatoly'
-            ? 'anatoly'
-            : parsedCreatorName === 'larry Wheels'
-            ? 'larry Wheels'
-            : 'Creating Your AI fitness trainer';
     const handleCheckboxChange = () => {
         setWeek1Completed(!week1Completed);
     };
@@ -153,13 +135,13 @@ const ProfileScreen = () => {
                             <p className="text-gray-500 py-2 flex items-center gap-x-2">
                                 Trainer:{' '}
                                 <Image
-                                    src={profiles}
+                                    src={davidGogginsProfilePic}
                                     alt="creator"
                                     height={50}
                                     width={50}
                                     className="rounded-full"
                                 />
-                                {creators}
+                                {'david goggins'}
                             </p>
                         </div>
                     </div>
