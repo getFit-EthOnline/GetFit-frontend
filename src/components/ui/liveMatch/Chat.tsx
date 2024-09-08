@@ -22,6 +22,23 @@ interface ChatProps {
     messageHistory: DecodedMessage[];
     conversation: Conversation;
 }
+// MessageList component to render the list of messages
+const MessageList = ({ messages, client, inputValue, chatRef }) => {
+    // Filter messages by unique id
+    messages = messages.filter(
+        (v, i, a) => a.findIndex((t) => t.id === v.id) === i,
+    );
+
+    return (
+        <div className="flex-grow overflow-y-auto pr-2" ref={chatRef}>
+            {messages.map((msg, index) => (
+                msg && (
+                    <MessageItem msg={msg} key={index} index={index} client={client} inputValue={inputValue} />
+                )
+            ))}
+        </div>
+    );
+};
 
 const Chat: React.FC<ChatProps> = ({ refetch, client, messageHistory, conversation }) => {
     const [inputValue, setInputValue] = useState("");
@@ -31,11 +48,12 @@ const Chat: React.FC<ChatProps> = ({ refetch, client, messageHistory, conversati
     const handleSend = async () => {
         if (inputValue) {
             await onSendMessage(inputValue);
-            // if (chatRef.current) {
-            //     (chatRef.current as HTMLDivElement).scrollTop = (chatRef.current as HTMLDivElement).scrollHeight;
-            // }
             setInputValue("");
         }
+        chatRef.current.scrollTo({
+            top: chatRef.current.scrollHeight,
+            behavior: 'smooth'
+        });
     };
 
 
@@ -43,35 +61,23 @@ const Chat: React.FC<ChatProps> = ({ refetch, client, messageHistory, conversati
         return conversation.send(value);
     };
 
-    // MessageList component to render the list of messages
-    const MessageList = ({ messages }) => {
-        // Filter messages by unique id
-        messages = messages.filter(
-            (v, i, a) => a.findIndex((t) => t.id === v.id) === i,
-        );
-
-        return (
-            <div className="flex-grow overflow-y-auto pr-2" ref={chatRef}>
-                {messages.map((msg, index) => (
-                    msg && (
-                        <MessageItem msg={msg} key={index} index={index} client={client} inputValue={inputValue} />
-                    )
-                ))}
-            </div>
-        );
-    };
 
     const handleInputChange = (event) => {
-        if (event.key === "Enter") {
-            handleSend();
-        } else {
-            setInputValue(event.target.value);
-        }
+        setInputValue(event.target.value);
     };
+
+    useEffect(() => {
+        if (chatRef) {
+            chatRef.current.scrollTo({
+                top: chatRef.current.scrollHeight + 200,
+                behavior: 'smooth'
+            });
+        }
+    }, [chatRef, messageHistory])
 
     return (
         <>
-            <MessageList messages={messageHistory} />
+            <MessageList messages={messageHistory} client={client} inputValue={inputValue} chatRef={chatRef} />
             <div className="bg-white sticky bottom-0">
                 <div className="flex  py-4">
                     <input
