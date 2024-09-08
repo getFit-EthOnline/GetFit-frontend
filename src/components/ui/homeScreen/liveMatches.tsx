@@ -102,7 +102,7 @@ const LiveMatches = ({ selected }: { selected: string }) => {
                             key={event.id}
                             className="relative w-[21%] p-2 group  "
                         >
-                            <Link href="/liveMatch">
+                            <Link href="/livematch">
                                 <div className=" overflow-hidden  rounded-md">
                                     <Image
                                         src={event.image}

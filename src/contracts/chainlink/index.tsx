@@ -1,12 +1,12 @@
-import { ethers } from 'ethers';
 import { AUTOPAY_ABI } from '@/abi/AUTOPAY_ABI';
+import { ERC20_ABI } from '@/abi/ERC20_ABI';
 import {
     AUTOPAY_CONTRACT_ADDRESS_BASE,
     AUTOPAY_CONTRACT_ADDRESS_SEPOLIA,
     USDC_TOKEN_ADDRESS_BASE,
     USDC_TOKEN_ADDRESS_SEPOLIA,
 } from '@/config/addresses';
-import { ERC20_ABI } from '@/abi/ERC20_ABI';
+import { ethers } from 'ethers';
 
 export async function sendUsdcCrossChainSubscription(
     userAddress: string | null,
