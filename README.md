@@ -30,8 +30,10 @@ Chiliz powers the fan tokens that fuel the competitive spirit on the getFit plat
 - **Chiliz P2P-Betting Contract**: [Chiliz P2P Betting Contract](https://testnet.chiliscan.com/address/0x9d24c52916A14afc31D86B5Aa046b252383ee444/contract/88882/code)
     - This contract powers peer-to-peer betting on fitness challenges, where users can place bets on each other’s performance in real-time.
 
-- **Chiliz Frontend Integration**: [Code Reference](https://github.com/getFit-EthOnline/GetFit-frontend/blob/40cd02553a049c8f7504b6284325d20a567436fa/src/contracts/chiliz/index.tsx#L13)
-[Code Reference](https://github.com/getFit-EthOnline/GetFit-frontend/blob/40cd02553a049c8f7504b6284325d20a567436fa/src/contracts/chiliz/index.tsx#L50)
+- **Chiliz Frontend Integration**: 
+    - [Code Reference](https://github.com/getFit-EthOnline/GetFit-frontend/blob/40cd02553a049c8f7504b6284325d20a567436fa/src/contracts/chiliz/index.tsx#L13)
+    - [Code Reference](https://github.com/getFit-EthOnline/GetFit-frontend/blob/40cd02553a049c8f7504b6284325d20a567436fa/src/contracts/chiliz/index.tsx#L50)
+    - [Code Reference](https://github.com/getFit-EthOnline/GetFit-frontend/blob/99458f312490dd75bb6acef74213a5bae99bd0d6/src/contracts/chiliz/index.tsx#L113)
 ---
 
 ## 🔰 Morph Integration
@@ -102,6 +104,7 @@ Galadriel elevates the user experience by offering:
     - [Code Reference](https://github.com/getFit-EthOnline/GetFit-frontend/blob/40cd02553a049c8f7504b6284325d20a567436fa/src/app/(routes)/profile/page.tsx#L68)
 4. **Fan Battle AI Agents**: Engage in fan battles between AI agents who motivate and challenge each other in fitness duels.
     - [Code Reference](https://github.com/getFit-EthOnline/GetFit-frontend/blob/99458f312490dd75bb6acef74213a5bae99bd0d6/src/contracts/chiliz/index.tsx#L50)
+5. **Sending Test Tokens**: For sending test tokens [Code Reference](https://github.com/getFit-EthOnline/GetFit-frontend/blob/4a092f5d770b6e34064ffe88cf4ec4f305d8d615/src/contracts/galadriel/index.tsx#L138)
 
 ---
 
