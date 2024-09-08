@@ -1,4 +1,5 @@
 'use client';
+
 import { REDIRECT_URL } from '@/config';
 import { galadriel_devnet } from '@/config/chains';
 import { sendTestTokensChiliz } from '@/contracts/chiliz';
@@ -132,7 +133,6 @@ function useWeb3Auth() {
         if (!provider) {
             return;
         }
-
         const ethersProvider = new ethers.BrowserProvider(provider);
         const signer = await ethersProvider.getSigner();
         const addr = signer.getAddress();
