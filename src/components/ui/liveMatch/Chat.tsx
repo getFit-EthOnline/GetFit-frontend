@@ -77,7 +77,7 @@ const Chat: React.FC<ChatProps> = ({ refetch, client, messageHistory, conversati
 
     return (
         <>
-            <MessageList messages={messageHistory} client={client} inputValue={inputValue} chatRef={chatRef} />
+            <MessageList messages={messageHistory.filter((p) => !!p.content)} client={client} inputValue={inputValue} chatRef={chatRef} />
             <div className="bg-white sticky bottom-0">
                 <div className="flex  py-4">
                     <input
