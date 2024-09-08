@@ -8,10 +8,10 @@ import useGlobalStore from '@/store';
 import React, { useState } from 'react';
 
 const Page = () => {
-    const { loggedIn } = useWeb3Auth();
     const [chatId, setChatId] = useState(0);
     const { address } = useGlobalStore();
     const [open, setOpen] = useState(false);
+
     return (
         <div className="px-20">
             <PhysicalFitness />
@@ -19,7 +19,7 @@ const Page = () => {
             {address && (
                 <ChatButton chatId={chatId} open={open} setOpen={setOpen} />
             )}
-            {loggedIn && (
+            {address && (
                 <InfluencerModal setChatId={setChatId} setChatOpen={setOpen} />
             )}
         </div>
