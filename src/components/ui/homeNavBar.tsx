@@ -8,7 +8,7 @@ import ComboboxComponent from './Combobox';
 import { WalletConnectButton } from './navBar';
 import useGlobalStore from '@/store';
 
-const navContents = [
+export const navContents = [
     {
         id: 1,
         title: 'Market Prediction',

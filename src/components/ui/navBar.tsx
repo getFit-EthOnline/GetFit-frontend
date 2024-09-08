@@ -11,14 +11,46 @@ import { ImSpinner2 } from 'react-icons/im';
 import { useChainId } from 'wagmi';
 import { galadriel_devnet } from '@/config/chains';
 import { baseSepolia, morphHolesky, sepolia, spicy } from 'wagmi/chains';
+import { navContents } from './homeNavBar';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 const NavBar = () => {
+    const url = usePathname();
     return (
-        <div className=" flex shadow-lg  justify-between items-center py-4 ">
+        <div className=" flex shadow-lg  justify-between items-center p-4 ">
             <div className=" flex justify-center items-center w-1/4">
                 <Image src={logo} alt="GetFit" className="w-44 " />
             </div>
-
+            <div className=" py-3 text-[#313131]  flex w-full  items-center  justify-center gap-x-10 font-medium">
+                {navContents.map((item) => {
+                    return (
+                        <Link href={item.link} key={item.id}>
+                            <div
+                                className={` ${
+                                    url === item.link ? 'text-[#80E142]' : ''
+                                }  flex items-center gap-x-1 justify-center `}
+                            >
+                                <p className="capitalize">{item.title}</p>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={1.5}
+                                    stroke="currentColor"
+                                    className="size-4"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                                    />
+                                </svg>
+                            </div>
+                        </Link>
+                    );
+                })}
+            </div>
             <div className=" items-center flex justify-center  w-1/4">
                 <WalletConnectButton />
             </div>
