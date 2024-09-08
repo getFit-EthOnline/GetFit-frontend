@@ -6,7 +6,6 @@ import { Client } from '@xmtp/xmtp-js';
 import axios from 'axios';
 import { Wallet } from 'ethers';
 import Image, { StaticImageData } from 'next/image';
-import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useAccount } from 'wagmi';
 import {
@@ -25,7 +24,6 @@ import {
     lazarPlan4,
     lazarProfilePic,
 } from '../../../../public';
-import SubscribeModal from './subscribeModal';
 
 type Plan = {
     id: number;
@@ -36,6 +34,7 @@ type Plan = {
 
 type InfluencerProfile = {
     id: number;
+    fees: number;
     bannerImage: StaticImageData;
     profilePic: StaticImageData;
     name: string;
@@ -49,6 +48,7 @@ const influencerProfile: InfluencerProfile[] = [
         id: 1,
         bannerImage: davidBanner,
         profilePic: davidProfilePic,
+        fees: 1,
         name: 'David Goggins',
         category: 'Stamina & Mental Toughness Coach',
         about: 'a former Navy SEAL, is known for extreme mental toughness. His program builds both physical endurance and mental resilience, emphasizing discipline and grit.',
@@ -62,7 +62,7 @@ const influencerProfile: InfluencerProfile[] = [
             },
             {
                 id: 2,
-                title: ' Mindset & Motivation',
+                title: 'Mindset & Motivation',
                 description:
                     'Goggins’ content includes motivational talks and strategies to develop mental toughness and discipline.',
                 image: davidPlan2,
@@ -87,6 +87,7 @@ const influencerProfile: InfluencerProfile[] = [
         id: 2,
         bannerImage: lazarBanner,
         profilePic: lazarProfilePic,
+        fees: 1,
         name: 'Lazar Angelov',
         category: 'Bodybuilding Expert Coach',
         about: ' is a famous bodybuilder known for his sculpted physique. His programs focus on muscle building, hypertrophy, and perfecting form. Lazar’s workouts use high-intensity and strength exercises to help users gain muscle and achieve their fitness goals.',
@@ -122,9 +123,10 @@ const influencerProfile: InfluencerProfile[] = [
         ],
     },
     {
-        id: 1,
+        id: 3,
         bannerImage: anatolyBanner,
         profilePic: anatolyProfilePic2,
+        fees: 1,
         name: 'Anatoly',
         category: 'Powerlifting & Strength Training Coach',
         about: 'a powerlifting champion, focuses on building strength with compound lifts like squats, bench presses, and deadlifts. His programs prioritize form and progressive strength gains',
@@ -138,7 +140,7 @@ const influencerProfile: InfluencerProfile[] = [
             },
             {
                 id: 2,
-                title: ' Powerlifting Techniques',
+                title: 'Powerlifting Techniques',
                 description:
                     'Learn proper techniques for powerlifting and avoid common mistakes that lead to injury.',
                 image: davidPlan2,
@@ -162,41 +164,12 @@ const influencerProfile: InfluencerProfile[] = [
 ];
 
 const InfluencerProfile = () => {
-    const [open, setOpen] = useState(false);
-    // const handleSender = async () => {
-    //     try {
-    //         const response = await fetch('/api/subscription', {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //             },
-    //             body: JSON.stringify({
-    //                 smartAccountAddress: smartAddress,
-    //                 email: userEmail,
-    //                 gogginsWalletAddress: '0x232342',
-    //             }),
-    //         });
-
-    //         if (response.ok) {
-    //             console.log('Subscription saved successfully');
-    //         } else {
-    //             console.error('Error saving subscription');
-    //         }
-    //     } catch (error) {
-    //         console.error('Error:', error);
-    //     }
-    // };
-
-
     return (
-        <>
-            {open && <SubscribeModal open={open} setOpen={setOpen} />}
-            <div className=" flex flex-col gap-y-10  ">
-                {influencerProfile.map((profile, index) => (
-                    <ProfileCard profile={profile} key={index} />
-                ))}
-            </div>
-        </>
+        <div className=" flex flex-col gap-y-10  ">
+            {influencerProfile.map((profile, index) => (
+                <ProfileCard profile={profile} key={index} />
+            ))}
+        </div>
     );
 };
 

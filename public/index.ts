@@ -29,6 +29,7 @@ import armWrestlinglive4 from './sportsImages/armWrestlinglive4.jpg';
 import weightLiftinglive1 from './sportsImages/weightLiftinglive1.jpeg';
 import weightLiftinglive2 from './sportsImages/weightLiftingLive2.jpg';
 import BackExercise from './M2E images/BackExercise.jpg';
+import UsdcIcon from './icons/usdcIcon.png';
 import chestExercise from './M2E images/chestExercise.jpg';
 import legsExercise from './M2E images/squartsExercise.jpg';
 import shoulderExercise from './M2E images/shoulderExercise.jpg';
@@ -175,6 +176,7 @@ export {
     lazarPlan4,
     Base,
     Sepolia,
+    UsdcIcon,
     anatolyBanner,
     anatolyProfilePic2,
     plan1,

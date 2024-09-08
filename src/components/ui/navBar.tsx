@@ -6,11 +6,11 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { logo } from '../../../public/index';
 
-import { galadriel_devnet } from '@/config/chains';
+import { galadriel_devnet, spicy } from '@/config/chains';
 import toast from 'react-hot-toast';
 import { ImSpinner2 } from 'react-icons/im';
 import { useChainId } from 'wagmi';
-import { base, morphHolesky, sepolia, spicy } from 'wagmi/chains';
+import { baseSepolia, morphHolesky, sepolia, } from 'wagmi/chains';
 
 const NavBar = () => {
     return (
@@ -44,16 +44,17 @@ export const WalletConnectButton = () => {
             ? 'GAL'
             : chainId === spicy.id
                 ? 'CHZ'
-                : sepolia.id || base.id || morphHolesky.id
+                : sepolia.id || baseSepolia.id || morphHolesky.id
                     ? 'USDC'
                     : '';
     const userAddress =
         chainId === morphHolesky.id ||
             chainId === sepolia.id ||
-            chainId === base.id
+            chainId === baseSepolia.id
             ? smartAddress
             : address;
     const userBalance = parseFloat(balance || '0').toFixed(3) + ' ' + currency;
+
     return (
         <div className="flex justify-center gap-x-4  items-center ">
             <motion.button
@@ -104,10 +105,11 @@ export const WalletConnectButton = () => {
             </motion.button>
             {userAddress && (
                 <svg
-                    onClick={() => {
+                    onClick={async () => {
+                        await logout();
                         localStorage.removeItem('hasModalBeenShown');
                         localStorage.removeItem('creatorName');
-                        logout();
+                        window.location.reload();
                     }}
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -127,7 +129,7 @@ export const WalletConnectButton = () => {
     );
 };
 
-const getButtonCTA = ({
+export const getButtonCTA = ({
     isLoading,
     text,
 }: {

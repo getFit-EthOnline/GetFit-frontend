@@ -6,20 +6,26 @@ import {
     ComboboxOptions,
 } from '@headlessui/react';
 
+import { galadriel_devnet } from '@/config/chains';
 import { getUsdcBalance } from '@/contracts/chainlink';
+import { sendTestTokensChiliz } from '@/contracts/chiliz';
+import { getBalance } from '@/contracts/galadriel';
 import useGlobalStore from '@/store';
+import { toastStyles } from '@/utils/utils';
 import clsx from 'clsx';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { FaAngleDown } from 'react-icons/fa6';
-import { useSwitchChain } from 'wagmi';
-import { base, morphHolesky, sepolia, spicy } from 'wagmi/chains';
+import { useAccount, useSwitchChain } from 'wagmi';
+import { baseSepolia, morphHolesky, sepolia, spicy } from 'wagmi/chains';
 import { Base, Chiliz, Galadriel, Morph, Sepolia } from '../../../public';
 export default function ComboboxComponent() {
+    const { chainId } = useAccount();
     const { chains, switchChainAsync } = useSwitchChain();
     const [selected, setSelected] = useState<any>(chains[0]);
+    const { address, setBalance, smartAddress } = useGlobalStore();
 
-    const { smartAddress, setBalance } = useGlobalStore();
     const handleSwitchChain = async (chainId: any) => {
         await switchChainAsync({ chainId: chainId });
         // if (chainId === spicy.id) {
@@ -36,18 +42,34 @@ export default function ComboboxComponent() {
         //         // }
         //     }
         // }
+    }
+    const handleSendBalance = async (chainId: number) => {
+        const balance = await getBalance(address, chainId);
+        setBalance(balance);
+        if (chainId === spicy.id) {
+            if (parseFloat(balance) < 1) {
+                toast.loading('Sending test tokens 💸', toastStyles);
+                const tokens = await sendTestTokensChiliz(address);
+                if (tokens.trxhash) {
+                    const balance = await getBalance(address, chainId);
+                    setBalance(balance);
+                    toast.dismiss();
+                    toast.success('Tokens sent successfully 🚀', toastStyles);
+                }
+            }
+        }
     };
     const smartBalanceFetch = async () => {
-        const balance: any = await getUsdcBalance(smartAddress);
-        const finalBalance = balance / 10 ** 6;
-        console.log(balance);
+        if (!chainId) return;
+        const balance: bigint = await getUsdcBalance(smartAddress, chainId);
+        const finalBalance = balance / BigInt(10 ** 6);
         setBalance(finalBalance.toString());
     };
+
     useEffect(() => {
-        if (smartAddress) {
-            smartBalanceFetch();
-        }
-    }, []);
+        smartBalanceFetch();
+    }, [smartAddress]);
+
     return (
         <div className="w-[260px]">
             <Combobox value={selected} onChange={(value) => {
@@ -74,7 +96,7 @@ export default function ComboboxComponent() {
                                         ? Morph
                                         : selected.id === sepolia.id
                                             ? Sepolia
-                                            : selected.id === base.id
+                                            : selected.id === baseSepolia.id
                                                 ? Base
                                                 : Galadriel
                             }
@@ -101,13 +123,15 @@ export default function ComboboxComponent() {
                                 onClick={() => {
                                     switchChainAsync({ chainId: chain.id });
                                     if (
+                                        chain.id === galadriel_devnet.id ||
+                                        chain.id === spicy.id
+                                    ) {
+                                        handleSendBalance(chain.id);
+                                    } else if (
                                         chain.id === sepolia.id ||
-                                        chain.id === base.id ||
-                                        chain.id === morphHolesky.id
+                                        chain.id === baseSepolia.id
                                     ) {
                                         smartBalanceFetch();
-                                    } else {
-                                        handleSwitchChain(chain.id);
                                     }
                                 }}
                                 className="group flex cursor-default items-center gap-2 rounded-lg py-2 px-3 select-none data-[focus]:bg-white/10"
@@ -120,7 +144,7 @@ export default function ComboboxComponent() {
                                                 ? Morph
                                                 : chain.id === sepolia.id
                                                     ? Sepolia
-                                                    : chain.id === base.id
+                                                    : chain.id === baseSepolia.id
                                                         ? Base
                                                         : Galadriel
                                     }
