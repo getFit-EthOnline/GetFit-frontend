@@ -54,6 +54,19 @@ Morph blockchain integration allows for gasless transactions within the M2E syst
 
 - **Morph Frontend Integration**: [Code Reference](https://github.com/getFit-EthOnline/GetFit-frontend/blob/40cd02553a049c8f7504b6284325d20a567436fa/src/contracts/morph/index.tsx#L9)
 
+  ### Video Walkthrough
+
+
+https://github.com/user-attachments/assets/c69b6f18-9446-4a60-8d7f-6651d339e9c5
+
+
+
+### Testing Guide
+
+To test **live P2P betting** with XMTP, visit the following link and make sure the selected chain is **Morph** to test smart accounts with Web3Auth + XMTP on Morph:
+
+- [Live Match Testing](https://getfrontend.vercel.app/livematch)
+
 ---
 
 ## 🔗 Chainlink Integration
