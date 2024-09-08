@@ -2,6 +2,10 @@
 
 The getFit platform is an innovative on-chain fitness app that motivates users to stay active while earning rewards! From Move-to-Earn to fan token battles, prediction markets, and exclusive memberships, getFit offers a holistic fitness journey powered by Web3 technologies. Our platform seamlessly integrates Web3Auth, Galadriel, Chiliz, Morph, XMTP, Biconomy, Chainlink, and Kinto to bring the best of fitness and blockchain to your fingertips. 💪✨
 
+![image](https://github.com/user-attachments/assets/d50f5b13-bb87-4857-8aa1-b69a687114e1)
+
+
+
 ## 🔥 Key Features
 
 ### 🏃‍♂️ M2E (Move-to-Earn)
